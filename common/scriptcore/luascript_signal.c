@@ -207,9 +207,9 @@ void luascript_signal_emit(struct fc_lua *fcl, const char *signal_name,
 /*****************************************************************************
   Create a new signal type.
 *****************************************************************************/
-void luascript_signal_create_valist(struct fc_lua *fcl,
+void luascript_signal_create_array(struct fc_lua *fcl,
                                     const char *signal_name,
-                                    int nargs, va_list args)
+                                    int nargs, int args[])
 {
   struct signal *psignal;
 
@@ -225,13 +225,27 @@ void luascript_signal_create_valist(struct fc_lua *fcl,
     char *sn = fc_malloc(strlen(signal_name) + 1);
 
     for (i = 0; i < nargs; i++) {
-      *(parg_types + i) = va_arg(args, int);
+      *(parg_types + i) = args[i];
     }
     luascript_signal_hash_insert(fcl->signals, signal_name,
                                  signal_new(nargs, parg_types));
     strcpy(sn, signal_name);
     luascript_signal_name_list_append(fcl->signal_names, sn);
   }
+}
+
+/*****************************************************************************
+  Create a new signal type.
+*****************************************************************************/
+void luascript_signal_create_valist(struct fc_lua *fcl,
+                                    const char *signal_name,
+                                    int nargs, va_list args)
+{
+  int i, arg_list[nargs];
+  for (i = 0; i < nargs; i++) {
+    arg_list[i] = va_arg(args, int);
+  }
+  luascript_signal_create_array(fcl, signal_name, nargs, arg_list);
 }
 
 /*****************************************************************************

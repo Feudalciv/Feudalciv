@@ -100,6 +100,8 @@ libfreeciv_srv_la_SOURCES = \
 		stdinhand.h	\
 		techtools.h	\
 		techtools.c	\
+		triggers.c  \
+		triggers.h  \
 		unithand.c	\
 		unithand.h	\
 		unittools.c	\
