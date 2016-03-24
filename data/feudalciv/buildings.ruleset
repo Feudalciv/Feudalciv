@@ -1,0 +1,669 @@
+; This is the feudalciv ruleset. See doc/README.ruleset_feudalciv
+; for a detailed description.
+
+; Modifying this file:
+; You should not modify this file except to make bugfixes or
+; for other "maintenance".  If you want to make custom changes,
+; you should create a new datadir subdirectory and copy this file
+; into that directory, and then modify that copy.  Then use the
+; command "rulesetdir <mysubdir>" in the server to have freeciv
+; use your new customized file.
+
+; Note that the freeciv AI may not cope well with anything more
+; than minor changes.
+
+[datafile]
+description="buildings data for Feudalciv"
+options="+Freeciv-2.5-ruleset"
+
+; /* <-- avoid gettext warnings
+;
+; Below: The individual buildings, one per section.
+; (Buildings = City Improvements and Wonders)
+;
+; The actual tag used (the * in [building_*]) does not matter, except 
+; it must be unique within this file, and it may be used in debug 
+; output when reading this file.
+;
+; Notes:
+;
+; name          = translatable name as seen by user
+; rule_name     = (optional) name for savegames, rulesets etc; if not
+;                 present, 'name' is used. Since the name used in savegames
+;                 must not change, use this when renaming a building after a
+;                 ruleset has been released.
+; genus	        = genus; one of:
+;                 "GreatWonder", "SmallWonder", "Improvement", "Special".
+; reqs		= requirements to build the building (see effects.ruleset
+;		  and README.effects for help on requirements)
+; graphic	= icon of improvement (used in city dialog)
+; graphic_alt	= alternate icon of improvement
+; obsolete_by	= advance which makes building obsolete; special
+;		  value "None" means does not become obsolete
+; build_cost	= production shields required to build
+; upkeep	= monetary upkeep value
+; sabotage	= percent chance of diplomat sabotage being successful
+; flags         = special flag strings
+;
+; ** Building flags **
+; "VisibleByOthers"  = Anyone who can see your city knows whether it has
+;                      this improvement. (Great and small wonders are
+;                      always visible.)
+; "SaveSmallWonder"  = If you lose the city with this building in, and the
+;                      "savepalace" server setting is enabled, another will
+;                      be built for free in a random city.
+;                      Should only be used with genus "SmallWonder".
+; "Gold"             = Not a real building; production turned into gold
+;                      indefinitely (capitalization/coinage).
+;                      Genus should be "Special".
+;
+; */ <-- avoid gettext warnings
+
+[building_aqueduct]
+name		= _("Aqueduct")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Construction", "Player"
+    }
+graphic	= "b.aqueduct"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 60
+upkeep		= 2
+sabotage	= 100
+sound		= "b_aqueduct"
+sound_alt	= "b_generic"
+helptext	= _("\
+Allows a city to grow larger than size 8 and reduces the chance of plague\
+ within the city. After Industrialization is researched this effect of\
+ the Aqueduct is reduced.\
+"), _("\
+A Sewer System is required for a city to grow larger\
+ than size 12.\
+")
+; NB: plague (illness) has to be activated in the ruleset
+
+[building_bank]
+name		= _("Bank")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Banking", "Player"
+      "Building", "Marketplace", "City"
+    }
+graphic	= "b.bank"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 80
+upkeep		= 2
+sabotage	= 100
+sound		= "b_bank"
+sound_alt	= "b_generic"
+; /* xgettext:no-c-format */
+helptext	= _("\
+Together with the Marketplace improvement, a Bank increases the\
+ luxury and tax production within a city by 100%.\
+")
+
+[building_barracks]
+name		= _("Barracks")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+
+    }
+graphic	= "b.barracks_i"
+graphic_alt	= "-"
+obsolete_by	= "Gunpowder"
+replaced_by	= "Barracks II"
+build_cost	= 30
+upkeep		= 1
+sabotage	= 100
+sound		= "b_barracks_i"
+sound_alt	= "b_generic"
+; /* xgettext:no-c-format */
+helptext	= _("\
+With a Barracks, each new land unit built in a city will\
+ automatically have Veteran status, which means that its attack and\
+ defense strengths are increased by 50%.  Also, damaged land units\
+ which stay in town for one full turn without moving are completely\
+ restored.\
+")
+
+[building_barracks_ii]
+name		= _("Barracks II")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Gunpowder", "Player"
+    }
+graphic	= "b.barracks_ii"
+graphic_alt	= "b.barracks_i"
+obsolete_by	= "Mobile Warfare"
+replaced_by	= "Barracks III"
+build_cost	= 30
+upkeep		= 1
+sabotage	= 100
+sound		= "b_barracks_ii"
+sound_alt	= "b_generic"
+; /* xgettext:no-c-format */
+helptext	= _("\
+With a Barracks, each new land unit built in a city will\
+ automatically have Veteran status, which means that its attack and\
+ defense strengths are increased by 50%.  Also, damaged land units\
+ which stay in town for one full turn without moving are completely\
+ restored.\
+")
+
+[building_barracks_iii]
+name		= _("Barracks III")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Mobile Warfare", "Player"
+    }
+graphic	= "b.barracks_iii"
+graphic_alt	= "b.barracks_i"
+obsolete_by	= "None"
+build_cost	= 30
+upkeep		= 1
+sabotage	= 100
+sound		= "b_barracks_iii"
+sound_alt	= "b_generic"
+; /* xgettext:no-c-format */
+helptext	= _("\
+With a Barracks, each new land unit built in a city will\
+ automatically have Veteran status, which means that its attack and\
+ defense strengths are increased by 50%.  Also, damaged land units\
+ which stay in town for one full turn without moving are completely\
+ restored.\
+")
+
+[building_cathedral]
+name		= _("Cathedral")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Monotheism", "Player"
+      "Building", "Temple", "City"
+    }
+graphic	= "b.cathedral"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 80
+upkeep		= 3
+sabotage	= 100
+sound		= "b_cathedral"
+sound_alt	= "b_generic"
+helptext	= _("\
+A Cathedral makes 3 unhappy citizens content in a city, making it\
+ easier to maintain order in that city; however, it does not affect\
+ citizens made unhappy by military activity.  The discovery of Theology\
+ increases the effect of a Cathedral, making an additional unhappy\
+ citizen content.  The discovery of Communism lessens the effect of\
+ a Cathedral, reducing by one the number of unhappy citizens made\
+ content.\
+")
+
+[building_city_walls]
+name		= _("City Walls")
+genus		= "Improvement"
+flags		= "VisibleByOthers"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Masonry", "Player"
+    }
+graphic	= "b.city_walls"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 60
+upkeep		= 0
+sabotage	= 50
+sound		= "b_city_walls"
+sound_alt	= "b_generic"
+helptext	= _("\
+City Walls make it easier to defend a city.  They triple the defense\
+ strength of units within the city against land and helicopter\
+ units.  They are ineffective against airborne and sea units as well\
+ as Howitzers.  City Walls also prevent the loss of population which\
+ occurs when a defending unit is destroyed by a land unit.\
+")
+
+[building_colosseum]
+name		= _("Colosseum")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Construction", "Player"
+    }
+graphic	= "b.colosseum"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 70
+upkeep		= 4
+sabotage	= 100
+sound		= "b_colosseum"
+sound_alt	= "b_generic"
+helptext	= _("\
+Entertains the citizens of a city, making 3 unhappy citizens content. \
+ (Four after the discovery of Electricity.)  However, it does not\
+ affect citizens made unhappy by military activity.\
+")
+; NOTE:
+; For Civ2 the "Electricity" condition should be "Electronics"
+
+[building_courthouse]
+name		= _("Courthouse")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Code of Laws", "Player"
+    }
+graphic	= "b.courthouse"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 60
+upkeep		= 1
+sabotage	= 100
+sound		= "b_courthouse"
+sound_alt	= "b_generic"
+; /* xgettext:no-c-format */
+helptext	= _("\
+Reduces the corruption in a city by 50%, and makes the revolt cost\
+ of the city 4 times bigger. (These effects are redundant in your\
+ capital city.)\
+"), _("\
+Under a Democracy, a Courthouse also makes 1 unhappy citizen content\
+ (unless that citizen is unhappy about military activity).\
+")
+
+[building_granary]
+name		= _("Granary")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Pottery", "Player"
+    }
+graphic	= "b.granary"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 40
+upkeep		= 1
+sabotage	= 100
+sound		= "b_granary"
+sound_alt	= "b_generic"
+helptext	= _("\
+The amount of stored food will be set to half full whenever a city\
+ with a Granary shrinks or grows. This helps a city to grow faster\
+ and more easily withstand famine.\
+")
+; NOTE:
+; In Civ2, city size reduction does not generate food like this.
+; Dare I ask where this food comes from?? :-)
+
+[building_harbour]
+name            = _("Harbor")
+rule_name       = "Harbour"     ; en_GB spelling used originally
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Seafaring", "Player"
+      "TerrainClass", "Oceanic", "Adjacent"
+    }
+graphic	= "b.harbour"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 40
+upkeep		= 1
+sabotage	= 100
+sound		= "b_harbour"
+sound_alt	= "b_generic"
+helptext	= _("\
+Gives one extra food resource on all Oceanic tiles.  The city needs\
+ to be coastal to build this improvement.\
+")
+
+[building_hospital]
+name		= _("Hospital")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Medicine", "Player"
+    }
+graphic	= "-"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 80
+upkeep		= 3
+sabotage	= 100
+sound		= "-"
+sound_alt	= "b_generic"
+helptext	= _("\
+A Hospital is used to treat the ill, and sometimes for medical research.\
+ A city with a Hospital is less likely to suffer from plagues.\
+")
+
+[building_library]
+name		= _("Library")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Writing", "Player"
+    }
+graphic	= "b.library"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 60
+upkeep		= 1
+sabotage	= 100
+sound		= "b_library"
+sound_alt	= "b_generic"
+; /* xgettext:no-c-format */
+helptext	= _("\
+Increases the science output in a city by 100%.\
+")
+
+[building_marketplace]
+name		= _("Marketplace")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Currency", "Player"
+    }
+graphic	= "b.marketplace"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 60
+upkeep		= 0
+sabotage	= 100
+sound		= "b_marketplace"
+sound_alt	= "b_generic"
+; /* xgettext:no-c-format */
+helptext	= _("\
+Increases the luxury and tax output in a city by 50%.\
+")
+
+[building_palace]
+name		= _("Palace")
+genus		= "SmallWonder"
+flags		= "SaveSmallWonder"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Masonry", "Player"
+    }
+graphic	= "b.palace"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 70
+upkeep		= 0
+sabotage	= 0
+sound		= "b_palace"
+sound_alt	= "b_generic"
+helptext	= _("\
+Makes a city the capital and the center of your government.\
+ Corruption in other cities is related to how far away from the\
+ capital they are, except when the government is Democracy or\
+ Communism. On top of this, corruption in your capital itself is\
+ half of what it would otherwise be (as if it had a Courthouse).\
+"), _("\
+The cost to enemy Diplomats and Spies of inciting a revolt in a\
+ city also depends upon the city's distance from the capital\
+ (under all forms of government). Your capital city itself cannot\
+ be incited to revolt, and enjoys a bonus when enemy agents try\
+ to evade your own agents stationed in the city, or sabotage your\
+ buildings.\
+"), _("\
+Take good care of your capital, as its loss may result in your\
+ empire plunging into civil war. Losing your current palace also\
+ results in losing whatever spaceship you might have.\
+"),
+; /* xgettext:no-c-format */
+_("\
+Under Despotism the city containing the palace gains a +75%\
+ production bonus, and under Monarchy a +50% production bonus.\
+")
+
+[building_police_station]
+name		= _("Police Station")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Communism", "Player"
+    }
+graphic	= "b.police_station"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 50
+upkeep		= 2
+sabotage	= 100
+sound		= "b_police_station"
+sound_alt	= "b_generic"
+helptext	= _("\
+Reduces the unhappiness caused by aggressively deployed military\
+ units owned by the city by 2 under Democracy and 1 under Republic\
+ -- in other words, it neutralizes the unhappiness caused by a single\
+ military unit. This improvement has no effect under other governments.\
+")
+; NOTE:
+; For Civ2 this should reduce unhappiness by one for *each* unit
+; outside a city that is causing at least one unhappiness.
+
+[building_sewer_system]
+name		= _("Sewer System")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Sanitation", "Player"
+      "Building", "Aqueduct", "City"
+    }
+graphic	= "b.sewer_system"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 80
+upkeep		= 2
+sabotage	= 100
+sound		= "b_sewer_system"
+sound_alt	= "b_generic"
+helptext	= _("\
+Allows a city to grow larger than size 12. Pre-requirement is an Aqueduct\
+ for a city to grow larger than size 8. The Sewer System further reduces\
+ the chance of a plague.\
+")
+; NB: plague (illness) has to be activated in the ruleset
+
+[building_church]
+name		= _("Church")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Ceremonial Burial", "Player"
+    }
+graphic	= "b.temple"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 30
+upkeep		= 1
+sabotage	= 100
+sound		= "b_temple"
+sound_alt	= "b_generic"
+helptext	= _("\
+Makes one unhappy citizen content.  The Mysticism advance doubles\
+ this effect.  With both Mysticism and the Oracle, 4 citizens are\
+ made content.  Does not affect citizens made unhappy by military\
+ activity.\
+"), _("\
+The work of the priests also reduces the effect of plague in the city.\
+")
+
+[building_university]
+name		= _("University")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "University", "Player"
+      "Building", "Library", "City"
+    }
+graphic	= "b.university"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 120
+upkeep		= 3
+sabotage	= 100
+sound		= "b_university"
+sound_alt	= "b_generic"
+; /* xgettext:no-c-format */
+helptext	= _("\
+Together with a Library, a University increases the science\
+ production of a city by 250%.\
+")
+
+[building_asmiths_trading_co]
+name		= _("A.Smith's Trading Co.")
+genus		= "GreatWonder"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Economics", "Player"
+    }
+graphic	= "b.asmiths_trading_co"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 400
+upkeep		= 0
+sabotage	= 0
+sound		= "w_asmiths_trading_co"
+sound_alt	= "w_generic"
+helptext	= _("\
+City improvements which would normally have an upkeep of 1 are free\
+ of upkeep, for all your cities.\
+")
+
+[building_copernicus_observatory]
+name		= _("Copernicus' Observatory")
+genus		= "GreatWonder"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Astronomy", "Player"
+    }
+graphic	= "b.copernicus_observatory"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 200
+upkeep		= 0
+sabotage	= 0
+sound		= "w_copernicus_observatory"
+sound_alt	= "w_generic"
+; /* xgettext:no-c-format */
+helptext	= _("\
+Boosts science production by 100% in the city where it is built.\
+")
+
+[building_great_library]
+name		= _("Great Library")
+genus		= "GreatWonder"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Literacy", "Player"
+    }
+graphic	= "b.great_library"
+graphic_alt	= "-"
+obsolete_by	= "Electricity"
+build_cost	= 300
+upkeep		= 0
+sabotage	= 0
+sound		= "w_great_library"
+sound_alt	= "w_generic"
+helptext	= _("\
+The civilization which builds the Great Library gets every advance\
+ that at least two other teams have achieved.\
+")
+
+[building_hanging_gardens]
+name		= _("Hanging Gardens")
+genus		= "GreatWonder"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Pottery", "Player"
+    }
+graphic	= "b.hanging_gardens"
+graphic_alt	= "-"
+obsolete_by	= "Railroad"
+build_cost	= 200
+upkeep		= 0
+sabotage	= 0
+sound		= "w_hanging_gardens"
+sound_alt	= "w_generic"
+helptext	= _("\
+Makes one content citizen happy in every city. Makes two extra\
+ content citizens happy in the city containing the Hanging Gardens\
+ (that is, a total of 3). In the unlikely event where there are no\
+ content citizens to get the effect of Hanging Gardens, the wonder\
+ applies to unhappy citizens (including those unhappy about military\
+ activity), making each content then happy.\
+")
+
+[building_king_richards_crusade]
+name		= _("King Richard's Crusade")
+genus		= "GreatWonder"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Engineering", "Player"
+    }
+graphic	= "b.king_richards_crusade"
+graphic_alt	= "-"
+obsolete_by	= "Robotics"
+build_cost	= 150
+upkeep		= 0
+sabotage	= 0
+sound		= "w_king_richards_crusade"
+sound_alt	= "w_generic"
+helptext	= _("\
+Adds one extra shield resource on every tile around the city\
+ where it is built.\
+")
+
+[building_lighthouse]
+name		= _("Lighthouse")
+genus		= "GreatWonder"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Map Making", "Player"
+      "TerrainClass", "Oceanic", "Adjacent"
+    }
+graphic	= "b.lighthouse"
+graphic_alt	= "-"
+obsolete_by	= "Magnetism"
+build_cost	= 200
+upkeep		= 0
+sabotage	= 0
+sound		= "w_lighthouse"
+sound_alt	= "w_generic"
+helptext	= _("\
+Gives all your sea units 1 additional movement point. Makes all your\
+ new military sea units veterans (for all your cities).\
+")
+
+[building_michelangelos_chapel]
+name		= _("Michelangelo's Chapel")
+genus		= "GreatWonder"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Monotheism", "Player"
+    }
+graphic	= "b.michelangelos_chapel"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 400
+upkeep		= 0
+sabotage	= 0
+sound		= "w_michelangelos_chapel"
+sound_alt	= "w_generic"
+helptext	= _("\
+Counts as having a Cathedral in each of your cities.  This makes 3\
+ unhappy citizens content in each city; however, it does not affect\
+ citizens made unhappy by military activity.  The discovery of Theology\
+ increases the effect of a Cathedral, making an additional unhappy\
+ citizen content.  The discovery of Communism lessens the effect of\
+ a Cathedral, reducing by one the number of unhappy citizens made\
+ content.\
+")
