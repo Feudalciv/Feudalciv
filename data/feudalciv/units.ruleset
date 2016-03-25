@@ -414,7 +414,7 @@ Upkeep for Settlers is in food as well as production, and a Settler\
 name          = _("?unit:Workers")
 class         = "Land"
 tech_req      = "Pottery"
-obsolete_by   = "Engineers"
+obsolete_by   = "None"
 graphic       = "u.worker"
 graphic_alt   = "u.engineers" ; for compatibility
 sound_move    = "m_worker"
@@ -475,61 +475,6 @@ Workers must be on board a ship to build buoys.\
 "), _("\
 See the help on Terrain and Terrain Alterations for the effects of \
 these actions.\
-")
-
-[unit_engineers]
-name          = _("Engineers")
-class         = "Land"
-tech_req      = "Explosives"
-obsolete_by   = "None"
-graphic       = "u.engineers"
-graphic_alt   = "-"
-sound_move    = "m_engineers"
-sound_move_alt = "m_generic"
-sound_fight   = "f_engineers"
-sound_fight_alt = "f_generic"
-build_cost    = 40
-pop_cost      = 0
-attack        = 0
-defense       = 2
-hitpoints     = 20
-firepower     = 1
-move_rate     = 2
-vision_radius_sq = 2
-transport_cap = 0
-fuel          = 0
-uk_happy      = 0
-uk_shield     = 1
-uk_food       = 0
-uk_gold       = 0
-flags         = "Settlers", "NonMil", "Transform", "Airbase"
-veteran_names             =
-; /* TRANS: Worker veteran level */
-  _("?worker_level:apprentice"),
-; /* TRANS: Worker veteran level */
-  _("?worker_level:journeyman"),
-; /* TRANS: Worker veteran level */
-  _("?worker_level:master")
-veteran_raise_chance      = 0, 0, 0
-veteran_work_raise_chance = 2, 1, 0
-veteran_power_fact        = 100, 125, 150
-veteran_move_bonus        = 0, 0, 0
-roles         = "Settlers"
-helptext      = _("\
-Engineers are similar to Workers, but they work twice as fast and\
- move twice as fast. Engineers may also perform major terrain\
- transformations which are beyond the capabilities of Workers and\
- Settlers, such as converting Tundra into Desert, or even Ocean into\
- Swamp in some circumstances (when on board an ocean-going vessel,\
- on a tile surrounded by sufficient existing land). See the\
- Terrain Alterations section for more details.\
-"), _("\
-TIP 1:  Upgrade Workers to Engineers when possible, as Engineers\
- require the same resources as ordinary Workers.\
-"), _("\
-TIP 2:  If you manage to build Leonardo's Workshop, research\
- Explosives before the Workshop becomes obsolete.  This way,\
- your Workers units will be upgraded for free.\
 ")
 
 [unit_warriors]
@@ -599,7 +544,7 @@ The Phalanx is armored infantry, suitable for defending your cities.\
 name          = _("Archers")
 class         = "Land"
 tech_req      = "Warrior Code"
-obsolete_by   = "Musketeers"
+obsolete_by   = "None"
 graphic       = "u.archers"
 graphic_alt   = "-"
 sound_move    = "m_archers"
@@ -631,7 +576,7 @@ Archers fight with bows and arrows and have a good offensive\
 name          = _("Legion")
 class         = "Land"
 tech_req      = "Iron Working"
-obsolete_by   = "Musketeers"
+obsolete_by   = "None"
 graphic       = "u.legion"
 graphic_alt   = "-"
 sound_move    = "m_legion"
@@ -663,7 +608,7 @@ Legions are heavily armed and well disciplined infantry\
 name          = _("Pikemen")
 class         = "Land"
 tech_req      = "Feudalism"
-obsolete_by   = "Musketeers"
+obsolete_by   = "None"
 graphic       = "u.pikemen"
 graphic_alt   = "-"
 sound_move    = "m_pikemen"
@@ -765,7 +710,7 @@ Chariots are horse-pulled war wagons, stronger\
 name          = _("Knights")
 class         = "Land"
 tech_req      = "Chivalry"
-obsolete_by   = "Dragoons"
+obsolete_by   = "None"
 graphic       = "u.knights"
 graphic_alt   = "-"
 sound_move    = "m_knights"
@@ -797,7 +742,7 @@ Knights are mounted and heavily armored warriors.\
 name          = _("Cavalry")
 class         = "Land"
 tech_req      = "Tactics"
-obsolete_by   = "Armor"
+obsolete_by   = "None"
 graphic       = "u.cavalry"
 graphic_alt   = "-"
 sound_move    = "m_cavalry"
@@ -828,7 +773,7 @@ Cavalry are mounted and highly trained soldiers.\
 name          = _("Catapult")
 class         = "Big Land"
 tech_req      = "Mathematics"
-obsolete_by   = "Cannon"
+obsolete_by   = "None"
 graphic       = "u.catapult"
 graphic_alt   = "-"
 sound_move    = "m_catapult"
@@ -862,7 +807,7 @@ Catapults are large rock-throwing machines of war.\
 name          = _("Trireme")
 class         = "Trireme"
 tech_req      = "Map Making"
-obsolete_by   = "Caravel"
+obsolete_by   = "None"
 graphic       = "u.trireme"
 graphic_alt   = "-"
 sound_move    = "m_trireme"
@@ -1160,7 +1105,7 @@ TIP:  You can stockpile a stack of Caravans in advance and bring\
 name          = _("Explorer")
 class         = "Land"
 tech_req      = "Seafaring"
-obsolete_by   = "Partisan"
+obsolete_by   = "None"
 graphic       = "u.explorer"
 graphic_alt   = "-"
 sound_move    = "m_explorer"

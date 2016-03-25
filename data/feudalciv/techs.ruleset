@@ -71,30 +71,12 @@ options="+Freeciv-2.5-ruleset"
 ;
 ; */ <-- avoid gettext warnings
 
-[advance_advanced_flight]
-name     = _("Advanced Flight")
-req1     = "Radio"
-req2     = "Machine Tools"
-root_req = "Radio"
-flags    = ""
-graphic     = "a.advanced_flight"
-graphic_alt = "-"
-
 [advance_alphabet]
 name     = _("Alphabet")
 req1     = "None"
 req2     = "None"
 flags    = ""
 graphic     = "a.alphabet"
-graphic_alt = "-"
-
-[advance_amphibious_warfare]
-name     = _("Amphibious Warfare")
-req1     = "Navigation"
-req2     = "Tactics"
-root_req = "Tactics"
-flags    = ""
-graphic     = "a.amphibious_warfare"
 graphic_alt = "-"
 
 [advance_astronomy]
@@ -104,24 +86,6 @@ req2     = "Mathematics"
 root_req = "Mathematics"
 flags    = ""
 graphic     = "a.astronomy"
-graphic_alt = "-"
-
-[advance_atomic_theory]
-name     = _("Atomic Theory")
-req1     = "Theory of Gravity"
-req2     = "Physics"
-root_req = "Theory of Gravity"
-flags    = ""
-graphic     = "a.atomic_theory"
-graphic_alt = "-"
-
-[advance_automobile]
-name     = _("Automobile")
-req1     = "Combustion"
-req2     = "Steel"
-root_req = "Combustion"
-flags    = "Population_Pollution_Inc"
-graphic     = "a.automobile"
 graphic_alt = "-"
 
 [advance_banking]
@@ -159,15 +123,6 @@ flags    = ""
 graphic     = "a.ceremonial_burial"
 graphic_alt = "-"
 
-[advance_chemistry]
-name     = _("Chemistry")
-req1     = "University"
-req2     = "Medicine"
-root_req = "Medicine"
-flags    = ""
-graphic     = "a.chemistry"
-graphic_alt = "-"
-
 [advance_chivalry]
 name     = _("Chivalry")
 req1     = "Feudalism"
@@ -184,52 +139,6 @@ req2     = "None"
 root_req = "Alphabet"
 flags    = ""
 graphic     = "a.code_of_laws"
-graphic_alt = "-"
-
-[advance_combined_arms]
-name     = _("Combined Arms")
-req1     = "Mobile Warfare"
-req2     = "Advanced Flight"
-root_req = "Advanced Flight"
-flags    = ""
-graphic     = "a.combined_arms"
-graphic_alt = "-"
-
-[advance_combustion]
-name     = _("Combustion")
-req1     = "Refining"
-req2     = "Explosives"
-root_req = "Refining"
-flags    = ""
-graphic     = "a.combustion"
-graphic_alt = "-"
-
-[advance_communism]
-name     = _("Communism")
-req1     = "Philosophy"
-req2     = "Industrialization"
-root_req = "Industrialization"
-flags    = ""
-graphic     = "a.communism"
-graphic_alt = "-"
-helptext = _("Reduces the effect of Cathedrals.")
-
-[advance_computers]
-name     = _("Computers")
-req1     = "Mass Production"
-req2     = "Miniaturization"
-root_req = "Miniaturization"
-flags    = ""
-graphic     = "a.computers"
-graphic_alt = "-"
-
-[advance_conscription]
-name     = _("Conscription")
-req1     = "Democracy"
-req2     = "Metallurgy"
-root_req = "Metallurgy"
-flags    = ""
-graphic     = "a.conscription"
 graphic_alt = "-"
 
 [advance_construction]
@@ -269,25 +178,6 @@ flags    = ""
 graphic     = "a.economics"
 graphic_alt = "-"
 
-[advance_electricity]
-name     = _("Electricity")
-req1     = "Metallurgy"
-req2     = "Magnetism"
-root_req = "Metallurgy"
-flags    = ""
-graphic     = "a.electricity"
-graphic_alt = "-"
-helptext = _("Improves the effect of Colosseums.")
-
-[advance_electronics]
-name     = _("Electronics")
-req1     = "The Corporation"
-req2     = "Electricity"
-root_req = "The Corporation"
-flags    = ""
-graphic     = "a.electronics"
-graphic_alt = "-"
-
 [advance_engineering]
 name     = _("Engineering")
 req1     = "The Wheel"
@@ -295,33 +185,6 @@ req2     = "Construction"
 root_req = "Construction"
 flags    = ""
 graphic     = "a.engineering"
-graphic_alt = "-"
-
-[advance_environmentalism]
-name     = _("Environmentalism")
-req1     = "Recycling"
-req2     = "Space Flight"
-root_req = "Space Flight"
-flags    = ""
-graphic     = "a.environmentalism"
-graphic_alt = "-"
-
-[advance_espionage]
-name     = _("Espionage")
-req1     = "Communism"
-req2     = "Democracy"
-root_req = "Communism"
-flags    = ""
-graphic     = "a.espionage"
-graphic_alt = "-"
-
-[advance_explosives]
-name     = _("Explosives")
-req1     = "Gunpowder"
-req2     = "Chemistry"
-root_req = "Chemistry"
-flags    = ""
-graphic     = "a.explosives"
 graphic_alt = "-"
 
 [advance_feudalism]
@@ -333,67 +196,12 @@ flags    = ""
 graphic     = "a.feudalism"
 graphic_alt = "-"
 
-[advance_flight]
-name     = _("Flight")
-req1     = "Combustion"
-req2     = "Theory of Gravity"
-root_req = "Combustion"
-flags    = "Build_Airborne"
-graphic     = "a.flight"
-graphic_alt = "-"
-helptext = _("Decreases one-time revenue from new trade routes.")
-
-[advance_fusion_power]
-name     = _("Fusion Power")
-req1     = "Nuclear Power"
-req2     = "Superconductors"
-root_req = "Superconductors"
-flags    = ""
-graphic     = "a.fusion_power"
-graphic_alt = "-"
-
-[advance_genetic_engineering]
-name     = _("Genetic Engineering")
-req1     = "Medicine"
-req2     = "The Corporation"
-root_req = "The Corporation"
-flags    = ""
-graphic     = "a.genetic_engineering"
-graphic_alt = "-"
-
-[advance_guerilla_warfare]
-name     = _("Guerilla Warfare")
-req1     = "Communism"
-req2     = "Tactics"
-root_req = "Communism"
-flags    = ""
-graphic     = "a.guerilla_warfare"
-graphic_alt = "-"
-
-[advance_gunpowder]
-name     = _("Gunpowder")
-req1     = "Invention"
-req2     = "Iron Working"
-root_req = "Invention"
-flags    = ""
-graphic     = "a.gunpowder"
-graphic_alt = "-"
-
 [advance_horseback_riding]
 name     = _("Horseback Riding")
 req1     = "None"
 req2     = "None"
 flags    = ""
 graphic     = "a.horseback_riding"
-graphic_alt = "-"
-
-[advance_industrialization]
-name     = _("Industrialization")
-req1     = "Railroad"
-req2     = "Banking"
-root_req = "Railroad"
-flags    = "Population_Pollution_Inc"
-graphic     = "a.industrialization"
 graphic_alt = "-"
 
 [advance_invention]
@@ -415,33 +223,6 @@ flags    = ""
 graphic     = "a.iron_working"
 graphic_alt = "-"
 
-[advance_labor_union]
-name     = _("Labor Union")
-req1     = "Mass Production"
-req2     = "Guerilla Warfare"
-root_req = "Mass Production"
-flags    = ""
-graphic     = "a.labor_union"
-graphic_alt = "-"
-
-[advance_laser]
-name     = _("Laser")
-req1     = "Mass Production"
-req2     = "Nuclear Power"
-root_req = "Nuclear Power"
-flags    = ""
-graphic     = "a.laser"
-graphic_alt = "-"
-
-[advance_leadership]
-name     = _("Leadership")
-req1     = "Chivalry"
-req2     = "Gunpowder"
-root_req = "Gunpowder"
-flags    = ""
-graphic     = "a.leadership"
-graphic_alt = "-"
-
 [advance_literacy]
 name     = _("Literacy")
 req1     = "Writing"
@@ -449,15 +230,6 @@ req2     = "Code of Laws"
 root_req = "Writing"
 flags    = ""
 graphic     = "a.literacy"
-graphic_alt = "-"
-
-[advance_machine_tools]
-name     = _("Machine Tools")
-req1     = "Steel"
-req2     = "Tactics"
-root_req = "Steel"
-flags    = ""
-graphic     = "a.machine_tools"
 graphic_alt = "-"
 
 [advance_magnetism]
@@ -486,15 +258,6 @@ flags    = ""
 graphic     = "a.masonry"
 graphic_alt = "-"
 
-[advance_mass_production]
-name     = _("Mass Production")
-req1     = "Automobile"
-req2     = "The Corporation"
-root_req = "Automobile"
-flags    = "Population_Pollution_Inc"
-graphic     = "a.mass_production"
-graphic_alt = "-"
-
 [advance_mathematics]
 name     = _("Mathematics")
 req1     = "Alphabet"
@@ -511,33 +274,6 @@ req2     = "Trade"
 root_req = "Philosophy"
 flags    = ""
 graphic     = "a.medicine"
-graphic_alt = "-"
-
-[advance_metallurgy]
-name     = _("Metallurgy")
-req1     = "Gunpowder"
-req2     = "University"
-root_req = "Gunpowder"
-flags    = ""
-graphic     = "a.metallurgy"
-graphic_alt = "-"
-
-[advance_miniaturization]
-name     = _("Miniaturization")
-req1     = "Machine Tools"
-req2     = "Electronics"
-root_req = "Machine Tools"
-flags    = ""
-graphic     = "a.miniaturization"
-graphic_alt = "-"
-
-[advance_mobile_warfare]
-name     = _("Mobile Warfare")
-req1     = "Automobile"
-req2     = "Tactics"
-root_req = "Automobile"
-flags    = ""
-graphic     = "a.mobile_warfare"
 graphic_alt = "-"
 
 [advance_monarchy]
@@ -577,25 +313,6 @@ flags    = ""
 graphic     = "a.navigation"
 graphic_alt = "-"
 
-[advance_nuclear_fission]
-name     = _("Nuclear Fission")
-req1     = "Mass Production"
-req2     = "Atomic Theory"
-root_req = "Mass Production"
-flags    = ""
-graphic     = "a.nuclear_fission"
-graphic_alt = "-"
-
-[advance_nuclear_power]
-name     = _("Nuclear Power")
-req1     = "Nuclear Fission"
-req2     = "Electronics"
-root_req = "Nuclear Fission"
-flags    = ""
-graphic     = "a.nuclear_power"
-graphic_alt = "-"
-helptext = _("Gives sea units one extra move.")
-
 [advance_philosophy]
 name     = _("Philosophy")
 req1     = "Mysticism"
@@ -616,15 +333,6 @@ flags    = ""
 graphic     = "a.physics"
 graphic_alt = "-"
 
-[advance_plastics]
-name     = _("Plastics")
-req1     = "Refining"
-req2     = "Space Flight"
-root_req = "Space Flight"
-flags    = "Population_Pollution_Inc"
-graphic     = "a.plastics"
-graphic_alt = "-"
-
 [advance_polytheism]
 name     = _("Polytheism")
 req1     = "Horseback Riding"
@@ -642,84 +350,6 @@ flags    = ""
 graphic     = "a.pottery"
 graphic_alt = "-"
 
-[advance_radio]
-name     = _("Radio")
-req1     = "Flight"
-req2     = "Electricity"
-root_req = "Flight"
-flags    = ""
-graphic     = "a.radio"
-graphic_alt = "-"
-helptext = _("Allows Workers and Engineers to build airbases and buoys.")
-
-[advance_railroad]
-name     = _("?tech:Railroad")
-req1     = "Steam Engine"
-req2     = "Bridge Building"
-root_req = "Steam Engine"
-flags    = ""
-graphic     = "a.railroad"
-graphic_alt = "-"
-helptext = _("\
-Allows Settlers, Workers and Engineers to upgrade roads to railroads.\
-"), _("\
-Decreases one-time revenue from new trade routes.\
-")
-
-[advance_recycling]
-name     = _("Recycling")
-req1     = "Mass Production"
-req2     = "Democracy"
-root_req = "Mass Production"
-flags    = ""
-graphic     = "a.recycling"
-graphic_alt = "-"
-
-[advance_refining]
-name     = _("Refining")
-req1     = "Chemistry"
-req2     = "The Corporation"
-root_req = "The Corporation"
-flags    = ""
-graphic     = "a.refining"
-graphic_alt = "-"
-
-[advance_refrigeration]
-name     = _("Refrigeration")
-req1     = "Sanitation"
-req2     = "Electricity"
-root_req = "Electricity"
-flags    = "Farmland"
-graphic     = "a.refrigeration"
-graphic_alt = "-"
-
-[advance_robotics]
-name     = _("Robotics")
-req1     = "Mobile Warfare"
-req2     = "Computers"
-root_req = "Computers"
-flags    = ""
-graphic     = "a.robotics"
-graphic_alt = "-"
-
-[advance_rocketry]
-name     = _("Rocketry")
-req1     = "Advanced Flight"
-req2     = "Electronics"
-root_req = "Advanced Flight"
-flags    = ""
-graphic     = "a.rocketry"
-graphic_alt = "-"
-
-[advance_sanitation]
-name     = _("Sanitation")
-req1     = "Engineering"
-req2     = "Medicine"
-root_req = "Medicine"
-flags    = ""
-graphic     = "a.sanitation"
-graphic_alt = "-"
-
 [advance_seafaring]
 name     = _("Seafaring")
 req1     = "Pottery"
@@ -727,72 +357,6 @@ req2     = "Map Making"
 root_req = "Map Making"
 flags    = ""
 graphic     = "a.seafaring"
-graphic_alt = "-"
-
-[advance_space_flight]
-name     = _("Space Flight")
-req1     = "Computers"
-req2     = "Rocketry"
-root_req = "Rocketry"
-flags    = ""
-graphic     = "a.space_flight"
-graphic_alt = "-"
-
-[advance_stealth]
-name     = _("Stealth")
-req1     = "Superconductors"
-req2     = "Advanced Flight"
-root_req = "Superconductors"
-flags    = ""
-graphic     = "a.stealth"
-graphic_alt = "-"
-
-[advance_steam_engine]
-name     = _("Steam Engine")
-req1     = "Physics"
-req2     = "Invention"
-root_req = "Physics"
-flags    = ""
-graphic     = "a.steam_engine"
-graphic_alt = "-"
-
-[advance_steel]
-name     = _("Steel")
-req1     = "Electricity"
-req2     = "Industrialization"
-root_req = "Industrialization"
-flags    = ""
-graphic     = "a.steel"
-graphic_alt = "-"
-
-[advance_superconductors]
-name     = _("Superconductors")
-req1     = "Nuclear Power"
-req2     = "Laser"
-root_req = "Laser"
-flags    = ""
-graphic     = "a.superconductors"
-graphic_alt = "-"
-helptext = _("\
-Allows Settlers, Workers and Engineers to upgrade railroads with maglev.\
-")
-
-[advance_tactics]
-name     = _("Tactics")
-req1     = "Conscription"
-req2     = "Leadership"
-root_req = "Conscription"
-flags    = ""
-graphic     = "a.tactics"
-graphic_alt = "-"
-
-[advance_the_corporation]
-name     = _("The Corporation")
-req1     = "Economics"
-req2     = "Industrialization"
-root_req = "Industrialization"
-flags    = ""
-graphic     = "a.the_corporation"
 graphic_alt = "-"
 
 [advance_the_republic]
