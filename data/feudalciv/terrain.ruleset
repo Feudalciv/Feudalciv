@@ -1,4 +1,4 @@
-; This is the feudalciv ruleset. See doc/README.ruleset_feudalciv
+; This is the experimental ruleset. See doc/README.ruleset_experimental
 ; for a detailed description.
 
 ; Modifying this file:
@@ -13,7 +13,7 @@
 ; than minor changes.
 
 [datafile]
-description="terrain data for Feudalciv"
+description="Experimental terrain data for Freeciv"
 options="+Freeciv-2.5-ruleset"
 
 [control]
@@ -247,7 +247,7 @@ warmer_wetter_result = "no"
 warmer_drier_result  = "terrain_swamp"
 cooler_wetter_result = "terrain_glacier"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Sea", "Trireme"
+native_to            = "Sea", "Air", "Missile", "Helicopter", "Trireme"
 flags                = "NoCities", "NoPollution", "FreshWater"
 property_ocean_depth = 0
 color.r              = 46
@@ -286,7 +286,7 @@ warmer_wetter_result = "no"
 warmer_drier_result  = "terrain_swamp"
 cooler_wetter_result = "terrain_glacier"
 cooler_drier_result  = "terrain_glacier"
-native_to            = "Sea", "Trireme"
+native_to            = "Sea", "Air", "Missile", "Helicopter", "Trireme"
 flags                = "NoCities", "NoPollution", "UnsafeCoast"
 property_ocean_depth = 32
 color.r              = 0
@@ -326,7 +326,7 @@ warmer_wetter_result = "no"
 warmer_drier_result  = "no"
 cooler_wetter_result = "no"
 cooler_drier_result  = "no"
-native_to            = "Sea"
+native_to            = "Sea", "Air", "Missile", "Helicopter"
 flags                = "NoCities", "NoPollution", "UnsafeCoast"
 property_ocean_depth = 87
 color.r              = 0
@@ -366,7 +366,7 @@ warmer_wetter_result = "terrain_tundra"
 warmer_drier_result  = "terrain_tundra"
 cooler_wetter_result = "no"
 cooler_drier_result  = "no"
-native_to            = "Land", "Big Land"
+native_to            = "Land", "Big Land", "Air", "Missile", "Helicopter"
 flags                = "NoBarbs", "NoCities", "CanHaveRiver"
 property_frozen      = 100
 color.r              = 232
@@ -407,7 +407,7 @@ warmer_wetter_result = "terrain_grassland"
 warmer_drier_result  = "no"
 cooler_wetter_result = "terrain_plains"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Land", "Big Land"
+native_to            = "Land", "Big Land", "Air", "Missile", "Helicopter"
 flags                = "CanHaveRiver"
 property_dry         = 100
 property_tropical    = 50
@@ -449,7 +449,7 @@ warmer_wetter_result = "terrain_jungle"
 warmer_drier_result  = "terrain_plains"
 cooler_wetter_result = "terrain_swamp"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Land"
+native_to            = "Land", "Air", "Missile", "Helicopter"
 flags                = "Starter", "CanHaveRiver"
 property_cold        = 20
 property_wet         = 20
@@ -492,7 +492,7 @@ warmer_wetter_result = "terrain_lake"
 warmer_drier_result  = "terrain_desert"
 cooler_wetter_result = "terrain_glacier"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Land", "Big Land"
+native_to            = "Land", "Big Land", "Air", "Missile", "Helicopter"
 flags                = "Starter", "CanHaveRiver"
 property_green       = 50
 property_temperate   = 50
@@ -532,7 +532,7 @@ warmer_wetter_result = "no"
 warmer_drier_result  = "no"
 cooler_wetter_result = "no"
 cooler_drier_result  = "no"
-native_to            = "Land"
+native_to            = "Land", "Air", "Missile", "Helicopter"
 flags                = "Starter", "CanHaveRiver"
 property_green       = 50
 property_mountainous = 30
@@ -573,7 +573,7 @@ warmer_wetter_result = "terrain_lake"
 warmer_drier_result  = "terrain_desert"
 cooler_wetter_result = "terrain_swamp"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Land"
+native_to            = "Land", "Air", "Missile", "Helicopter"
 flags                = "CanHaveRiver"
 property_foliage     = 50
 property_tropical    = 50
@@ -615,7 +615,7 @@ warmer_wetter_result = "no"
 warmer_drier_result  = "no"
 cooler_wetter_result = "no"
 cooler_drier_result  = "no"
-native_to            = "Land"
+native_to            = "Land", "Air", "Missile", "Helicopter"
 flags                = "CanHaveRiver"
 property_mountainous = 70
 color.r              = 129
@@ -655,7 +655,7 @@ warmer_wetter_result = "terrain_lake"
 warmer_drier_result  = "terrain_desert"
 cooler_wetter_result = "terrain_glacier"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Land", "Big Land"
+native_to            = "Land", "Big Land", "Air", "Missile", "Helicopter"
 flags                = "Starter", "CanHaveRiver"
 property_green       = 50
 property_temperate   = 50
@@ -696,7 +696,7 @@ warmer_wetter_result = "terrain_lake"
 warmer_drier_result  = "terrain_desert"
 cooler_wetter_result = "terrain_glacier"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Land"
+native_to            = "Land", "Air", "Missile", "Helicopter"
 flags                = "CanHaveRiver"
 property_wet         = 100
 property_tropical    = 10
@@ -739,7 +739,7 @@ warmer_wetter_result = "terrain_lake"
 warmer_drier_result  = "terrain_desert"
 cooler_wetter_result = "terrain_glacier"
 cooler_drier_result  = "no"
-native_to            = "Land", "Big Land"
+native_to            = "Land", "Big Land", "Air", "Missile", "Helicopter"
 flags                = "Starter", "NoBarbs", "CanHaveRiver"
 property_cold        = 50
 color.r              = 188
@@ -1023,6 +1023,49 @@ Fortresses improve defense for land units. Among other effects, a land \
 unit remaining in a fortress for a whole turn without moving recovers \
 a quarter of its hit points. With Invention, fortresses gain watchtowers \
 from which land units can see further afield.\
+")
+
+[base_airbase]
+name           = _("Airbase")
+graphic        = "base.airbase"
+graphic_alt    = "-"
+activity_gfx   = "unit.airbase"
+act_gfx_alt    = "-"
+reqs           =
+    { "type", "name", "range", "negated"
+      "Tech", "Radio", "Player", FALSE
+      "TerrainClass", "Land", "Local", FALSE
+      "UnitFlag", "Airbase", "Local", FALSE
+      "CityTile", "Center", "Local", TRUE
+    }
+gui_type       = "Airbase"
+build_time     = 3
+native_to      = "Air", "Helicopter", "Missile"
+flags          = "NoStackDeath", "ParadropFrom"
+helptext       = _("\
+Airbases allow your air units to land and refuel. Air units in an \
+airbase may be attacked by land units.\
+")
+
+[base_buoy]
+name           = _("Buoy")
+graphic        = "base.buoy"
+graphic_alt    = "base.fortress"
+activity_gfx   = "unit.buoy"
+act_gfx_alt    = "unit.fortress"
+reqs           =
+    { "type", "name", "range", "negated"
+      "Tech", "Radio", "Player", FALSE
+      "TerrainClass", "Oceanic", "Local", FALSE
+      "UnitFlag", "Airbase", "Local", FALSE
+      "CityTile", "Center", "Local", TRUE
+    }
+gui_type       = "Fortress"
+build_time     = 3
+border_sq      = 0
+vision_main_sq = 5
+helptext       = _("\
+Buoys may be built in the ocean (by units on a sea-going vessel).\
 ")
 
 [base_ruins]
