@@ -159,8 +159,8 @@ static void signal_destroy(struct signal *psignal)
 /*****************************************************************************
   Invoke all the callback functions attached to a given signal.
 *****************************************************************************/
-void luascript_signal_emit_valist(struct fc_lua *fcl, const char *signal_name,
-                                  int nargs, va_list args)
+void luascript_signal_emit_array(struct fc_lua *fcl, const char *signal_name,
+                                 int nargs, int[] args)
 {
   struct signal *psignal;
 
@@ -189,6 +189,19 @@ void luascript_signal_emit_valist(struct fc_lua *fcl, const char *signal_name,
     luascript_log(fcl, LOG_ERROR, "Signal \"%s\" does not exist, so cannot "
                                   "be invoked.", signal_name);
   }
+}
+
+/*****************************************************************************
+  Invoke all the callback functions attached to a given signal.
+*****************************************************************************/
+void luascript_signal_emit_valist(struct fc_lua *fcl, const char *signal_name,
+                                  int nargs, va_list args)
+{
+  int i, arg_list[nargs];
+  for (i = 0; i < nargs; i++) {
+    arg_list[i] = va_arg(args, int);
+  }
+  luascript_signal_emit_array(fcl, signal_name, nargs, arg_list);
 }
 
 /*****************************************************************************

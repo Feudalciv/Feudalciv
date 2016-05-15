@@ -129,7 +129,7 @@ void trigger_signal_create(struct trigger *ptrigger)
 {
   int nargs = ptrigger->reqs.size;
   int args[nargs];
-  /** TODO: Fill arg types here **/
+  get_trigger_signal_arg_list(ptrigger, args);
   script_server_trigger_signal_create(ptrigger->signal, nargs, args);
 }
 
@@ -176,7 +176,7 @@ void trigger_cache_free(void)
   trigger_type gives the trigger type to be considered
 
 **************************************************************************/
-bool check_trigger(struct trigger *trigger,
+bool check_trigger(struct trigger *ptrigger,
                              const struct player *target_player,
                              const struct player *other_player,
                              const struct city *target_city,
@@ -188,17 +188,18 @@ bool check_trigger(struct trigger *trigger,
                              const struct specialist *target_specialist,
                              const struct action *target_action)
 {
-  /* Loop over all triggers */
-  trigger_list_iterate(get_triggers(), ptrigger) {
-    /* For each trigger, see if it is active. */
-    if (are_reqs_active(target_player, other_player, target_city,
-                        target_building, target_tile,
-                        target_unit, target_unittype,
-                        target_output, target_specialist, target_action,
-			&ptrigger->reqs, RPT_CERTAIN)) {
-        return TRUE;
-    }
-  } trigger_list_iterate_end;
+  /* For each trigger, see if it is active. */
+  if (are_reqs_active(target_player, other_player, target_city,
+                      target_building, target_tile,
+                      target_unit, target_unittype,
+                      target_output, target_specialist, target_action,
+      &trigger->reqs, RPT_CERTAIN)) {
+      int nargs = ptrigger->reqs.size;
+      int args[nargs];
+      get_trigger_signal_arg_list(ptrigger, args);
+      script_server_trigger_signal_emit(ptrigger->signal, nargs, args);
+      return TRUE;
+  }
 
   return FALSE;
 }
@@ -263,4 +264,15 @@ bool iterate_trigger_cache(itc_cb cb, void *data)
   } trigger_list_iterate_end;
 
   return TRUE;
+}
+
+/**************************************************************************
+
+
+**************************************************************************/
+void get_trigger_signal_arg_list(const struct trigger * ptrigger, int[] args)
+{
+  requirement_vector_iterate(&old->reqs, preq) {
+
+  } requirement_vector_iterate_end;
 }

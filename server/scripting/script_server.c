@@ -377,6 +377,14 @@ void script_server_trigger_signal_create(const char *signal_name,
 }
 
 /*****************************************************************************
+  Invoke all the callback functions attached to a given trigger.
+*****************************************************************************/
+void script_server_trigger_emit(const char *signal_name, int nargs, int args[])
+{
+  luascript_signal_emit_array(fcl, signal_name, nargs, args);
+}
+
+/*****************************************************************************
   Add server callback functions; these must be defined in the lua script
   '<rulesetdir>/script.lua':
 
