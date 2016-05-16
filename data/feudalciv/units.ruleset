@@ -738,37 +738,6 @@ helptext      = _("\
 Knights are mounted and heavily armored warriors.\
 ")
 
-[unit_cavalry]
-name          = _("Cavalry")
-class         = "Land"
-tech_req      = "Tactics"
-obsolete_by   = "None"
-graphic       = "u.cavalry"
-graphic_alt   = "-"
-sound_move    = "m_cavalry"
-sound_move_alt = "m_generic"
-sound_fight   = "f_cavalry"
-sound_fight_alt = "f_generic"
-build_cost    = 60
-pop_cost      = 0
-attack        = 8
-defense       = 3
-hitpoints     = 20
-firepower     = 1
-move_rate     = 2
-vision_radius_sq = 2
-transport_cap = 0
-fuel          = 0
-uk_happy      = 1
-uk_shield     = 1
-uk_food       = 0
-uk_gold       = 0
-flags         = "Shield2Gold"
-roles         = "AttackFast", "Hunter"
-helptext      = _("\
-Cavalry are mounted and highly trained soldiers.\
-")
-
 [unit_catapult]
 name          = _("Catapult")
 class         = "Big Land"
@@ -875,7 +844,7 @@ The Holk is a ship more suited to deep sea travel and can enter\
 name          = _("Diplomat")
 class         = "Land"
 tech_req      = "Writing"
-obsolete_by   = "Spy"
+obsolete_by   = "None"
 graphic       = "u.diplomat"
 graphic_alt   = "-"
 sound_move    = "m_diplomat"
@@ -978,75 +947,6 @@ In some game strategies, hordes of Diplomats can be used to wreak\
 "), _("\
 Diplomats built under a Communist government will start at the first\
  veteran level (secretary).\
-")
-
-[unit_spy]
-name          = _("Spy")
-class         = "Land"
-tech_req      = "Espionage"
-obsolete_by   = "None"
-graphic       = "u.spy"
-graphic_alt   = "-"
-sound_move    = "m_spy"
-sound_move_alt = "m_generic"
-sound_fight   = "f_spy"
-sound_fight_alt = "f_generic"
-build_cost    = 30
-pop_cost      = 0
-attack        = 0
-defense       = 0
-hitpoints     = 10
-firepower     = 1
-move_rate     = 3
-vision_radius_sq = 8
-transport_cap = 0
-fuel          = 0
-uk_happy      = 0
-uk_shield     = 0
-uk_food       = 0
-uk_gold       = 0
-flags         = "Diplomat", "IgZOC", "NonMil", "Spy"
-veteran_names =
-; /* TRANS: Spy veteran level */
-  _("?spy_level:informant"),
-; /* TRANS: Spy veteran level */
-  _("?spy_level:handler"),
-; /* TRANS: Spy veteran level */
-  _("?spy_level:agent"),
-; /* TRANS: Spy veteran level */
-  _("?spy_level:spymaster")
-veteran_raise_chance = 50, 33, 20, 0
-veteran_work_raise_chance = 0, 0, 0, 0
-veteran_power_fact = 100, 105, 110, 115
-veteran_move_bonus = 0, 0, 0, 0
-roles         = "Diplomat"
-helptext      = _("\
-A Spy is more skilled in the arts of espionage than her Diplomat predecessor.\
-"), _("\
-She can perform all the functions of the Diplomat; refer to the Diplomat\
- entry for more details. Unlike a Diplomat, a Spy may also survive an\
- operation in a foreign city and become more experienced as a result.\
- Spies are also more effective than Diplomats at defending cities\
- against foreign Diplomats and Spies.\
-"), _("\
-A Spy can also be used to:\n\
- - sabotage an enemy unit (reducing its hit points to half), if it is\
- alone on a tile and the players are at war;\n\
- - poison the water supply of an enemy city (reducing the population\
- by one and emptying the granary);\n\
- - steal specific technology (with a reduced chance of success);\n\
- - steal further technologies from a city which has already been\
- stolen from (although cities become more resistant each time they\
- are stolen from);\n\
- - sabotage predetermined city targets (with a reduced chance of\
- success).\
-"), _("\
-A Spy that survives the more aggressive actions (sabotage, theft,\
- inciting rebellion, and poisoning) escapes to the safety of the\
- nearest friendly city.\
-"), _("\
-Spies built under a Communist government will start at the first\
- veteran level (handler).\
 ")
 
 [unit_caravan]

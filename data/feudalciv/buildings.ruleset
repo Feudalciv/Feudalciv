@@ -115,7 +115,7 @@ reqs	=
     }
 graphic	= "b.barracks_i"
 graphic_alt	= "-"
-obsolete_by	= "Gunpowder"
+obsolete_by	= "None"
 replaced_by	= "Barracks II"
 build_cost	= 30
 upkeep		= 1
@@ -136,11 +136,10 @@ name		= _("Barracks II")
 genus		= "Improvement"
 reqs	=
     { "type", "name", "range"
-      "Tech", "Gunpowder", "Player"
     }
 graphic	= "b.barracks_ii"
 graphic_alt	= "b.barracks_i"
-obsolete_by	= "Mobile Warfare"
+obsolete_by	= "None"
 replaced_by	= "Barracks III"
 build_cost	= 30
 upkeep		= 1
@@ -161,7 +160,6 @@ name		= _("Barracks III")
 genus		= "Improvement"
 reqs	=
     { "type", "name", "range"
-      "Tech", "Mobile Warfare", "Player"
     }
 graphic	= "b.barracks_iii"
 graphic_alt	= "b.barracks_i"
@@ -180,13 +178,32 @@ With a Barracks, each new land unit built in a city will\
  restored.\
 ")
 
+[building_castle]
+name        = _("Castle")
+genus       = "Improvement"
+reqs    = 
+    { "type", "name", "range"
+    }
+graphic = "b.city_walls"
+graphic_alt = "-"
+obsolete_by = "None"
+build_cost  = 100
+upkeep      = 0
+sabotage    = 200
+sound       = "b_city_walls"
+sound_alt   = "b_generic"
+helptext	= _("\
+Castles make it easier to defend a city.  They triple the defense\
+ strength of units within the city against land units.\ 
+")
+
 [building_cathedral]
 name		= _("Cathedral")
 genus		= "Improvement"
 reqs	=
     { "type", "name", "range"
       "Tech", "Monotheism", "Player"
-      "Building", "Temple", "City"
+      "Building", "Church", "City"
     }
 graphic	= "b.cathedral"
 graphic_alt	= "-"
@@ -429,7 +446,6 @@ name		= _("Police Station")
 genus		= "Improvement"
 reqs	=
     { "type", "name", "range"
-      "Tech", "Communism", "Player"
     }
 graphic	= "b.police_station"
 graphic_alt	= "-"
@@ -454,7 +470,6 @@ name		= _("Sewer System")
 genus		= "Improvement"
 reqs	=
     { "type", "name", "range"
-      "Tech", "Sanitation", "Player"
       "Building", "Aqueduct", "City"
     }
 graphic	= "b.sewer_system"

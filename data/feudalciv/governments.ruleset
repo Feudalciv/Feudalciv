@@ -107,7 +107,6 @@ reqs = { "type", "name", "range"
        }
 graphic     = "gov.monarchy"
 graphic_alt = "-"
-ai_better   = "Communism"
 
 ruler_male_title = _("King %s")
 ruler_female_title = _("Queen %s")
@@ -118,30 +117,6 @@ Under Monarchy, a king or queen serves as a hereditary figurehead\
 "), _("\
 Monarchy suffers the same small amount of corruption that\
  the Republic does.\
-")
-
-;------------------------------------------------------------------------
-[government_communism]
-
-name        = _("Communism")
-reqs = { "type", "name", "range"
-         "tech", "Communism", "Player"
-       }
-graphic     = "gov.communism"
-graphic_alt = "-"
-
-ruler_male_title = _("Comrade %s")
-ruler_female_title = _("?female:Comrade %s")
-
-helptext = _("\
-A Communist government is based on the ideal that all people are\
- equal.  All goods are owned by the state, rather than by private\
- citizens.  Communism gives a balance between military and commercial\
- styles of government.\
-"), _("\
-Under Communism, corruption does not vary by distance from\
- the capital; all cities (including the capital) have a modest amount\
- of corruption.\
 ")
 
 ;------------------------------------------------------------------------

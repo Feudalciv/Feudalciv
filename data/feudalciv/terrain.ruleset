@@ -247,7 +247,7 @@ warmer_wetter_result = "no"
 warmer_drier_result  = "terrain_swamp"
 cooler_wetter_result = "terrain_glacier"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Sea", "Air", "Missile", "Helicopter", "Trireme"
+native_to            = "Sea", "Trireme"
 flags                = "NoCities", "NoPollution", "FreshWater"
 property_ocean_depth = 0
 color.r              = 46
@@ -286,7 +286,7 @@ warmer_wetter_result = "no"
 warmer_drier_result  = "terrain_swamp"
 cooler_wetter_result = "terrain_glacier"
 cooler_drier_result  = "terrain_glacier"
-native_to            = "Sea", "Air", "Missile", "Helicopter", "Trireme"
+native_to            = "Sea", "Trireme"
 flags                = "NoCities", "NoPollution", "UnsafeCoast"
 property_ocean_depth = 32
 color.r              = 0
@@ -326,7 +326,7 @@ warmer_wetter_result = "no"
 warmer_drier_result  = "no"
 cooler_wetter_result = "no"
 cooler_drier_result  = "no"
-native_to            = "Sea", "Air", "Missile", "Helicopter"
+native_to            = "Sea"
 flags                = "NoCities", "NoPollution", "UnsafeCoast"
 property_ocean_depth = 87
 color.r              = 0
@@ -366,7 +366,7 @@ warmer_wetter_result = "terrain_tundra"
 warmer_drier_result  = "terrain_tundra"
 cooler_wetter_result = "no"
 cooler_drier_result  = "no"
-native_to            = "Land", "Big Land", "Air", "Missile", "Helicopter"
+native_to            = "Land", "Big Land"
 flags                = "NoBarbs", "NoCities", "CanHaveRiver"
 property_frozen      = 100
 color.r              = 232
@@ -407,7 +407,7 @@ warmer_wetter_result = "terrain_grassland"
 warmer_drier_result  = "no"
 cooler_wetter_result = "terrain_plains"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Land", "Big Land", "Air", "Missile", "Helicopter"
+native_to            = "Land", "Big Land"
 flags                = "CanHaveRiver"
 property_dry         = 100
 property_tropical    = 50
@@ -449,7 +449,7 @@ warmer_wetter_result = "terrain_jungle"
 warmer_drier_result  = "terrain_plains"
 cooler_wetter_result = "terrain_swamp"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Land", "Air", "Missile", "Helicopter"
+native_to            = "Land"
 flags                = "Starter", "CanHaveRiver"
 property_cold        = 20
 property_wet         = 20
@@ -492,7 +492,7 @@ warmer_wetter_result = "terrain_lake"
 warmer_drier_result  = "terrain_desert"
 cooler_wetter_result = "terrain_glacier"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Land", "Big Land", "Air", "Missile", "Helicopter"
+native_to            = "Land", "Big Land"
 flags                = "Starter", "CanHaveRiver"
 property_green       = 50
 property_temperate   = 50
@@ -532,7 +532,7 @@ warmer_wetter_result = "no"
 warmer_drier_result  = "no"
 cooler_wetter_result = "no"
 cooler_drier_result  = "no"
-native_to            = "Land", "Air", "Missile", "Helicopter"
+native_to            = "Land"
 flags                = "Starter", "CanHaveRiver"
 property_green       = 50
 property_mountainous = 30
@@ -573,7 +573,7 @@ warmer_wetter_result = "terrain_lake"
 warmer_drier_result  = "terrain_desert"
 cooler_wetter_result = "terrain_swamp"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Land", "Air", "Missile", "Helicopter"
+native_to            = "Land"
 flags                = "CanHaveRiver"
 property_foliage     = 50
 property_tropical    = 50
@@ -615,7 +615,7 @@ warmer_wetter_result = "no"
 warmer_drier_result  = "no"
 cooler_wetter_result = "no"
 cooler_drier_result  = "no"
-native_to            = "Land", "Air", "Missile", "Helicopter"
+native_to            = "Land"
 flags                = "CanHaveRiver"
 property_mountainous = 70
 color.r              = 129
@@ -655,7 +655,7 @@ warmer_wetter_result = "terrain_lake"
 warmer_drier_result  = "terrain_desert"
 cooler_wetter_result = "terrain_glacier"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Land", "Big Land", "Air", "Missile", "Helicopter"
+native_to            = "Land", "Big Land"
 flags                = "Starter", "CanHaveRiver"
 property_green       = 50
 property_temperate   = 50
@@ -696,7 +696,7 @@ warmer_wetter_result = "terrain_lake"
 warmer_drier_result  = "terrain_desert"
 cooler_wetter_result = "terrain_glacier"
 cooler_drier_result  = "terrain_tundra"
-native_to            = "Land", "Air", "Missile", "Helicopter"
+native_to            = "Land"
 flags                = "CanHaveRiver"
 property_wet         = 100
 property_tropical    = 10
@@ -739,7 +739,7 @@ warmer_wetter_result = "terrain_lake"
 warmer_drier_result  = "terrain_desert"
 cooler_wetter_result = "terrain_glacier"
 cooler_drier_result  = "no"
-native_to            = "Land", "Big Land", "Air", "Missile", "Helicopter"
+native_to            = "Land", "Big Land"
 flags                = "Starter", "NoBarbs", "CanHaveRiver"
 property_cold        = 50
 color.r              = 188
@@ -1025,49 +1025,6 @@ a quarter of its hit points. With Invention, fortresses gain watchtowers \
 from which land units can see further afield.\
 ")
 
-[base_airbase]
-name           = _("Airbase")
-graphic        = "base.airbase"
-graphic_alt    = "-"
-activity_gfx   = "unit.airbase"
-act_gfx_alt    = "-"
-reqs           =
-    { "type", "name", "range", "negated"
-      "Tech", "Radio", "Player", FALSE
-      "TerrainClass", "Land", "Local", FALSE
-      "UnitFlag", "Airbase", "Local", FALSE
-      "CityTile", "Center", "Local", TRUE
-    }
-gui_type       = "Airbase"
-build_time     = 3
-native_to      = "Air", "Helicopter", "Missile"
-flags          = "NoStackDeath", "ParadropFrom"
-helptext       = _("\
-Airbases allow your air units to land and refuel. Air units in an \
-airbase may be attacked by land units.\
-")
-
-[base_buoy]
-name           = _("Buoy")
-graphic        = "base.buoy"
-graphic_alt    = "base.fortress"
-activity_gfx   = "unit.buoy"
-act_gfx_alt    = "unit.fortress"
-reqs           =
-    { "type", "name", "range", "negated"
-      "Tech", "Radio", "Player", FALSE
-      "TerrainClass", "Oceanic", "Local", FALSE
-      "UnitFlag", "Airbase", "Local", FALSE
-      "CityTile", "Center", "Local", TRUE
-    }
-gui_type       = "Fortress"
-build_time     = 3
-border_sq      = 0
-vision_main_sq = 5
-helptext       = _("\
-Buoys may be built in the ocean (by units on a sea-going vessel).\
-")
-
 [base_ruins]
 name           = _("Ruins")
 graphic        = "base.ruins"
@@ -1187,7 +1144,6 @@ shield_bonus   = 0
 trade_bonus    = 0
 compat_special = "Road"
 native_to      = "Land", "Big Land"
-hidden_by      = "Railroad", "Maglev"
 flags          = "NativeTile", "RequiresBridge", "AutoOnCityCenter"
 helptext       = _("\
 Roads allow your land units to move more quickly, and allow heavy\
@@ -1198,80 +1154,6 @@ Roads allow your land units to move more quickly, and allow heavy\
 Building roads on river tiles requires knowledge of Bridge Building.\
  City center tiles automatically get roads (unless they are on a river\
  tile and you do not yet know Bridge Building).\
-")
-
-[road_railroad]
-name           = _("Railroad")
-graphic        = "road.rail"
-graphic_alt    = "-"
-activity_gfx   = "unit.rail"
-act_gfx_alt    = "unit.road"
-reqs           =
-    { "type", "name", "range"
-      "Tech", "Railroad", "Player"
-      "Road", "Road", "Local"
-      "UnitFlag", "Settlers", "Local"
-      "TerrainClass", "Land", "Local"
-    }
-move_cost      = 1
-build_time     = 3
-food_incr      = 0
-shield_incr    = 0
-trade_incr     = 0
-food_bonus     = 0
-shield_bonus   = 50
-trade_bonus    = 0
-compat_special = "Railroad"
-native_to      = "Land", "Big Land"
-hidden_by      = "Maglev"
-flags          = "NativeTile", "RequiresBridge", "AutoOnCityCenter"
-helptext       = _("\
-Once you learn the Railroad technology, you may upgrade your roads\
- to railroads. Units travel considerably faster along railroads than\
- along roads.\
-"), _("\
-A railroad also increases any shield resources produced by a tile.\
- A tile whose road is upgraded to a railroad retains any trade bonus\
- from the road as well.\
-"), _("\
-City center tiles with roads are automatically upgraded to railroads\
- when you learn the Railroad technology.\
-")
-
-[road_maglev]
-name           = _("Maglev")
-graphic        = "road.maglev"
-graphic_alt    = "road.rail"
-activity_gfx   = "unit.maglev"
-act_gfx_alt    = "unit.road"
-reqs           =
-    { "type", "name", "range"
-      "Tech", "Superconductors", "Player"
-      "Road", "Railroad", "Local"
-      "UnitFlag", "Settlers", "Local"
-      "TerrainClass", "Land", "Local"
-    }
-move_cost      = 0
-build_time     = 3
-food_incr      = 0
-shield_incr    = 0
-trade_incr     = 0
-food_bonus     = 0
-shield_bonus   = 0
-trade_bonus    = 0
-native_to      = "Land"
-flags          = "NativeTile", "RequiresBridge", "AutoOnCityCenter"
-helptext       = _("\
-With sufficient technology, you may build magnetic levitation systems\
- along your railroad routes. Land units expend no movement points\
- when riding a maglev; you may ride indefinitely. (As may your enemies!)\
-"), _("\
-Your regular railroads are still used to carry heavy Big Land\
- units for which the maglev system is unsuitable, and they continue\
- to provide production and trade bonuses.\
-"), _("\
-City center tiles with railroads are automatically upgraded to maglev\
- when you learn about Superconductors.\
 ")
 
 [road_river]
