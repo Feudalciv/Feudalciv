@@ -31,4 +31,4 @@ default_government = "Despotism"
 ;aggressive = 50
 
 
-*include "default/nationlist.ruleset"
+*include "feudalciv/nationlist.ruleset"

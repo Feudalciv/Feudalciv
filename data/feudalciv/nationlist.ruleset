@@ -1,0 +1,79 @@
+
+; Descriptions of nation sets
+; These are self-contained subsets of the available nations; one of these
+; can be chosen in pregame with the "nationset" option. No nations
+; outside the selected subset will be used.
+; The first set defined is the one that is used by default. It is mandatory
+; to have at least one, but if there is only one, it will be kept out of
+; the user`s way.
+; name 		= Translatable name of the set presented in the UI.
+; rule_name     = Unique persistent name; this is also visible to users as
+;                 the value of the "nationset" server option, and presented
+;                 in "/list nationsets". It should thus be short, in lower
+;                 case, and not contain spaces or punctuation.
+;                 The same saved "nationset" setting may be used for multiple
+;                 rulesets, so if your custom ruleset has any set which
+;                 contains all of its nations, it is useful to give it a
+;                 rule_name of "all" so that users can specify that they
+;                 always want the choice of all available nations by
+;                 default.
+; description   = Optional short user description of this set.
+
+[nset_feudalciv]
+name=_("?nationset:Feudalciv")
+rule_name="feudalciv"
+; /* TRANS: Description of 'Core' nation set in default rulesets.
+; If you have translated all of the nations in the extended set, not
+; just these core nations, feel free to discard the words about
+; localization, rather than translating literally. */
+description=_("\
+A set of nations to be used with feudalciv.\
+")
+
+; Descriptions of nation groups
+; These are more cosmetic than sets; they affect the "pick nation" dialog,
+; and also affect random nation selection.
+; It`s OK to not define any nation groups at all.
+; name 		= name of the group
+; match		= How much the AI will try to select a nation in the same
+;                 group
+
+[ngroup_anglo_saxon]
+name=_("?nationgroup:Anglo Saxon")
+match=2
+[ngroup_norse]
+name=_("?nationgroup:Norse")
+match=2
+
+[compatibility]
+
+; Compatibility: these nations are intended for use in a variety of
+; rulesets; declare which governments etc the nations may refer to, so that
+; nations referencing any of these can be loaded even in rulesets which
+; do not have some of them (if a referenced game identifier is not on these
+; lists, it will cause an error, to allow typos to be spotted)
+
+allowed_govs =
+  "Anarchy", "Despotism", "Monarchy"
+allowed_terrains =
+  "Lake", "Ocean", "Desert", "Forest", "Grassland", "Hills", "Jungle",
+  "Mountains", "Plains", "Swamp", "Tundra", "Glacier", "River"
+allowed_city_styles =
+  "European", "Classical", "Tropical", "Asian", "Babylonian", "Celtic"
+
+; Every nation is a member of the "extended" set (no need to specify in
+; individual nation specs).
+default_nationset = "Feudalciv"
+
+; Below: nations data loaded from ruleset files for
+; all nations available. If you want to have more
+; nations, just add the path to your ruleset to this list.
+;
+; See doc/README.nations for information on how to
+; create nation rulesets, including style guidelines.
+
+*include "feudalciv/nation/barbarian.ruleset"
+*include "feudalciv/nation/english.ruleset"
+*include "feudalciv/nation/pirate.ruleset"
+*include "feudalciv/nation/saxon.ruleset"
+*include "feudalciv/nation/viking.ruleset"

@@ -11,6 +11,7 @@ pkgdata_DATA =          \
 	game.ruleset	\
 	governments.ruleset \
 	nations.ruleset	\
+	nationlist.ruleset	\
 	techs.ruleset	\
 	terrain.ruleset	\
 	units.ruleset
