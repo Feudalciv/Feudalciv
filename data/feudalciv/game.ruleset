@@ -189,7 +189,7 @@ tired_attack = FALSE
 
 [borders]
 ; Base border radius from city.
-radius_sq_city = 17
+radius_sq_city = 50
 
 ; Border radius square increased by this amount / point of city size
 size_effect    = 1

@@ -6,10 +6,13 @@ pkgdatadir = $(datadir)/@PACKAGE@/feudalciv/nation
 
 pkgdata_DATA = \
 		barbarian.ruleset \
+		cornish.ruleset \
 		english.ruleset \
+		northumbrian.ruleset \
 		pirate.ruleset \
 		saxon.ruleset \
-		viking.ruleset 
+		viking.ruleset \
+		welsh.ruleset 
 
 EXTRA_DIST = $(pkgdata_DATA) Makefile.am.sh
 

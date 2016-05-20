@@ -930,6 +930,14 @@ reqs	=
       "Building", "Castle", "City"
     }
 
+[effect_castle_vision]
+type    = "City_Vision_Radius_Sq"
+value   = 100
+reqs    =
+    { "type", "name", "range"
+      "Building", "Castle", "City"
+    }
+
 [effect_colosseum]
 type    = "Make_Content"
 value	= 3
@@ -986,6 +994,22 @@ value	= 50
 reqs	=
     { "type", "name", "range"
       "Building", "Granary", "City"
+    }
+
+[effect_town_radius]
+type    = "City_Radius_Sq"
+value	= 50
+reqs	=
+    { "type", "name", "range"
+      "Building", "Town", "City"
+    }
+
+[effect_town_vision]
+type    = "City_Vision_Radius_Sq"
+value	= 50
+reqs	=
+    { "type", "name", "range"
+      "Building", "Town", "City"
     }
 
 [effect_harbour]
@@ -1332,7 +1356,7 @@ value   = 2
 ; City radius 2 - radius is sqrt(2+3) = 2.24
 [effect_city_radius_1]
 type    = "City_Radius_Sq"
-value   = 200
+value   = 3
 reqs    =
     { "type", "name", "range"
       "MinSize", "3", "City"
@@ -1349,7 +1373,7 @@ reqs    =
 ; City radius 2 - radius of vision is sqrt(2+3) = 2.24
 [effect_city_vision_1]
 type    = "City_Vision_Radius_Sq"
-value   = 200
+value   = 3
 reqs    =
     { "type", "name", "range"
       "MinSize", "3", "City"

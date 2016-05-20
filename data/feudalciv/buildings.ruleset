@@ -188,7 +188,7 @@ graphic = "b.city_walls"
 graphic_alt = "-"
 obsolete_by = "None"
 build_cost  = 100
-upkeep      = 0
+upkeep      = 2
 sabotage    = 200
 sound       = "b_city_walls"
 sound_alt   = "b_generic"
@@ -531,6 +531,26 @@ sound_alt	= "b_generic"
 helptext	= _("\
 Together with a Library, a University increases the science\
  production of a city by 250%.\
+")
+
+[building_town]
+name		= _("Town")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Building", "Granary", "City"
+    }
+graphic	= "b.Granary"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 120
+upkeep		= 0
+sabotage	= 100
+sound		= "b_granary"
+sound_alt	= "b_generic"
+; /* xgettext:no-c-format */
+helptext	= _("\
+Place that has people
 ")
 
 [building_asmiths_trading_co]
