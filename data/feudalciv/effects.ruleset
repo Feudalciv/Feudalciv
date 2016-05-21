@@ -938,6 +938,14 @@ reqs    =
       "Building", "Castle", "City"
     }
 
+[effect_castle_borders]
+type    = "City_Border_Radius_Sq"
+value   = 80
+reqs    =
+    { "type", "name", "range"
+      "Building", "Castle", "City"
+    }
+
 [effect_colosseum]
 type    = "Make_Content"
 value	= 3
@@ -1006,7 +1014,7 @@ reqs	=
 
 [effect_town_vision]
 type    = "City_Vision_Radius_Sq"
-value	= 50
+value	= 10
 reqs	=
     { "type", "name", "range"
       "Building", "Town", "City"

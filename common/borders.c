@@ -46,6 +46,7 @@ int tile_border_source_radius_sq(struct tile *ptile)
      * possible with a city radius of 5 (radius_sq = 26). */
     radius_sq += MIN(city_size_get(pcity), CITY_MAP_MAX_RADIUS_SQ)
                  * game.info.border_size_effect;
+    radius_sq += get_city_bonus(pcity, EFT_CITY_BORDER_RADIUS_SQ);
   } else {
     base_type_iterate(pbase) {
       if (tile_has_base(ptile, pbase) && territory_claiming_base(pbase)) {
