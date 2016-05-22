@@ -54,7 +54,7 @@ match=2
 ; lists, it will cause an error, to allow typos to be spotted)
 
 allowed_govs =
-  "Anarchy", "Despotism", "Monarchy"
+  "Anarchy", "Despotism", "Monarchy", "Feudalism"
 allowed_terrains =
   "Lake", "Ocean", "Desert", "Forest", "Grassland", "Hills", "Jungle",
   "Mountains", "Plains", "Swamp", "Tundra", "Glacier", "River"
@@ -73,10 +73,9 @@ default_nationset = "Feudalciv"
 ; create nation rulesets, including style guidelines.
 
 *include "feudalciv/nation/barbarian.ruleset"
-*include "feudalciv/nation/english.ruleset"
+*include "feudalciv/nation/hampshire.ruleset"
 *include "feudalciv/nation/pirate.ruleset"
-*include "feudalciv/nation/saxon.ruleset"
-*include "feudalciv/nation/viking.ruleset"
-*include "feudalciv/nation/cornish.ruleset"
-*include "feudalciv/nation/northumbrian.ruleset"
-*include "feudalciv/nation/welsh.ruleset"
+*include "feudalciv/nation/danelaw.ruleset"
+*include "feudalciv/nation/cornwall.ruleset"
+*include "feudalciv/nation/northumbria.ruleset"
+*include "feudalciv/nation/gwent.ruleset"

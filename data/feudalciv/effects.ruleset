@@ -268,15 +268,6 @@ reqs   =
       "OutputType", "Shield", "Local"
     }
 
-[effect_upkeep_free_units_monarchy]
-type    = "Unit_Upkeep_Free_Per_City"
-value	= 3
-reqs   =
-    { "type", "name", "range"
-      "Gov", "Monarchy", "Player"
-      "OutputType", "Shield", "Local"
-    }
-
 [effect_civil_war_0]
 type    = "Civil_War_Chance"
 value   = 90
