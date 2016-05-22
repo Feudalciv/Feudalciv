@@ -96,7 +96,7 @@ changable_tax = TRUE            ; set to FALSE to disallow changing of tax rates
 
 vision_reveal_tiles = TRUE      ; civ1 & 2 default FALSE
 
-pop_report_zeroes = 4           ; Population in reports in tens of thousands
+pop_report_zeroes = 2           ; Population in reports in tens of thousands
 
 [citizen]
 nationality   = TRUE            ; account for the nationality of the citizens
