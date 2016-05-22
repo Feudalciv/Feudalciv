@@ -150,6 +150,8 @@ enum diplstate_type {
   DS_ALLIANCE,
   DS_NO_CONTACT,
   DS_TEAM,
+  DS_SUBJECT,
+  DS_OVERLORD,
   DS_LAST	/* leave this last */
 };
 
@@ -400,6 +402,8 @@ static inline bool is_barbarian(const struct player *pplayer)
 {
   return pplayer->ai_common.barbarian_type != NOT_A_BARBARIAN;
 }
+
+const struct player * get_player_overlord(const struct player *pplayer);
 
 bool gives_shared_vision(const struct player *me, const struct player *them);
 

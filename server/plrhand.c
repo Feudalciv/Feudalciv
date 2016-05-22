@@ -612,11 +612,13 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
 {
   enum diplstate_type old_type;
   enum diplstate_type new_type;
+  enum diplstate_type subject_ds;
   enum dipl_reason diplcheck;
   bool repeat = FALSE;
   struct player *pplayer2 = player_by_number(other_player_id);
-  struct player_diplstate *ds_plrplr2, *ds_plr2plr;
+  struct player_diplstate *ds_plrplr2, *ds_plr2plr, *ds_plroverlord, *ds_overlordplr, *ds_plrplr3, *ds_plr3plr;
   struct unit_list *pplayer_seen_units, *pplayer2_seen_units;
+  const struct player *overlord;
 
   if (NULL == pplayer2 || players_on_same_team(pplayer, pplayer2)) {
     return;
@@ -760,6 +762,60 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
                       player_name(pplayer2));
         handle_diplomacy_cancel_pact(other, player_number(pplayer2), CLAUSE_ALLIANCE);
       }
+    }
+    if (other != pplayer && other != pplayer2 && new_type == DS_WAR) {
+      overlord = get_player_overlord(pplayer2);
+      if (overlord != NULL) {
+        /* bring overlord into the war */
+        notify_player(overlord, NULL, E_TREATY_BROKEN, ftc_server,
+                      _("%s declared war on our subject %s. "
+                        "We are obligated to defend our subject %s and have taken control of the conflict."),
+                      player_name(pplayer),
+                      nation_plural_for_player(pplayer2),
+                      player_name(pplayer2));
+        ds_plroverlord = player_diplstate_get(pplayer, overlord);
+        ds_overlordplr = player_diplstate_get(overlord, pplayer);
+        ds_plroverlord->type = ds_overlordplr->type = new_type;
+        handle_diplomacy_cancel_pact(pplayer, player_number(overlord), CLAUSE_LAST);
+      }
+
+      /* bring subjects into war */
+      players_iterate(pplayer3) {
+        subject_ds = player_diplstate_get(pplayer2, pplayer3)->type;
+        if (subject_ds == DS_SUBJECT) {
+          /* We are in the same team as the agressor; we cannot break
+           * alliance with him. We trust our team mate and break alliance
+           * with the attacked player */
+          notify_player(pplayer3, NULL, E_TREATY_BROKEN, ftc_server,
+                      _("Your overlord %s is at war with %s. "
+                        "You have pledged fealty to %s and join them in this conflict."),
+                      player_name(overlord),
+                      nation_plural_for_player(pplayer),
+                      player_name(overlord));
+
+          ds_plrplr3 = player_diplstate_get(pplayer, pplayer3);
+          ds_plr3plr = player_diplstate_get(pplayer3, pplayer);
+          ds_plrplr3->type = ds_plr3plr->type = new_type;
+          handle_diplomacy_cancel_pact(pplayer, player_number(pplayer3), CLAUSE_LAST);
+        }
+        subject_ds = player_diplstate_get(pplayer, pplayer3)->type;
+        if (subject_ds == DS_SUBJECT) {
+          /* We are in the same team as the agressor; we cannot break
+           * alliance with him. We trust our team mate and break alliance
+           * with the attacked player */
+          notify_player(pplayer3, NULL, E_TREATY_BROKEN, ftc_server,
+                      _("Your overlord %s is at war with %s. "
+                        "You have pledged fealty to %s and join them in this conflict."),
+                      player_name(overlord),
+                      nation_plural_for_player(pplayer),
+                      player_name(overlord));
+
+          ds_plrplr3 = player_diplstate_get(pplayer2, pplayer3);
+          ds_plr3plr = player_diplstate_get(pplayer3, pplayer2);
+          ds_plrplr3->type = ds_plr3plr->type = new_type;
+          handle_diplomacy_cancel_pact(pplayer2, player_number(pplayer3), CLAUSE_LAST);
+        }
+      } players_iterate_end;
     }
   } players_iterate_alive_end;
 }

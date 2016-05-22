@@ -151,6 +151,8 @@ static enum diplstate_type dst_closest(enum diplstate_type a,
     [DS_PEACE] = 4,
     [DS_ALLIANCE] = 5,
     [DS_TEAM] = 6,
+    [DS_SUBJECT] = 7,
+    [DS_OVERLORD] = 8,
   };
 
   if (how_close[a] < how_close[b]) {

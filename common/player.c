@@ -94,12 +94,12 @@ enum diplstate_type cancel_pact_result(enum diplstate_type oldstate)
 /***************************************************************
   Returns true iff p1 can cancel treaty on p2.
 
-  The senate may not allow you to break the treaty.  In this 
-  case you must first dissolve the senate then you can break 
-  it.  This is waived if you have statue of liberty since you 
-  could easily just dissolve and then recreate it. 
+  The senate may not allow you to break the treaty.  In this
+  case you must first dissolve the senate then you can break
+  it.  This is waived if you have statue of liberty since you
+  could easily just dissolve and then recreate it.
 ***************************************************************/
-enum dipl_reason pplayer_can_cancel_treaty(const struct player *p1, 
+enum dipl_reason pplayer_can_cancel_treaty(const struct player *p1,
                                            const struct player *p2)
 {
   enum diplstate_type ds = player_diplstate_get(p1, p2)->type;
@@ -124,15 +124,15 @@ enum dipl_reason pplayer_can_cancel_treaty(const struct player *p1,
 /***************************************************************
   Returns true iff p1 can be in alliance with p2.
 
-  Check that we are not at war with any of p2's allies. Note 
-  that for an alliance to be made, we need to check this both 
+  Check that we are not at war with any of p2's allies. Note
+  that for an alliance to be made, we need to check this both
   ways.
 
-  The reason for this is to avoid the dread 'love-love-hate' 
+  The reason for this is to avoid the dread 'love-love-hate'
   triad, in which p1 is allied to p2 is allied to p3 is at
   war with p1. These lead to strange situations.
 ***************************************************************/
-static bool is_valid_alliance(const struct player *p1, 
+static bool is_valid_alliance(const struct player *p1,
                               const struct player *p2)
 {
   players_iterate_alive(pplayer) {
@@ -155,7 +155,7 @@ static bool is_valid_alliance(const struct player *p1,
   We cannot regress in a treaty chain. So we cannot suggest
   'Peace' if we are in 'Alliance'. Then you have to cancel.
 
-  For alliance there is only one condition: We are not at war 
+  For alliance there is only one condition: We are not at war
   with any of p2's allies.
 ***************************************************************/
 enum dipl_reason pplayer_can_make_treaty(const struct player *p1,
@@ -172,9 +172,9 @@ enum dipl_reason pplayer_can_make_treaty(const struct player *p1,
       || get_player_bonus(p2, EFT_NO_DIPLOMACY) > 0) {
     return DIPL_ERROR;
   }
-  if (treaty == DS_WAR 
-      || treaty == DS_NO_CONTACT 
-      || treaty == DS_ARMISTICE 
+  if (treaty == DS_WAR
+      || treaty == DS_NO_CONTACT
+      || treaty == DS_ARMISTICE
       || treaty == DS_TEAM
       || treaty == DS_LAST) {
     return DIPL_ERROR; /* these are not negotiable treaties */
@@ -182,7 +182,7 @@ enum dipl_reason pplayer_can_make_treaty(const struct player *p1,
   if (treaty == DS_CEASEFIRE && existing != DS_WAR) {
     return DIPL_ERROR; /* only available from war */
   }
-  if (treaty == DS_PEACE 
+  if (treaty == DS_PEACE
       && (existing != DS_WAR && existing != DS_CEASEFIRE)) {
     return DIPL_ERROR;
   }
@@ -1120,7 +1120,7 @@ bool player_knows_techs_with_flag(const struct player *pplayer,
 }
 
 /**************************************************************************
-  Locate the player capital city, (NULL Otherwise) 
+  Locate the player capital city, (NULL Otherwise)
 **************************************************************************/
 struct city *player_capital(const struct player *pplayer)
 {
@@ -1219,15 +1219,17 @@ const char *love_text(const int love)
 **************************************************************************/
 const char *diplstate_text(const enum diplstate_type type)
 {
-  static const char *ds_names[DS_LAST] = 
+  static const char *ds_names[DS_LAST] =
   {
     N_("?diplomatic_state:Armistice"),
-    N_("?diplomatic_state:War"), 
+    N_("?diplomatic_state:War"),
     N_("?diplomatic_state:Cease-fire"),
     N_("?diplomatic_state:Peace"),
     N_("?diplomatic_state:Alliance"),
     N_("?diplomatic_state:Never met"),
-    N_("?diplomatic_state:Team")
+    N_("?diplomatic_state:Team"),
+    N_("?diplomatic_state:Subject"),
+    N_("?diplomatic_state:Overlord")
   };
 
   fc_assert_ret_val_msg(0 <= type && type < DS_LAST, NULL,
@@ -1273,7 +1275,7 @@ bool pplayers_allied(const struct player *pplayer,
 
   ds = player_diplstate_get(pplayer, pplayer2)->type;
 
-  return (ds == DS_ALLIANCE || ds == DS_TEAM);
+  return (ds == DS_ALLIANCE || ds == DS_TEAM || ds == DS_SUBJECT || ds == DS_OVERLORD);
 }
 
 /***************************************************************
@@ -1292,7 +1294,8 @@ bool pplayers_in_peace(const struct player *pplayer,
   }
 
   return (ds == DS_PEACE || ds == DS_ALLIANCE
-          || ds == DS_ARMISTICE || ds == DS_TEAM);
+          || ds == DS_ARMISTICE || ds == DS_TEAM
+          || ds == DS_SUBJECT || ds == DS_OVERLORD);
 }
 
 /****************************************************************************
@@ -1339,6 +1342,20 @@ bool players_on_same_team(const struct player *pplayer1,
                           const struct player *pplayer2)
 {
   return pplayer1->team == pplayer2->team;
+}
+
+/**************************************************************************
+  Returns the overlord of the given player or NULL if the player has no
+  overlord
+ *************************************************************************/
+const struct player * get_player_overlord(const struct player *pplayer)
+{
+
+  players_iterate(pplayer2) {
+    enum diplstate_type ds = player_diplstate_get(pplayer, pplayer2)->type;
+    if (ds == DS_OVERLORD) return pplayer2;
+  } players_iterate_end;
+  return NULL;
 }
 
 /**************************************************************************

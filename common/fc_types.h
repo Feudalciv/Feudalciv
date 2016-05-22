@@ -252,7 +252,7 @@ enum barbarian_type {
 };
 
 /*
- * Citytile requirement types. 
+ * Citytile requirement types.
  */
 enum citytile_type {
   CITYT_CENTER,

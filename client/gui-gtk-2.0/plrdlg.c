@@ -657,6 +657,8 @@ static void fill_row(GtkListStore *store, GtkTreeIter *it,
       break;
     case DS_ALLIANCE:
     case DS_TEAM:
+    case DS_OVERLORD:
+    case DS_SUBJECT:
       weight = PANGO_WEIGHT_BOLD;
       style = PANGO_STYLE_NORMAL;
       break;
