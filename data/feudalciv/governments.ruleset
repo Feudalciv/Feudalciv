@@ -120,44 +120,23 @@ Monarchy suffers the same small amount of corruption that\
 ")
 
 ;------------------------------------------------------------------------
-[government_republic]
+[government_feudalism]
 
-name        = _("Republic")
+name        = _("Feudalism")
 reqs = { "type", "name", "range"
-         "tech", "The Republic", "Player"
+         "tech", "Monarchy", "Player"
        }
-graphic     = "gov.republic"
+graphic     = "gov.monarchy"
 graphic_alt = "-"
+ai_better   = "Monarchy"
 
-ruler_male_title = _("President %s")
-ruler_female_title = _("?female:President %s")
+ruler_male_title = _("King %s")
+ruler_female_title = _("Queen %s")
 
 helptext = _("\
-Under a Republican government, citizens hold an election to select a\
- representative who will govern them; since elected leaders must\
- remain popular to remain in control, citizens are given a greater\
- degree of freedom.  Citizens under the Republic become unhappy\
- easily, but the self-sufficiency of your citizens allows high levels\
- of trade.\
-")
-
-;------------------------------------------------------------------------
-[government_democracy]
-
-name        = _("Democracy")
-reqs = { "type", "name", "range"
-         "tech", "Democracy", "Player"
-       }
-graphic     = "gov.democracy"
-graphic_alt = "-"
-
-ruler_male_title = _("Prime Minister %s")
-ruler_female_title = _("?female:Prime Minister %s")
-
-helptext = _("\
-Under Democracy, citizens govern directly by voting on issues.\
- Democracy offers the highest possible level of trade, but also\
- offers the most potential for unhappiness.  There is no corruption\
- during Democracy, but citizens become very upset during\
- wars.\
+Under Monarchy, a king or queen serves as a hereditary figurehead\
+ for your government.\
+"), _("\
+Monarchy suffers the same small amount of corruption that\
+ the Republic does.\
 ")
