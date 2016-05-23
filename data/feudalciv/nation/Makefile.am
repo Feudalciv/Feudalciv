@@ -6,12 +6,30 @@ pkgdatadir = $(datadir)/@PACKAGE@/feudalciv/nation
 
 pkgdata_DATA = \
 		barbarian.ruleset \
+		berkshire.ruleset \
+		brycheinion.ruleset \
+		buelt.ruleset \
 		cornwall.ruleset \
 		danelaw.ruleset \
+		devon.ruleset \
+		dorset.ruleset \
+		dyfed.ruleset \
+		essex.ruleset \
 		gwent.ruleset \
+		gwynedd.ruleset \
 		hampshire.ruleset \
+		jorvik.ruleset \
+		kent.ruleset \
+		norfolk.ruleset \
+		northmercia.ruleset \
 		northumbria.ruleset \
-		pirate.ruleset 
+		pirate.ruleset \
+		powys.ruleset \
+		suffolk.ruleset \
+		surrey.ruleset \
+		sussex.ruleset \
+		westmercia.ruleset \
+		wiltshire.ruleset 
 
 EXTRA_DIST = $(pkgdata_DATA) Makefile.am.sh
 

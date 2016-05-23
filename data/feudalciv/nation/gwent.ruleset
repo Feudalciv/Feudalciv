@@ -1,0 +1,26 @@
+[nation_gwent]
+
+name=_("Gwent")
+plural=_("?plural:Gwent")
+groups= "Feudalciv"
+legend=_("")
+
+leaders = {
+ "name",                        "sex"
+ "Rhys ap Ithel",               "Male"
+}
+
+ruler_titles = {
+ "government",      "male_title",           "female_title"
+}
+
+flag="wales"
+flag_alt = "united_kingdom"
+city_style = "Celtic"
+
+init_techs=""
+init_buildings=""
+init_units=""
+
+cities =
+ "Caerwent"

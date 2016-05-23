@@ -1,0 +1,28 @@
+[nation_cornwall]
+
+name = _("Cornwall")
+plural = _("?plural:Cornwall")
+groups= "Feudalciv" 
+legend=_("")
+
+leaders = {
+ "name",                "sex"
+ "Arthur Gernow",       "Male" ; King Arthur
+}
+
+ruler_titles = {
+ "government",      "male_title",      "female_title"
+ "Feudalism",        _("High King %s"), _("High Queen %s")
+}
+
+flag = "cornwall"
+flag_alt = "england"
+city_style = "Celtic"
+
+init_techs=""
+init_buildings=""
+init_units=""
+
+cities =
+  "Carnelford"
+    

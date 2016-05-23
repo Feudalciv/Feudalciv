@@ -1,0 +1,27 @@
+[nation_hampshire]
+
+translation_domain="freeciv"
+
+name=_("Hampshire")
+plural=_("?plural:Hampshire")
+groups="Feudalciv"
+legend=_("")
+
+leaders = {
+ "name",                        "sex"
+ "Alfred the Great",            "Male" ; a.k.a. "Alfred of Wessex"
+}
+
+ruler_titles = {
+ "government",      "male_title",           "female_title"
+}
+
+flag="england"
+city_style = "European"
+
+init_techs=""
+init_buildings=""
+init_units=""
+
+cities =
+ "Winchester"

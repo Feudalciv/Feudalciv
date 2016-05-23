@@ -1,0 +1,24 @@
+[nation_dyfed]
+
+name=_("Dyfed")
+plural=_("?plural:Dyfed")
+groups= "Feudalciv"
+legend=_("")
+
+leaders = {
+ "name",                        "sex"
+}
+
+ruler_titles = {
+ "government",      "male_title",           "female_title"
+}
+
+flag="wales"
+flag_alt = "united_kingdom"
+city_style = "Celtic"
+
+init_techs=""
+init_buildings=""
+init_units=""
+
+

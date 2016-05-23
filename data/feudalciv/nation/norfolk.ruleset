@@ -1,0 +1,24 @@
+[nation_norfolk]
+
+name=_("Norfolk")
+plural=_("?plural:Norfolk")
+groups= "Feudalciv"
+legend=_("")
+
+leaders = {
+ "name",                        "sex"
+}
+
+ruler_titles = {
+ "government",      "male_title",           "female_title"
+}
+
+flag="viking"
+flag_alt = "united_kingdom"
+city_style = "European"
+
+init_techs=""
+init_buildings=""
+init_units=""
+
+
