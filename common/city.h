@@ -77,6 +77,8 @@ BV_DEFINE(bv_city_options, CITYO_LAST); /* Used in the network protocol. */
 
 #define INCITE_IMPOSSIBLE_COST (1000 * 1000 * 1000)
 
+#define CITY_BASE_GROWTH_RATE     0.05
+
 /*
  * Size of the biggest possible city.
  *
@@ -302,6 +304,8 @@ struct city {
   struct player *owner; /* Cannot be NULL. */
   struct player *original; /* Cannot be NULL. */
   int id;
+  int population;
+  int pop_update_date;
 
   /* the people */
   citizens size;
@@ -518,6 +522,10 @@ struct tile *city_tile(const struct city *pcity);
 citizens city_size_get(const struct city *pcity);
 void city_size_add(struct city *pcity, int add);
 void city_size_set(struct city *pcity, citizens size);
+
+void city_population_set(struct city *pcity, int size);
+int city_population_add(struct city *pcity, int add);
+int city_population_for_size(int size);
 
 citizens city_specialists(const struct city *pcity);
 

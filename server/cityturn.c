@@ -666,8 +666,8 @@ static citizens city_reduce_workers(struct city *pcity, citizens change)
   Reduce the city size.  Return TRUE if the city survives the population
   loss.
 **************************************************************************/
-bool city_reduce_size(struct city *pcity, citizens pop_loss,
-                      struct player *destroyer)
+static bool city_reduce_size_and_population(struct city *pcity, citizens pop_loss,
+                      struct player *destroyer, bool reduce_pop)
 {
   citizens loss_remain;
   int old_radius_sq;
@@ -681,6 +681,11 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
   }
   old_radius_sq = tile_border_source_radius_sq(pcity->tile);
   city_size_add(pcity, -pop_loss);
+  if (reduce_pop) {
+    city_population_add(pcity,
+            city_population_for_size(city_size_get(pcity) - pop_loss)
+            - city_population_for_size(city_size_get(pcity)));
+  }
   map_update_border(pcity->tile, pcity->owner, old_radius_sq,
                     tile_border_source_radius_sq(pcity->tile));
 
@@ -727,6 +732,13 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
   sanity_check_city(pcity);
   return TRUE;
 }
+
+bool city_reduce_size(struct city *pcity, citizens pop_loss,
+                      struct player *destroyer)
+{
+  city_reduce_size_and_population(pcity, pop_loss, destroyer, TRUE);
+}
+
 
 /**************************************************************************
   Repair the city population without affecting city size.
@@ -780,7 +792,7 @@ static void city_reset_foodbox(struct city *pcity, int new_size)
   the city to the clients as part of this function. There might be several
   calls to this function at once, and those actions are needed only once.
 **************************************************************************/
-static bool city_increase_size(struct city *pcity, struct player *nationality)
+static bool city_increase_size_and_population(struct city *pcity, struct player *nationality, bool increase_pop)
 {
   int new_food;
   int savings_pct = granary_savings(pcity);
@@ -814,6 +826,11 @@ static bool city_increase_size(struct city *pcity, struct player *nationality)
   }
 
   city_size_add(pcity, 1);
+  if (increase_pop) {
+    city_population_add(pcity,
+            city_population_for_size(city_size_get(pcity) + 1)
+            - city_population_for_size(city_size_get(pcity)));
+  }
 
   /* Do not empty food stock if city is growing by celebrating */
   if (rapture_grow) {
@@ -877,6 +894,11 @@ static bool city_increase_size(struct city *pcity, struct player *nationality)
   return TRUE;
 }
 
+static bool city_increase_size(struct city *pcity, struct player *nationality)
+{
+  city_increase_size_and_population(pcity, nationality, TRUE);
+}
+
 /****************************************************************************
   Change the city size.  Return TRUE iff the city is still alive afterwards.
 ****************************************************************************/
@@ -911,58 +933,28 @@ static void city_populate(struct city *pcity, struct player *nationality)
 {
   int saved_id = pcity->id;
   int granary_size = city_granary_size(city_size_get(pcity));
+  double population_increase = 0.05;
+  int added_size = 0;
 
   pcity->food_stock += pcity->surplus[O_FOOD];
-  if (pcity->food_stock >= granary_size || city_rapture_grow(pcity)) {
-    if (city_had_recent_plague(pcity)) {
-      notify_player(city_owner(pcity), city_tile(pcity),
-                    E_CITY_PLAGUE, ftc_server,
-                    _("A recent plague outbreak prevents growth in %s."),
-                    city_link(pcity));
-      /* Lose excess food */
-      pcity->food_stock = MIN(pcity->food_stock, granary_size);
-    } else {
-      city_increase_size(pcity, nationality);
-      map_claim_border(pcity->tile, pcity->owner, -1);
-    }
+
+  if (pcity->food_stock >= granary_size) {
+    pcity->food_stock = granary_size;
   } else if (pcity->food_stock < 0) {
-    /* FIXME: should this depend on units with ability to build
-     * cities or on units that require food in upkeep?
-     * I'll assume citybuilders (units that 'contain' 1 pop) -- sjolie
-     * The above may make more logical sense, but in game terms
-     * you want to disband a unit that is draining your food
-     * reserves.  Hence, I'll assume food upkeep > 0 units. -- jjm
-     */
-    unit_list_iterate_safe(pcity->units_supported, punit) {
-      if (punit->upkeep[O_FOOD] > 0
-          && !unit_has_type_flag(punit, UTYF_UNDISBANDABLE)) {
+    population_increase += 0.05 * pcity->food_stock;
+    pcity->food_stock = 0;
+  }
 
-        notify_player(city_owner(pcity), city_tile(pcity),
-                      E_UNIT_LOST_MISC, ftc_server,
-                      _("Famine feared in %s, %s lost!"),
-                      city_link(pcity), unit_tile_link(punit));
+  /* Increase population */
+  added_size = city_population_add(pcity, population_increase * city_population(pcity));
 
-        wipe_unit(punit, ULR_STARVED, NULL);
-
-        if (city_exist(saved_id)) {
-          city_reset_foodbox(pcity, city_size_get(pcity));
-        }
-	return;
-      }
-    } unit_list_iterate_safe_end;
-    if (city_size_get(pcity) > 1) {
-      notify_player(city_owner(pcity), city_tile(pcity),
-                    E_CITY_FAMINE, ftc_server,
-                    _("Famine causes population loss in %s."),
-                    city_link(pcity));
-    } else {
-      notify_player(city_owner(pcity), city_tile(pcity),
-                    E_CITY_FAMINE, ftc_server,
-		    _("Famine destroys %s entirely."),
-		    city_link(pcity));
+  if (added_size > 0) {
+    for(; added_size > 0; added_size--) {
+      city_increase_size_and_population(pcity, nationality, FALSE);
     }
-    city_reset_foodbox(pcity, city_size_get(pcity) - 1);
-    city_reduce_size(pcity, 1, NULL);
+    map_claim_border(pcity->tile, pcity->owner, -1);
+  } else if (added_size < 0) {
+    city_reduce_size_and_population(pcity, -added_size, NULL, FALSE);
   }
 }
 
@@ -1534,6 +1526,8 @@ static void upgrade_unit_prod(struct city *pcity)
 static bool city_distribute_surplus_shields(struct player *pplayer,
 					    struct city *pcity)
 {
+  int size_change = 0;
+
   if (pcity->surplus[O_SHIELD] < 0) {
     unit_list_iterate_safe(pcity->units_supported, punit) {
       if (utype_upkeep_cost(unit_type(punit), pplayer, O_SHIELD) > 0

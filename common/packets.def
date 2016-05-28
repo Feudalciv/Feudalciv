@@ -571,6 +571,7 @@ PACKET_CITY_INFO = 31; sc, lsend, is-game-info, force, cancel(PACKET_CITY_SHORT_
 
   UINT8 specialists_size;
   CITIZENS specialists[SP_MAX:specialists_size];
+  UINT32 population;
 
   UINT8 nationalities_count;
   PLAYER nation_id[MAX_NUM_PLAYER_SLOTS:nationalities_count];
@@ -623,6 +624,7 @@ PACKET_CITY_SHORT_INFO = 32; sc, lsend, is-game-info, cancel(PACKET_CITY_INFO)
 
   PLAYER owner;
   UINT8 size;
+  UINT32 population;
 
   BOOL occupied;
   BOOL walls;

@@ -657,6 +657,7 @@ void handle_city_info(const struct packet_city_info *packet)
   
   /* check data */
   city_size_set(pcity, 0);
+  city_population_set(pcity, packet->population);
   for (i = 0; i < FEELING_LAST; i++) {
     pcity->feel[CITIZEN_HAPPY][i] = packet->ppl_happy[i];
     pcity->feel[CITIZEN_CONTENT][i] = packet->ppl_content[i];

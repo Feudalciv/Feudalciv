@@ -17,7 +17,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <math.h> /* pow, sqrt, exp */
+#include <math.h> /* pow, sqrt, exp, log */
 
 /* utility */
 #include "distribute.h"
@@ -1118,8 +1118,50 @@ void city_size_set(struct city *pcity, citizens size)
 **************************************************************************/
 int city_population(const struct city *pcity)
 {
-  /*  Sum_{i=1}^{n} i  ==  n*(n+1)/2  */
-  return city_size_get(pcity) * (city_size_get(pcity) + 1) * 5;
+  fc_assert_ret_val(pcity != NULL, 0);
+
+  return pcity->population;
+}
+
+/*****************************************************************************
+  Set the city population
+*****************************************************************************/
+void city_population_set(struct city *pcity, int population)
+{
+  fc_assert_ret(pcity != NULL);
+
+  pcity->population = population;
+  pcity->pop_update_date = game.info.year;
+}
+
+/*****************************************************************************
+  Add a (positive or negative) value to the city population.
+  returns number of sizes the city increased
+*****************************************************************************/
+int city_population_add(struct city *pcity, int add)
+{
+  fc_assert_ret_val(pcity != NULL, 0);
+
+  int level_pop = city_population_for_size(city_size_get(pcity));
+  int level_pop_next = city_population_for_size(city_size_get(pcity) + 1);
+  int year_diff = game.info.year - pcity->pop_update_date;
+  int new_size = pcity->size;
+  pcity->population += add;
+  while (pcity->population < level_pop)
+  {
+    level_pop = city_population_for_size(--new_size);
+  }
+  while (pcity->population > level_pop_next)
+  {
+    level_pop_next = city_population_for_size(++new_size + 1);
+  }
+  pcity->pop_update_date = game.info.year;
+  return new_size - pcity->size;
+}
+
+int city_population_for_size(int size)
+{
+  return size * (size + 1) * 50;
 }
 
 /**************************************************************************
@@ -1777,11 +1819,11 @@ int city_turns_to_build(const struct city *pcity,
 int city_turns_to_grow(const struct city *pcity)
 {
   if (pcity->surplus[O_FOOD] > 0) {
-    return (city_granary_size(city_size_get(pcity)) - pcity->food_stock +
-	    pcity->surplus[O_FOOD] - 1) / pcity->surplus[O_FOOD];
+    return (int)ceil(log((double)city_population_for_size(city_size_get(pcity) + 1.0) / city_population(pcity))/log(1.0 + CITY_BASE_GROWTH_RATE));
   } else if (pcity->surplus[O_FOOD] < 0) {
     /* turns before famine loss */
-    return -1 + (pcity->food_stock / pcity->surplus[O_FOOD]);
+    return -1 + -(int)ceil(log((double)city_population_for_size(city_size_get(pcity) - 1.0) /
+            city_population(pcity))/log(1.0 + CITY_BASE_GROWTH_RATE + CITY_BASE_GROWTH_RATE * pcity->surplus[O_FOOD]));
   } else {
     return FC_INFINITY;
   }
@@ -3144,6 +3186,7 @@ struct city *create_city_virtual(struct player *pplayer,
 
   /* Now set some usefull default values. */
   city_size_set(pcity, 1);
+  city_population_set(pcity, 100);
   pcity->specialists[DEFAULT_SPECIALIST] = 1;
 
   output_type_iterate(o) {

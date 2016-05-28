@@ -4346,6 +4346,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
   int id, i, repair, specialists = 0, workers = 0, value;
   int nat_x, nat_y;
   citizens size;
+  int population;
 
   sg_warn_ret_val(secfile_lookup_int(loading->file, &nat_x, "%s.x", citystr),
                   FALSE, "%s", secfile_error());
@@ -4378,6 +4379,13 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
   sg_warn_ret_val(value == (int)size, FALSE,
                   "Invalid city size: %d, set to %d", value, size);
   city_size_set(pcity, size);
+
+  if (!secfile_lookup_int(loading->file, &population, "%s.population",
+                                     citystr)) {
+    city_population_set(pcity, city_population_for_size(city_size_get(pcity)));
+  } else {
+    city_population_set(pcity, population);
+  }
 
   specialist_type_iterate(sp) {
     sg_warn_ret_val(

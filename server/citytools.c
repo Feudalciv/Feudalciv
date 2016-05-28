@@ -2299,6 +2299,7 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
   sz_strlcpy(packet->name, city_name(pcity));
 
   packet->size = city_size_get(pcity);
+  packet->population = city_population(pcity);
   for (i = 0; i < FEELING_LAST; i++) {
     packet->ppl_happy[i] = pcity->feel[CITIZEN_HAPPY][i];
     packet->ppl_content[i] = pcity->feel[CITIZEN_CONTENT][i];
