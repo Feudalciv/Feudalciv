@@ -933,7 +933,7 @@ static void city_populate(struct city *pcity, struct player *nationality)
 {
   int saved_id = pcity->id;
   int granary_size = city_granary_size(city_size_get(pcity));
-  double population_increase = 0.05;
+  double population_increase = game.info.pop_base_growth;
   int added_size = 0;
 
   pcity->food_stock += pcity->surplus[O_FOOD];
@@ -941,7 +941,7 @@ static void city_populate(struct city *pcity, struct player *nationality)
   if (pcity->food_stock >= granary_size) {
     pcity->food_stock = granary_size;
   } else if (pcity->food_stock < 0) {
-    population_increase += 0.05 * pcity->food_stock;
+    population_increase += game.info.pop_base_growth * pcity->food_stock;
     pcity->food_stock = 0;
   }
 

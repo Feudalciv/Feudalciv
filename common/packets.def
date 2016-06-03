@@ -433,6 +433,7 @@ PACKET_GAME_INFO = 16; sc
   UINT8 celebratesize;
   BOOL changable_tax;
   UINT8 pop_report_zeroes;
+  UFLOAT pop_base_growth;
   BOOL citizen_nationality;
   UINT16 citizen_convert_speed;
   UINT8 citizen_partisans_pct;

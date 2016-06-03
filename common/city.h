@@ -77,8 +77,6 @@ BV_DEFINE(bv_city_options, CITYO_LAST); /* Used in the network protocol. */
 
 #define INCITE_IMPOSSIBLE_COST (1000 * 1000 * 1000)
 
-#define CITY_BASE_GROWTH_RATE     0.05
-
 /*
  * Size of the biggest possible city.
  *

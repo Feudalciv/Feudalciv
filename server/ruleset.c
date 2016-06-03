@@ -4411,6 +4411,9 @@ static bool load_ruleset_cities(struct section_file *file)
     game.info.pop_report_zeroes =
       secfile_lookup_int_default(file, 1, "parameters.pop_report_zeroes");
 
+    game.info.pop_base_growth =
+      ((float)secfile_lookup_int_default(file, 5, "parameters.pop_base_growth_pct"))/100;
+
     /* Citizens configuration. */
     game.info.citizen_nationality =
       secfile_lookup_bool_default(file, FALSE,
