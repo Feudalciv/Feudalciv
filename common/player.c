@@ -80,6 +80,7 @@ enum diplstate_type cancel_pact_result(enum diplstate_type oldstate)
   case DS_ARMISTICE:
   case DS_CEASEFIRE:
   case DS_PEACE:
+  case DS_SUBJECT:
     return DS_WAR;
   case DS_ALLIANCE:
     return DS_ARMISTICE;
@@ -183,7 +184,9 @@ enum dipl_reason pplayer_can_make_treaty(const struct player *p1,
     return DIPL_ERROR; /* only available from war */
   }
   if (treaty == DS_PEACE
-      && (existing != DS_WAR && existing != DS_CEASEFIRE)) {
+      && ((existing != DS_WAR && existing != DS_CEASEFIRE)
+          /* only overlords can negotiate peace */
+      || get_player_overlord(p1) != NULL || get_player_overlord(p2) != NULL)) {
     return DIPL_ERROR;
   }
   if (treaty == DS_ALLIANCE) {
@@ -1351,10 +1354,13 @@ bool players_on_same_team(const struct player *pplayer1,
 const struct player * get_player_overlord(const struct player *pplayer)
 {
 
-  players_iterate(pplayer2) {
+  players_iterate_alive(pplayer2) {
     enum diplstate_type ds = player_diplstate_get(pplayer, pplayer2)->type;
-    if (ds == DS_OVERLORD) return pplayer2;
-  } players_iterate_end;
+    if (ds == DS_OVERLORD) {
+      return pplayer2;
+    }
+  } players_iterate_alive_end;
+
   return NULL;
 }
 

@@ -434,6 +434,16 @@ bool gives_shared_vision(const struct player *me, const struct player *them);
 #define players_iterate_alive_end                                           \
   } players_iterate_end;
 
+/* iterate over all players which are alive and subjects of the given player */
+#define player_subjects_iterate(_pplayer, _psubject)                          \
+  players_iterate_alive(_psubject) {                                          \
+    enum diplstate_type ds = player_diplstate_get(_pplayer, _psubject)->type; \
+    if (ds != DS_SUBJECT) {                                                   \
+        continue;                                                             \
+    }
+#define player_subjects_iterate_end                                           \
+  } players_iterate_alive_end;
+
 /* get 'struct player_list' and related functions: */
 #define SPECLIST_TAG player
 #define SPECLIST_TYPE struct player

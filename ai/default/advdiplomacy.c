@@ -446,7 +446,7 @@ static int dai_goldequiv_clause(struct ai_type *ait,
     break;
 
   case CLAUSE_SEAMAP:
-    if (!give || ds_after == DS_ALLIANCE) {
+    if (!give || ds_after == DS_ALLIANCE || ds_after == DS_SUBJECT || ds_after == DS_OVERLORD) {
       /* Useless to us - we're omniscient! And allies get it for free! */
       worth = 0;
     } else {
@@ -466,7 +466,7 @@ static int dai_goldequiv_clause(struct ai_type *ait,
     break;
 
   case CLAUSE_MAP:
-    if (!give || ds_after == DS_ALLIANCE) {
+    if (!give || ds_after == DS_ALLIANCE || ds_after == DS_SUBJECT || ds_after == DS_OVERLORD) {
       /* Useless to us - we're omniscient! And allies get it for free! */
       worth = 0;
     } else {
@@ -542,7 +542,7 @@ static int dai_goldequiv_clause(struct ai_type *ait,
 
   case CLAUSE_EMBASSY:
     if (give) {
-      if (ds_after == DS_ALLIANCE) {
+      if (ds_after == DS_ALLIANCE || ds_after == DS_SUBJECT || ds_after == DS_OVERLORD) {
         worth = 0;
       } else if (ds_after == DS_PEACE) {
         worth = -5 * game.info.turn;

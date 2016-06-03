@@ -162,6 +162,48 @@ static enum diplstate_type dst_closest(enum diplstate_type a,
   }
 }
 
+void set_peace(struct player *pgiver, struct player *pdest)
+{
+  struct player_diplstate *ds_giverdest
+    = player_diplstate_get(pgiver, pdest);
+
+  struct player_diplstate *ds_destgiver
+    = player_diplstate_get(pdest, pgiver);
+  ds_giverdest->type = DS_ARMISTICE;
+  ds_destgiver->type = DS_ARMISTICE;
+  ds_giverdest->turns_left = TURNS_LEFT;
+  ds_destgiver->turns_left = TURNS_LEFT;
+  ds_giverdest->max_state = dst_closest(DS_PEACE,
+                                        ds_giverdest->max_state);
+  ds_destgiver->max_state = dst_closest(DS_PEACE,
+                                        ds_destgiver->max_state);
+  notify_player(pgiver, NULL, E_TREATY_PEACE, ftc_server,
+                /* TRANS: ... the Poles ... Polish territory. */
+                PL_("You agree on an armistice with the %s. In %d turn, "
+                    "it will become a peace treaty. Move your "
+                    "units out of %s territory.",
+                    "You agree on an armistice with the %s. In %d turns, "
+                    "it will become a peace treaty. Move your "
+                    "units out of %s territory.",
+                    TURNS_LEFT),
+                nation_plural_for_player(pdest),
+                TURNS_LEFT,
+                nation_adjective_for_player(pdest));
+  notify_player(pdest, NULL, E_TREATY_PEACE, ftc_server,
+                /* TRANS: ... the Poles ... Polish territory. */
+                PL_("You agree on an armistice with the %s. In %d turn, "
+                    "it will become a peace treaty. Move your "
+                    "units out of %s territory.",
+                    "You agree on an armistice with the %s. In %d turns, "
+                    "it will become a peace treaty. Move your "
+                    "units out of %s territory.",
+                    TURNS_LEFT),
+                nation_plural_for_player(pgiver),
+                TURNS_LEFT,
+                nation_adjective_for_player(pgiver));
+}
+
+
 /**************************************************************************
 pplayer clicked the accept button. If he accepted the treaty we check the
 clauses. If both players have now accepted the treaty we execute the agreed
@@ -546,38 +588,9 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
           pgiver_seen_units = get_units_seen_via_ally(pgiver, pdest);
           pdest_seen_units = get_units_seen_via_ally(pdest, pgiver);
         }
-        ds_giverdest->type = DS_ARMISTICE;
-        ds_destgiver->type = DS_ARMISTICE;
-        ds_giverdest->turns_left = TURNS_LEFT;
-        ds_destgiver->turns_left = TURNS_LEFT;
-        ds_giverdest->max_state = dst_closest(DS_PEACE,
-                                              ds_giverdest->max_state);
-        ds_destgiver->max_state = dst_closest(DS_PEACE,
-                                              ds_destgiver->max_state);
-        notify_player(pgiver, NULL, E_TREATY_PEACE, ftc_server,
-                      /* TRANS: ... the Poles ... Polish territory. */
-                      PL_("You agree on an armistice with the %s. In %d turn, "
-                          "it will become a peace treaty. Move your "
-                          "units out of %s territory.",
-                          "You agree on an armistice with the %s. In %d turns, "
-                          "it will become a peace treaty. Move your "
-                          "units out of %s territory.",
-                          TURNS_LEFT),
-                      nation_plural_for_player(pdest),
-                      TURNS_LEFT,
-                      nation_adjective_for_player(pdest));
-        notify_player(pdest, NULL, E_TREATY_PEACE, ftc_server,
-                      /* TRANS: ... the Poles ... Polish territory. */
-                      PL_("You agree on an armistice with the %s. In %d turn, "
-                          "it will become a peace treaty. Move your "
-                          "units out of %s territory.",
-                          "You agree on an armistice with the %s. In %d turns, "
-                          "it will become a peace treaty. Move your "
-                          "units out of %s territory.",
-                          TURNS_LEFT),
-                      nation_plural_for_player(pgiver),
-                      TURNS_LEFT,
-                      nation_adjective_for_player(pgiver));
+
+        set_peace(pgiver, pdest);
+
         if (old_diplstate == DS_ALLIANCE) {
           update_players_after_alliance_breakup(pgiver, pdest,
                                                 pgiver_seen_units,
@@ -585,6 +598,14 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
           unit_list_destroy(pgiver_seen_units);
           unit_list_destroy(pdest_seen_units);
         }
+
+        player_subjects_iterate(pgiver, giversubject) {
+          set_peace(giversubject, pdest);
+          player_subjects_iterate(pdest, destsubject) {
+            set_peace(destsubject, pgiver);
+            set_peace(giversubject, destsubject);
+          } player_subjects_iterate_end;
+        } player_subjects_iterate_end;
 
         worker_refresh_required = TRUE;
 	break;
