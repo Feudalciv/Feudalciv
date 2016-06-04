@@ -477,11 +477,42 @@ See the help on Terrain and Terrain Alterations for the effects of \
 these actions.\
 ")
 
-[unit_warriors]
-name          = _("Warriors")
+[unit_earldormen]
+name          = _("Earldormen")
 class         = "Land"
 tech_req      = "None"
-obsolete_by   = "Pikemen"
+obsolete_by   = "None"
+graphic       = "u.warriors"
+graphic_alt   = "-"
+sound_move    = "m_warriors"
+sound_move_alt = "m_generic"
+sound_fight   = "f_warriors"
+sound_fight_alt = "f_generic"
+build_cost    = 40
+pop_cost      = 0
+attack        = 3
+defense       = 3
+hitpoints     = 12
+firepower     = 1
+move_rate     = 1
+vision_radius_sq = 2
+transport_cap = 0
+fuel          = 0
+uk_happy      = 1
+uk_shield     = 0
+uk_food       = 0
+uk_gold       = 2
+flags         = ""
+roles         = "DefendGood", "FirstBuild"
+helptext      = _("\
+Saxon noblemen and their personal armies\
+")
+
+[unit_fyrdsmen]
+name          = _("Fyrdsmen")
+class         = "Land"
+tech_req      = "None"
+obsolete_by   = "None"
 graphic       = "u.warriors"
 graphic_alt   = "-"
 sound_move    = "m_warriors"
@@ -491,57 +522,25 @@ sound_fight_alt = "f_generic"
 build_cost    = 10
 pop_cost      = 0
 attack        = 1
-defense       = 1
-hitpoints     = 10
-firepower     = 1
-move_rate     = 1
-vision_radius_sq = 2
-transport_cap = 0
-fuel          = 0
-uk_happy      = 1
-uk_shield     = 1
-uk_food       = 0
-uk_gold       = 0
-flags         = ""
-roles         = "DefendOk", "FirstBuild"
-helptext      = _("\
-This unit may be built from the start of the game.  It is the\
- weakest offensive unit.\
-")
-
-[unit_phalanx]
-name          = _("Phalanx")
-class         = "Land"
-tech_req      = "Bronze Working"
-obsolete_by   = "Pikemen"
-graphic       = "u.phalanx"
-graphic_alt   = "-"
-sound_move    = "m_phalanx"
-sound_move_alt = "m_generic"
-sound_fight   = "f_phalanx"
-sound_fight_alt = "f_generic"
-build_cost    = 20
-pop_cost      = 0
-attack        = 1
 defense       = 2
-hitpoints     = 10
+hitpoints     = 8
 firepower     = 1
 move_rate     = 1
 vision_radius_sq = 2
 transport_cap = 0
 fuel          = 0
 uk_happy      = 1
-uk_shield     = 1
-uk_food       = 0
+uk_shield     = 0
+uk_food       = 1
 uk_gold       = 0
 flags         = ""
 roles         = "DefendGood", "FirstBuild"
 helptext      = _("\
-The Phalanx is armored infantry, suitable for defending your cities.\
+Levied part time soldiers, part time farmers\
 ")
 
-[unit_archers]
-name          = _("Archers")
+[unit_fyrdsmen_archers]
+name          = _("Fyrdsmen Archers")
 class         = "Land"
 tech_req      = "Warrior Code"
 obsolete_by   = "None"
@@ -551,31 +550,30 @@ sound_move    = "m_archers"
 sound_move_alt = "m_generic"
 sound_fight   = "f_archers"
 sound_fight_alt = "f_generic"
-build_cost    = 30
+build_cost    = 12
 pop_cost      = 0
-attack        = 3
-defense       = 2
-hitpoints     = 10
+attack        = 2
+defense       = 1
+hitpoints     = 6
 firepower     = 1
 move_rate     = 1
 vision_radius_sq = 2
 transport_cap = 0
 fuel          = 0
 uk_happy      = 1
-uk_shield     = 1
-uk_food       = 0
+uk_shield     = 0
+uk_food       = 1
 uk_gold       = 0
 flags         = ""
 roles         = "DefendOk"
 helptext      = _("\
-Archers fight with bows and arrows and have a good offensive\
- value as well as decent defense.\
+Fyrdsmen armed with bows\
 ")
 
-[unit_legion]
-name          = _("Legion")
+[unit_jarls]
+name          = _("Jarls")
 class         = "Land"
-tech_req      = "Iron Working"
+tech_req      = "None"
 obsolete_by   = "None"
 graphic       = "u.legion"
 graphic_alt   = "-"
@@ -583,69 +581,62 @@ sound_move    = "m_legion"
 sound_move_alt = "m_generic"
 sound_fight   = "f_legion"
 sound_fight_alt = "f_generic"
-build_cost    = 40
+build_cost    = 50
 pop_cost      = 0
 attack        = 4
 defense       = 2
-hitpoints     = 10
+hitpoints     = 12
 firepower     = 1
 move_rate     = 1
 vision_radius_sq = 2
 transport_cap = 0
 fuel          = 0
 uk_happy      = 1
-uk_shield     = 1
+uk_shield     = 0
+uk_food       = 0
+uk_gold       = 2
+flags         = ""
+roles         = "DefendOk"
+helptext      = _("\
+Norse noblemen and their retinue\
+")
+
+[unit_viking_raiders]
+name          = _("Viking Raiders")
+class         = "Land"
+tech_req      = "None"
+obsolete_by   = "None"
+graphic       = "u.legion"
+graphic_alt   = "-"
+sound_move    = "m_legion"
+sound_move_alt = "m_generic"
+sound_fight   = "f_legion"
+sound_fight_alt = "f_generic"
+build_cost    = 60
+pop_cost      = 0
+attack        = 2
+defense       = 2
+hitpoints     = 8
+firepower     = 1
+move_rate     = 1
+vision_radius_sq = 2
+transport_cap = 0
+fuel          = 0
+uk_happy      = 0
+uk_shield     = 0
 uk_food       = 0
 uk_gold       = 0
-flags         = ""
+flags         = "NoHome"
 roles         = "DefendOk", "Hut", "BarbarianBuild", "BarbarianSea"
 helptext      = _("\
-Legions are heavily armed and well disciplined infantry\
- units with an excellent offensive value.\
+Viking Raiders\
 ")
 
-[unit_pikemen]
-name          = _("Pikemen")
-class         = "Land"
-tech_req      = "Feudalism"
-obsolete_by   = "None"
-graphic       = "u.pikemen"
-graphic_alt   = "-"
-sound_move    = "m_pikemen"
-sound_move_alt = "m_generic"
-sound_fight   = "f_pikemen"
-sound_fight_alt = "f_generic"
-build_cost    = 20
-pop_cost      = 0
-attack        = 1
-defense       = 2
-hitpoints     = 10
-firepower     = 1
-move_rate     = 1
-vision_radius_sq = 2
-transport_cap = 0
-fuel          = 0
-uk_happy      = 1
-uk_shield     = 1
-uk_food       = 0
-uk_gold       = 0
-bonuses       =
-   { "flag", "type", "value"
-     "Horse", "DefenseMultiplier", 1
-   }
-flags         = ""
-roles         = "DefendGood", "FirstBuild"
-helptext      = _("\
-Equipped with long pikes, Pikemen replaces Phalanx\
- as the preferred city defender. Pikemen get double defense when\
- attacked by mounted units (except Cavalry).\
-")
-
-[unit_horsemen]
-name          = _("Horsemen")
+[unit_scout_cavalry]
+name          = _("Scout Cavalry")
 class         = "Land"
 tech_req      = "Horseback Riding"
-obsolete_by   = "Knights"
+obsolete_by   = "None"
 graphic       = "u.horsemen"
 graphic_alt   = "-"
 sound_move    = "m_horsemen"
@@ -654,12 +645,12 @@ sound_fight   = "f_horsemen"
 sound_fight_alt = "f_generic"
 build_cost    = 20
 pop_cost      = 0
-attack        = 2
+attack        = 1
 defense       = 1
-hitpoints     = 10
+hitpoints     = 8
 firepower     = 1
 move_rate     = 2
-vision_radius_sq = 2
+vision_radius_sq = 6
 transport_cap = 0
 fuel          = 0
 uk_happy      = 1
@@ -667,113 +658,16 @@ uk_shield     = 1
 uk_food       = 0
 uk_gold       = 0
 flags         = "Horse"
-roles         = "AttackFast", "Hut", "Barbarian", "Hunter"
+roles         = "AttackFast", "Hut", "Barbarian", "Hunter", "Explorer"
 helptext      = _("\
 Horsemen are mounted warriors and an early\
  shock-troop that can penetrate deep into\
  enemy territory.\
 ")
 
-[unit_chariot]
-name          = _("Chariot")
-class         = "Land"
-tech_req      = "The Wheel"
-obsolete_by   = "Knights"
-graphic       = "u.chariot"
-graphic_alt   = "-"
-sound_move    = "m_chariot"
-sound_move_alt = "m_generic"
-sound_fight   = "f_chariot"
-sound_fight_alt = "f_generic"
-build_cost    = 30
-pop_cost      = 0
-attack        = 3
-defense       = 1
-hitpoints     = 10
-firepower     = 1
-move_rate     = 2
-vision_radius_sq = 2
-transport_cap = 0
-fuel          = 0
-uk_happy      = 1
-uk_shield     = 1
-uk_food       = 0
-uk_gold       = 0
-flags         = "Horse"
-roles         = "AttackFast", "Hut", "Hunter"
-helptext      = _("\
-Chariots are horse-pulled war wagons, stronger\
- but more expensive than horsemen.\
-")
-
-[unit_knights]
-name          = _("Knights")
-class         = "Land"
-tech_req      = "Chivalry"
-obsolete_by   = "None"
-graphic       = "u.knights"
-graphic_alt   = "-"
-sound_move    = "m_knights"
-sound_move_alt = "m_generic"
-sound_fight   = "f_knights"
-sound_fight_alt = "f_generic"
-build_cost    = 40
-pop_cost      = 0
-attack        = 4
-defense       = 2
-hitpoints     = 10
-firepower     = 1
-move_rate     = 2
-vision_radius_sq = 2
-transport_cap = 0
-fuel          = 0
-uk_happy      = 1
-uk_shield     = 1
-uk_food       = 0
-uk_gold       = 0
-flags         = "Horse"
-roles         = "AttackFast", "HutTech", "BarbarianTech",
-                "BarbarianBuildTech", "BarbarianSeaTech", "Hunter"
-helptext      = _("\
-Knights are mounted and heavily armored warriors.\
-")
-
-[unit_catapult]
-name          = _("Catapult")
-class         = "Big Land"
-tech_req      = "Mathematics"
-obsolete_by   = "None"
-graphic       = "u.catapult"
-graphic_alt   = "-"
-sound_move    = "m_catapult"
-sound_move_alt = "m_generic"
-sound_fight   = "f_catapult"
-sound_fight_alt = "f_generic"
-build_cost    = 40
-pop_cost      = 0
-attack        = 6
-defense       = 1
-hitpoints     = 10
-firepower     = 1
-move_rate     = 1
-vision_radius_sq = 2
-transport_cap = 0
-fuel          = 0
-uk_happy      = 1
-uk_shield     = 1
-uk_food       = 0
-uk_gold       = 0
-flags         = ""
-roles         = "AttackStrong"
-helptext      = _("\
-Catapults are large rock-throwing machines of war.\
- They are very strong attackers but equally weak\
- defenders and will need an escort to be effective.\
-")
-
-[unit_trireme]
+[unit_longship]
 ; /* TRANS: unit type */
-name          = _("Trireme")
+name          = _("Longship")
 class         = "Trireme"
 tech_req      = "Map Making"
 obsolete_by   = "None"
@@ -783,7 +677,7 @@ sound_move    = "m_trireme"
 sound_move_alt = "m_generic"
 sound_fight   = "f_trireme"
 sound_fight_alt = "f_generic"
-build_cost    = 40
+build_cost    = 60
 pop_cost      = 0
 attack        = 1
 defense       = 1
@@ -801,14 +695,43 @@ cargo         = "Land"
 flags         = "BadCityDefender"
 roles         = "Ferryboat"
 helptext      = _("\
-The Trireme is your first boat unit. It can act\
- as a transport ship and has rudimentary offensive\
- capabilities, and unlike later boats can travel on\
- rivers, but it may not enter deep ocean tiles.\
+ Shallow-bottomed Norse ship capable of travelling up rivers\
+")
+
+[unit_cog]
+name          = _("Cog")
+class         = "Sea"
+tech_req      = "Navigation"
+obsolete_by   = "None"
+graphic       = "u.caravel"
+graphic_alt   = "-"
+sound_move    = "m_caravel"
+sound_move_alt = "m_generic"
+sound_fight   = "f_caravel"
+sound_fight_alt = "f_generic"
+build_cost    = 40
+pop_cost      = 0
+attack        = 1
+defense       = 1
+hitpoints     = 10
+firepower     = 1
+move_rate     = 2
+vision_radius_sq = 2
+transport_cap = 3
+fuel          = 0
+uk_happy      = 1
+uk_shield     = 1
+uk_food       = 0
+uk_gold       = 0
+cargo         = "Land"
+flags         = "BadCityDefender"
+roles         = "Ferryboat", "BarbarianBoat"
+helptext      = _("\
+Square-rigged ship based on the Norse Knarr that appeared during the 10th century.\
 ")
 
 [unit_holk]
-name          = _("Holk")
+name          = _("Knarr")
 class         = "Sea"
 tech_req      = "Navigation"
 obsolete_by   = "None"
@@ -836,9 +759,9 @@ cargo         = "Land"
 flags         = "BadCityDefender"
 roles         = "Ferryboat", "BarbarianBoat"
 helptext      = _("\
-The Holk is a ship more suited to deep sea travel and can enter\
- any ocean tile.\
+A Norse ship built for long sea voyages and used during the Viking expansion.\
 ")
+
 
 [unit_diplomat]
 name          = _("Diplomat")
@@ -999,38 +922,6 @@ Every Caravan that is used to build a wonder will add 50 shields\
 TIP:  You can stockpile a stack of Caravans in advance and bring\
  them all into a city where you have started to build a wonder,\
  and finish it in only one turn!\
-")
-
-[unit_explorer]
-name          = _("Explorer")
-class         = "Land"
-tech_req      = "Seafaring"
-obsolete_by   = "None"
-graphic       = "u.explorer"
-graphic_alt   = "-"
-sound_move    = "m_explorer"
-sound_move_alt = "m_generic"
-sound_fight   = "f_explorer"
-sound_fight_alt = "f_generic"
-build_cost    = 30
-pop_cost      = 0
-attack        = 0
-defense       = 1
-hitpoints     = 10
-firepower     = 1
-move_rate     = 1
-vision_radius_sq = 2
-transport_cap = 0
-fuel          = 0
-uk_happy      = 0
-uk_shield     = 0
-uk_food       = 0
-uk_gold       = 0
-flags         = "IgTer", "IgZOC", "NonMil"
-roles         = "Explorer"
-helptext      = _("\
-Explorers are brave individuals that are very useful for\
- mapping unknown territory.\
 ")
 
 [unit_leader]
