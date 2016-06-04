@@ -829,22 +829,6 @@ reqs	=
       "Building", "Granary", "City"
     }
 
-[effect_town_radius]
-type    = "City_Radius_Sq"
-value	= 50
-reqs	=
-    { "type", "name", "range"
-      "Building", "Town", "City"
-    }
-
-[effect_town_vision]
-type    = "City_Vision_Radius_Sq"
-value	= 10
-reqs	=
-    { "type", "name", "range"
-      "Building", "Town", "City"
-    }
-
 [effect_harbour]
 type    = "Output_Add_Tile"
 value	= 1
@@ -1181,7 +1165,7 @@ value   = 2
 ; City radius 2 - radius is sqrt(2+3) = 2.24
 [effect_city_radius_1]
 type    = "City_Radius_Sq"
-value   = 3
+value   = 10
 reqs    =
     { "type", "name", "range"
       "MinSize", "3", "City"
@@ -1207,10 +1191,10 @@ reqs    =
 ; City radius 3 - radius is sqrt(2+3+5) = 3.16
 [effect_city_radius_2]
 type    = "City_Radius_Sq"
-value   = 5
+value   = 20
 reqs    =
     { "type", "name", "range"
-      "MinSize", "10", "City"
+      "MinSize", "6", "City"
     }
 
 [effect_city_image_2]
@@ -1242,10 +1226,10 @@ reqs    =
 ; City radius 4 - radius is sqrt(2+3+5+7) = 4.12
 [effect_city_radius_3]
 type    = "City_Radius_Sq"
-value   = 7
+value   = 30
 reqs    =
     { "type", "name", "range"
-      "MinSize", "30", "City"
+      "MinSize", "12", "City"
     }
 
 [effect_city_image_3]

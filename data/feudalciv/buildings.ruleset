@@ -533,26 +533,6 @@ Together with a Library, a University increases the science\
  production of a city by 250%.\
 ")
 
-[building_town]
-name		= _("Town")
-genus		= "Improvement"
-reqs	=
-    { "type", "name", "range"
-      "Building", "Granary", "City"
-    }
-graphic	= "b.Granary"
-graphic_alt	= "-"
-obsolete_by	= "None"
-build_cost	= 120
-upkeep		= 0
-sabotage	= 100
-sound		= "b_granary"
-sound_alt	= "b_generic"
-; /* xgettext:no-c-format */
-helptext	= _("\
-Place that has people
-")
-
 [building_asmiths_trading_co]
 name		= _("A.Smith's Trading Co.")
 genus		= "GreatWonder"
