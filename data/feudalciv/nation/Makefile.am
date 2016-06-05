@@ -7,7 +7,7 @@ pkgdatadir = $(datadir)/@PACKAGE@/feudalciv/nation
 pkgdata_DATA = \
 		barbarian.ruleset \
 		berkshire.ruleset \
-		brycheinion.ruleset \
+		brycheiniog.ruleset \
 		buelt.ruleset \
 		cornwall.ruleset \
 		danelaw.ruleset \
@@ -15,6 +15,7 @@ pkgdata_DATA = \
 		dorset.ruleset \
 		dyfed.ruleset \
 		essex.ruleset \
+		glywysing.ruleset \
 		gwent.ruleset \
 		gwynedd.ruleset \
 		hampshire.ruleset \
@@ -25,6 +26,8 @@ pkgdata_DATA = \
 		northumbria.ruleset \
 		pirate.ruleset \
 		powys.ruleset \
+		seisyllwg.ruleset \
+		somerset.ruleset \
 		suffolk.ruleset \
 		surrey.ruleset \
 		sussex.ruleset \

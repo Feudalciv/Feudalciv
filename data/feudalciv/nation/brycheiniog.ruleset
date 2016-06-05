@@ -1,7 +1,7 @@
-[nation_brycheinion]
+[nation_brycheiniog]
 
-name=_("Brycheinion")
-plural=_("?plural:Brycheinion")
+name=_("Brycheiniog")
+plural=_("?plural:Brycheiniog")
 groups= "Feudalciv"
 legend=_("")
 
