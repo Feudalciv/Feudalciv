@@ -138,6 +138,10 @@ static enum diplstate_type pact_clause_to_diplstate_type(enum clause_type type)
     return DS_PEACE;
   case CLAUSE_CEASEFIRE:
     return DS_CEASEFIRE;
+  case CLAUSE_BECOME_SUBJECT:
+    return DS_SUBJECT;
+  case CLAUSE_VASSALIZE:
+    return DS_OVERLORD;
   default:
     log_error("Invalid diplomatic clause %d.", type)
     return DS_WAR;

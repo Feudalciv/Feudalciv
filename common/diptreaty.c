@@ -161,7 +161,9 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
       && ((ds == DS_PEACE && type == CLAUSE_PEACE)
           || (ds == DS_ARMISTICE && type == CLAUSE_PEACE)
           || (ds == DS_ALLIANCE && type == CLAUSE_ALLIANCE)
-          || (ds == DS_CEASEFIRE && type == CLAUSE_CEASEFIRE))) {
+          || (ds == DS_CEASEFIRE && type == CLAUSE_CEASEFIRE))
+          || (ds == DS_OVERLORD && type == CLAUSE_BECOME_SUBJECT)
+          || (ds == DS_SUBJECT && type == CLAUSE_VASSALIZE)) {
     /* we already have this diplomatic state */
     log_error("Illegal treaty suggested between %s and %s - they "
               "already have this treaty level.",

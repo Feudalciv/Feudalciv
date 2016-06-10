@@ -328,6 +328,18 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
             return;
           }
           break;
+    case CLAUSE_BECOME_SUBJECT:
+          diplcheck = pplayer_can_make_treaty(pplayer, pother, DS_OVERLORD);
+          if (diplcheck != DIPL_OK) {
+            return;
+          }
+          break;
+    case CLAUSE_VASSALIZE:
+          diplcheck = pplayer_can_make_treaty(pplayer, pother, DS_SUBJECT);
+          if (diplcheck != DIPL_OK) {
+            return;
+          }
+          break;
 	case CLAUSE_GOLD:
 	  if (pplayer->economic.gold < pclause->value) {
             notify_player(pplayer, NULL, E_DIPLOMACY, ftc_server,
@@ -431,6 +443,18 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
           break;
   case CLAUSE_CEASEFIRE:
           diplcheck = pplayer_can_make_treaty(pplayer, pother, DS_CEASEFIRE);
+          if (diplcheck != DIPL_OK) {
+            goto cleanup;
+          }
+          break;
+    case CLAUSE_BECOME_SUBJECT:
+          diplcheck = pplayer_can_make_treaty(pplayer, pother, DS_OVERLORD);
+          if (diplcheck != DIPL_OK) {
+            goto cleanup;
+          }
+          break;
+    case CLAUSE_VASSALIZE:
+          diplcheck = pplayer_can_make_treaty(pplayer, pother, DS_SUBJECT);
           if (diplcheck != DIPL_OK) {
             goto cleanup;
           }
@@ -626,7 +650,38 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
         give_allied_visibility(pdest, pgiver);
 
         worker_refresh_required = TRUE;
-	break;
+      case CLAUSE_BECOME_SUBJECT:
+        ds_giverdest->type = DS_OVERLORD;
+        ds_destgiver->type = DS_SUBJECT;
+        ds_giverdest->max_state = dst_closest(DS_OVERLORD,
+                                              ds_giverdest->max_state);
+        ds_destgiver->max_state = dst_closest(DS_SUBJECT,
+                                              ds_destgiver->max_state);
+        notify_player(pgiver, NULL, E_TREATY_BECOME_SUBJECT, ftc_server,
+                      _("You pledge fealty to %s."),
+                      player_name(pdest));
+        notify_player(pdest, NULL, E_TREATY_VASSALIZE, ftc_server,
+                      _("%s has agreed become your servant."),
+                      player_name(pgiver));
+        give_allied_visibility(pgiver, pdest);
+        give_allied_visibility(pdest, pgiver);
+        break;
+      case CLAUSE_VASSALIZE:
+        ds_giverdest->type = DS_SUBJECT;
+        ds_destgiver->type = DS_OVERLORD;
+        ds_giverdest->max_state = dst_closest(DS_SUBJECT,
+                                              ds_giverdest->max_state);
+        ds_destgiver->max_state = dst_closest(DS_OVERLORD,
+                                              ds_destgiver->max_state);
+        notify_player(pdest, NULL, E_TREATY_BECOME_SUBJECT, ftc_server,
+                      _("You pledge fealty to %s."),
+                      player_name(pgiver));
+        notify_player(pgiver, NULL, E_TREATY_VASSALIZE, ftc_server,
+                      _("%s has agreed become your servant."),
+                      player_name(pdest));
+        give_allied_visibility(pgiver, pdest);
+        give_allied_visibility(pdest, pgiver);
+        break;
       case CLAUSE_VISION:
 	give_shared_vision(pgiver, pdest);
         notify_player(pgiver, NULL, E_TREATY_SHARED_VISION, ftc_server,

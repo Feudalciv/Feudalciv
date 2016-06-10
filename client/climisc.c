@@ -291,6 +291,14 @@ void client_diplomacy_clause_string(char *buf, int bufsiz,
     fc_snprintf(buf, bufsiz, _("The %s give an embassy"),
                 nation_plural_for_player(pclause->from));
     break;
+  case CLAUSE_BECOME_SUBJECT:
+    fc_snprintf(buf, bufsiz, _("%s becomes your subject"),
+                player_name(pclause->from));
+    break;
+  case CLAUSE_VASSALIZE:
+    fc_snprintf(buf, bufsiz, _("%s becomes your overlord"),
+                player_name(pclause->from));
+    break;
   default:
     fc_assert(FALSE);
     if (bufsiz > 0) {
