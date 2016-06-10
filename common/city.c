@@ -1818,6 +1818,10 @@ int city_turns_to_build(const struct city *pcity,
 **************************************************************************/
 int city_turns_to_grow(const struct city *pcity)
 {
+  if (pcity->surplus[O_FOOD] < 0 && abs(game.info.pop_base_growth + game.info.pop_base_growth * pcity->surplus[O_FOOD]) < 0.001)
+  {
+    return FC_INFINITY;
+  }
   if (pcity->surplus[O_FOOD] > 0) {
     return (int)ceil(log((double)city_population_for_size(city_size_get(pcity) + 1.0) / city_population(pcity))/log(1.0 + game.info.pop_base_growth));
   } else if (pcity->surplus[O_FOOD] < 0) {
