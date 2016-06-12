@@ -1144,6 +1144,7 @@ shield_bonus   = 0
 trade_bonus    = 0
 compat_special = "Road"
 native_to      = "Land", "Big Land"
+hidden_by      = "Highway"
 flags          = "NativeTile", "RequiresBridge", "AutoOnCityCenter"
 helptext       = _("\
 Roads allow your land units to move more quickly, and allow heavy\
@@ -1154,6 +1155,30 @@ Roads allow your land units to move more quickly, and allow heavy\
 Building roads on river tiles requires knowledge of Bridge Building.\
  City center tiles automatically get roads (unless they are on a river\
  tile and you do not yet know Bridge Building).\
+")
+
+[road_highway]
+name           = _("Highway")
+graphic        = "road.highway"
+graphic_alt    = "-"
+activity_gfx   = "unit.road"
+act_gfx_alt    = "unit.road"
+move_cost      = 2
+build_time     = 3
+food_incr      = 0
+shield_incr    = 0
+trade_incr     = 0
+food_bonus     = 0
+shield_bonus   = 50
+trade_bonus    = 0
+compat_special = "Railroad"
+native_to      = "Land", "Big Land"
+flags          = "NativeTile", "RequiresBridge"
+helptext       = _("\
+A highway increases movement speed of units and  also increases any\
+shield resources produced by a tile.\
+ A tile whose road is upgraded to a highway retains any trade bonus\
+ from the road as well.\
 ")
 
 [road_river]

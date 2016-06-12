@@ -247,4 +247,5 @@ styles =
       "road.rail",   "ParityCombined"
       "road.maglev", "ParityCombined"
       "road.river",  "River"
+      "road.highway", "ParityCombined"
     }
