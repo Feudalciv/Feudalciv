@@ -2004,3 +2004,10 @@ PACKET_EDIT_OBJECT_CREATED = 219; sc, dsend
   SINT32 tag;
   SINT32 id;
 end
+
+PACKET_EVENT_RESPONSE = 220; dsend
+  PLAYER player;
+  EVENT event;
+  int response;
+end
+
