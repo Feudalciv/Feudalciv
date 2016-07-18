@@ -183,18 +183,19 @@ static void notify_connect_msg_response(GtkWidget *w, gint response)
   User has responded to notify dialog with possibility to center
   (goto) on event location.
 *****************************************************************/
-static void notify_custom_response(GtkWidget *w, gint response)
+static void notify_trigger_response(GtkWidget *w, gint response)
 {
-
+  const char *id = g_object_get_data(G_OBJECT(w), "id");
+  dsend_packet_trigger_response(&client.conn, id, response);
+  gtk_widget_destroy(w);
 }
 
 /**************************************************************************
   Popup a dialog to display information about an event
 **************************************************************************/
-void popup_notify_custom_dialog(const char *headline, const char *lines,
-                                int num_responses, const char **responses,
-                                const struct text_tag_list *tags,
-                                struct tile *ptile)
+void popup_notify_trigger_dialog(const char * id, const char *headline,
+                                 const char *lines, int num_responses,
+                                 const char **responses)
 {
   GtkWidget *shell, *label, *command;
   int i;
@@ -212,13 +213,14 @@ void popup_notify_custom_dialog(const char *headline, const char *lines,
   gtk_widget_show(label);
 
   for (i = 0; i < num_responses; i++) {
-    command = gtk_stockbutton_new(GTK_STOCK_JUMP_TO,
+    command = gtk_stockbutton_new(GTK_STOCK_BOLD,
       responses[i]);
     gtk_dialog_add_action_widget(GTK_DIALOG(shell), command, i + 1);
     gtk_widget_show(command);
   }
 
-  g_signal_connect(shell, "response", G_CALLBACK(notify_goto_response), NULL);
+  g_object_set_data(G_OBJECT(shell), "id", id);
+  g_signal_connect(shell, "response", G_CALLBACK(notify_trigger_response), NULL);
   gtk_widget_show(shell);
 }
 

@@ -3,7 +3,7 @@
 Max used id:
 ============
 
-Max id: 236
+Max id: 238
 
 Packets are not ordered by their id, but by their category. New packet
 with higher id may get added to existing category, and not to the end of file.
@@ -2000,14 +2000,20 @@ end
 
 /************** Server Editor Packets **********************/
 
-PACKET_EDIT_OBJECT_CREATED = 219; sc, dsend
+PACKET_EDIT_OBJECT_CREATED = 219; sc, handle-per-conn, dsend
   SINT32 tag;
   SINT32 id;
 end
 
-PACKET_EVENT_RESPONSE = 220; dsend
-  PLAYER player;
-  EVENT event;
-  int response;
+PACKET_TRIGGER_RESPONSE = 237; cs, handle-per-conn, dsend
+  STRING name[256];
+  UINT8 response;
 end
 
+PACKET_TRIGGER = 238; sc, handle-via-packet, handle-per-conn
+  STRING name[256];
+  STRING title[256];
+  STRING desc[MAX_LEN_PACKET];
+  UINT8 responses_num;
+  STRING responses[32:responses_num][MAX_LEN_NAME];
+end

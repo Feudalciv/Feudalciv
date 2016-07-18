@@ -103,8 +103,10 @@ int collect_already_built_targets(struct universal *targets,
 
 /* the number of units in city */
 int num_present_units_in_city(struct city* pcity);
-int num_supported_units_in_city(struct city* pcity);	
+int num_supported_units_in_city(struct city* pcity);
 
+void handle_triggered_event(const char *name, const char *title, const char *desc,
+        int num_responses, const char **responses);
 void handle_event(const char *featured_text, struct tile *ptile,
                   enum event_type event, int conn_id);
 void create_event(struct tile *ptile, enum event_type event,

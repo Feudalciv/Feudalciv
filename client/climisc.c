@@ -934,6 +934,15 @@ int num_present_units_in_city(struct city *pcity)
 }
 
 /**************************************************************************
+  Handles a triggered event
+**************************************************************************/
+void handle_triggered_event(const char *name, const char *title, const char *desc,
+        int num_responses, const char **responses)
+{
+  popup_notify_trigger_dialog(name, title, desc, num_responses, responses);
+}
+
+/**************************************************************************
   Handles a chat or event message.
 **************************************************************************/
 void handle_event(const char *featured_text, struct tile *ptile,
