@@ -373,7 +373,7 @@ static void script_server_signal_create(void)
 void script_server_trigger_signal_create(const char *signal_name,
                              int nargs, int args[])
 {
-  luascript_signal_create_array(fcl_main, signal_name, nargs, args);
+  luascript_signal_create_array(fcl, signal_name, nargs, args);
 }
 
 /*****************************************************************************

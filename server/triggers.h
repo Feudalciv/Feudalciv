@@ -23,7 +23,7 @@ extern "C" {
 /* common */
 #include "connection.h"
 #include "fc_types.h"
-#include "multipliers.h"
+
 
 #include "requirements.h"
 
@@ -34,6 +34,11 @@ struct trigger {
   const char * signal;
   const char * mtth;
   bool repeatable;
+
+  const char * title;
+  const char * desc;
+  const int responses_num;;
+  const char ** responses;
 
   /* An trigger can have multiple requirements.  The trigger will only be
    * active if all of these requirement are met. */
@@ -66,17 +71,18 @@ void trigger_cache_free(void);
 typedef bool (*itc_cb)(struct trigger*, void *data);
 bool iterate_trigger_cache(itc_cb cb, void *data);
 
-bool check_trigger(struct trigger *trigger,
-                 const struct player *target_player,
-                 const struct player *other_player,
-                 const struct city *target_city,
-                 const struct impr_type *target_building,
-                 const struct tile *target_tile,
-                 const struct unit *target_unit,
-                 const struct unit_type *target_unittype,
-                 const struct output_type *target_output,
-                 const struct specialist *target_specialist,
-                 const struct action *target_action);
+bool check_trigger(struct trigger *ptrigger,
+                   const struct player *target_player,
+                   const struct player *other_player,
+                   const struct city *target_city,
+                   const struct impr_type *target_building,
+                   const struct tile *target_tile,
+                   const struct unit *target_unit,
+                   const struct unit_type *target_unittype,
+                   const struct output_type *target_output,
+                   const struct specialist *target_specialist);
+
+void trigger_by_name(struct player *pplayer, const char * name);
 
 #ifdef __cplusplus
 }

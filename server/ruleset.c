@@ -62,6 +62,7 @@
 #include "rssanity.h"
 #include "settings.h"
 #include "srv_main.h"
+#include "triggers.h"
 
 /* server/advisors */
 #include "advruleset.h"
@@ -170,8 +171,7 @@ static bool load_ruleset_veteran(struct section_file *file,
                                  const char *path,
                                  struct veteran_system **vsystem, char *err,
                                  size_t err_len);
-static bool load_ruleset_triggers(struct section_file *file,
-                                  struct rscompat_info *compat);
+static bool load_ruleset_triggers(struct section_file *file);
 
 
 /**************************************************************************
@@ -4570,21 +4570,18 @@ static bool load_ruleset_effects(struct section_file *file)
 /**************************************************************************
 Load triggers.ruleset file
 **************************************************************************/
-static bool load_ruleset_triggers(struct section_file *file,
-                                 struct rscompat_info *compat)
+static bool load_ruleset_triggers(struct section_file *file)
 {
   struct section_list *sec;
   const char *filename;
   bool ok = TRUE;
 
   filename = secfile_name(file);
-
-  compat->ver_triggers = rscompat_check_capabilities(file, filename, compat);
-  if (compat->ver_triggers <= 0) {
+  if (check_ruleset_capabilities(file, RULESET_CAPABILITIES, filename) == NULL) {
     return FALSE;
   }
+
   (void) secfile_entry_by_path(file, "datafile.description");   /* unused */
-  (void) secfile_entry_by_path(file, "datafile.ruledit");       /* unused */
 
   /* Parse triggers and add them to the triggers ruleset cache. */
   sec = secfile_sections_by_name_prefix(file, TRIGGER_SECTION_PREFIX);
@@ -4616,9 +4613,9 @@ static bool load_ruleset_triggers(struct section_file *file,
       break;
     }
 
-    ptrigger = trigger_new(signal, nargs, args, mtth, repeatable);
+    ptrigger = trigger_new(signal, mtth, repeatable);
 
-    reqs = lookup_req_list(file, compat, sec_name, "reqs", signal);
+    reqs = lookup_req_list(file, sec_name, "reqs", signal);
     if (reqs == NULL) {
       ok = FALSE;
       break;
@@ -4628,17 +4625,17 @@ static bool load_ruleset_triggers(struct section_file *file,
       trigger_req_append(ptrigger, *preq);
     } requirement_vector_iterate_end;
 
-    if (compat->compat_mode) {
-      reqs = lookup_req_list(file, compat, sec_name, "nreqs", signal);
-      if (reqs == NULL) {
-        ok = FALSE;
-        break;
-      }
-      requirement_vector_iterate(reqs, preq) {
-        preq->present = !preq->present;
-        trigger_req_append(ptrigger, *preq);
-      } requirement_vector_iterate_end;
+    reqs = lookup_req_list(file, sec_name, "nreqs", signal);
+    if (reqs == NULL) {
+      ok = FALSE;
+      break;
     }
+    requirement_vector_iterate(reqs, req) {
+      struct requirement *preq = fc_malloc(sizeof(*preq));
+
+      *preq = *req;
+      trigger_req_append(ptrigger, *preq);
+    } requirement_vector_iterate_end;
   } section_list_iterate_end;
   section_list_destroy(sec);
 
@@ -6220,7 +6217,7 @@ static bool load_rulesetdir(const char *rsdir, bool act)
     ok = load_ruleset_game(rsdir, act);
   }
   if (ok) {
-    ok = load_ruleset_triggers(triggerfile, &compat_info);
+    ok = load_ruleset_triggers(triggerfile);
   }
 
   if (ok) {

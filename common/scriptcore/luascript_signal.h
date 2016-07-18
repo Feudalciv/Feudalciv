@@ -30,6 +30,9 @@ void luascript_signal_emit_valist(struct fc_lua *fcl, const char *signal_name,
 void luascript_signal_emit(struct fc_lua *fcl, const char *signal_name,
                            int nargs, ...);
 
+void luascript_signal_emit_array(struct fc_lua *fcl, const char *signal_name,
+                           int nargs, int args[]);
+
 void luascript_signal_create_valist(struct fc_lua *fcl,
                                     const char *signal_name, int nargs,
                                     va_list args);

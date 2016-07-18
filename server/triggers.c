@@ -41,6 +41,9 @@
 
 #include "triggers.h"
 
+static void send_trigger(struct connection *pconn,
+                         struct trigger *ptrigger);
+void get_trigger_signal_arg_list(const struct trigger * ptrigger, int args[]);
 
 static bool initialized = FALSE;
 
@@ -177,27 +180,26 @@ void trigger_cache_free(void)
 
 **************************************************************************/
 bool check_trigger(struct trigger *ptrigger,
-                             const struct player *target_player,
-                             const struct player *other_player,
-                             const struct city *target_city,
-                             const struct impr_type *target_building,
-                             const struct tile *target_tile,
-                             const struct unit *target_unit,
-                             const struct unit_type *target_unittype,
-                             const struct output_type *target_output,
-                             const struct specialist *target_specialist,
-                             const struct action *target_action)
+                   const struct player *target_player,
+                   const struct player *other_player,
+                   const struct city *target_city,
+                   const struct impr_type *target_building,
+                   const struct tile *target_tile,
+                   const struct unit *target_unit,
+                   const struct unit_type *target_unittype,
+                   const struct output_type *target_output,
+                   const struct specialist *target_specialist)
 {
   /* For each trigger, see if it is active. */
-  if (are_reqs_active(target_player, other_player, target_city,
+  if (are_reqs_active(target_player, target_city,
                       target_building, target_tile,
-                      target_unit, target_unittype,
-                      target_output, target_specialist, target_action,
-      &trigger->reqs, RPT_CERTAIN)) {
+                      target_unittype,
+                      target_output, target_specialist,
+      &(ptrigger->reqs), RPT_CERTAIN)) {
       int nargs = ptrigger->reqs.size;
       int args[nargs];
       get_trigger_signal_arg_list(ptrigger, args);
-      script_server_trigger_signal_emit(ptrigger->signal, nargs, args);
+      script_server_trigger_emit(ptrigger->signal, nargs, args);
       return TRUE;
   }
 
@@ -216,9 +218,6 @@ void get_trigger_req_text(const struct trigger *ptrigger,
   /* FIXME: should we do something for present==FALSE reqs?
    * Currently we just ignore them. */
   requirement_vector_iterate(&ptrigger->reqs, preq) {
-    if (!preq->present) {
-      continue;
-    }
     if (buf[0] != '\0') {
       fc_strlcat(buf, Q_("?req-list-separator:+"), buf_len);
     }
@@ -270,9 +269,61 @@ bool iterate_trigger_cache(itc_cb cb, void *data)
 
 
 **************************************************************************/
-void get_trigger_signal_arg_list(const struct trigger * ptrigger, int[] args)
+void get_trigger_signal_arg_list(const struct trigger * ptrigger, int args[])
 {
-  requirement_vector_iterate(&old->reqs, preq) {
+  requirement_vector_iterate(&ptrigger->reqs, preq) {
 
   } requirement_vector_iterate_end;
 }
+
+/**************************************************************************
+ Fire trigger for given player
+**************************************************************************/
+static void trigger_for_player(struct player *pdest, struct trigger *ptrigger)
+{
+  struct connection *dest = NULL;       /* The 'pdest' user. */
+
+  /* Find the user of the player 'pdest'. */
+  conn_list_iterate(pdest->connections, pconn) {
+    if (!pconn->observer) {
+      dest = pconn;
+      break;
+    }
+  } conn_list_iterate_end;
+
+  if (NULL != dest) {
+    send_trigger(dest, ptrigger);
+  }
+}
+
+
+/**************************************************************************
+  Send a trigger packet.
+**************************************************************************/
+static void send_trigger(struct connection *pconn,
+                          struct trigger *ptrigger)
+{
+  struct packet_trigger packet;
+  int i;
+
+  strcpy(packet.name, ptrigger->signal);
+  strcpy(packet.title, ptrigger->title);
+  strcpy(packet.desc, ptrigger->desc);
+  packet.responses_num = ptrigger->responses_num;
+  for (i = 0; i < ptrigger->responses_num; i++) {
+    strcpy(packet.responses[i], ptrigger->responses[i]);
+  }
+
+  send_packet_trigger(pconn, &packet);
+}
+
+/**************************************************************************
+  Fire the trigger with the given name
+**************************************************************************/
+void trigger_by_name(struct player *pplayer, const char * name);
+{
+  struct trigger *ptrigger;
+  /* TODO: Find trigger by name */
+  trigger_for_player(pplayer, ptrigger);
+}
+

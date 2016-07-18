@@ -160,7 +160,7 @@ static void signal_destroy(struct signal *psignal)
   Invoke all the callback functions attached to a given signal.
 *****************************************************************************/
 void luascript_signal_emit_array(struct fc_lua *fcl, const char *signal_name,
-                                 int nargs, int[] args)
+                                 int nargs, int args[])
 {
   struct signal *psignal;
 

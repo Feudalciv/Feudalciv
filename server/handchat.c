@@ -92,7 +92,7 @@ static void send_chat_msg(struct connection *pconn,
   vpackage_chat_msg(&packet, sender, color, format, args);
   va_end(args);
 
-  send_packet_chat_msg(pconn, &packet);
+  send_packet_trigger(pconn, &packet);
 }
 
 /**************************************************************************
