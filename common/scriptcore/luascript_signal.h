@@ -17,6 +17,8 @@
 extern "C" {
 #endif /* __cplusplus */
 
+#include "luascript_types.h"
+
 /* utility */
 #include "support.h"
 
@@ -31,14 +33,14 @@ void luascript_signal_emit(struct fc_lua *fcl, const char *signal_name,
                            int nargs, ...);
 
 void luascript_signal_emit_array(struct fc_lua *fcl, const char *signal_name,
-                           int nargs, int args[]);
+                           int nargs, void* args[]);
 
 void luascript_signal_create_valist(struct fc_lua *fcl,
                                     const char *signal_name, int nargs,
                                     va_list args);
 void luascript_signal_create_array(struct fc_lua *fcl,
                                     const char *signal_name, int nargs,
-                                    int args[]);
+                                    enum api_types args[]);
 void luascript_signal_create(struct fc_lua *fcl, const char *signal_name,
                              int nargs, ...);
 void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,

@@ -20,9 +20,11 @@
 
 /* common/scriptcore */
 #include "luascript.h"
+#include "packets.h"
 
 /* server */
 #include "notify.h"
+#include "triggers.h"
 
 #include "api_server_notify.h"
 
@@ -49,3 +51,10 @@ void api_notify_event_msg(lua_State *L, Player *pplayer, Tile *ptile,
   notify_player(pplayer, ptile, event, ftc_any, "%s", message);
 }
 
+/*****************************************************************************
+  Send a manual trigger to a player.
+*****************************************************************************/
+void api_notify_trigger(lua_State *L, Player *pplayer, const char *name)
+{
+  //trigger_by_name(pplayer, name);
+}

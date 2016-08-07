@@ -4586,19 +4586,28 @@ static bool load_ruleset_triggers(struct section_file *file)
   /* Parse triggers and add them to the triggers ruleset cache. */
   sec = secfile_sections_by_name_prefix(file, TRIGGER_SECTION_PREFIX);
   section_list_iterate(sec, psection) {
-    const char *signal, *mtth;
-    int nargs;
+    const char *mtth, *title, *desc;
+    int nresponses;
     const char ** args;
     bool repeatable;
     struct multiplier *pmul;
     struct trigger *ptrigger;
     const char *sec_name = section_name(psection);
+    const char **responses;
     struct requirement_vector *reqs;
 
-    signal = secfile_lookup_str(file, "%s.signal", sec_name);
+    title = secfile_lookup_str(file, "%s.title", sec_name);
 
-    if (signal == NULL) {
-      ruleset_error(LOG_ERROR, "\"%s\" [%s] missing trigger signal.", filename, sec_name);
+    if (title == NULL) {
+      ruleset_error(LOG_ERROR, "\"%s\" [%s] missing trigger title.", filename, sec_name);
+      ok = FALSE;
+      break;
+    }
+
+    desc = secfile_lookup_str(file, "%s.desc", sec_name);
+
+    if (desc == NULL) {
+      ruleset_error(LOG_ERROR, "\"%s\" [%s] missing trigger description.", filename, sec_name);
       ok = FALSE;
       break;
     }
@@ -4607,15 +4616,11 @@ static bool load_ruleset_triggers(struct section_file *file)
 
     mtth = secfile_lookup_str(file, "%s.mtth", sec_name);
 
-    if (mtth == NULL) {
-      ruleset_error(LOG_ERROR, "\"%s\" [%s] missing trigger mtth.", filename, sec_name);
-      ok = FALSE;
-      break;
-    }
+    responses = secfile_lookup_str_vec(file, &nresponses, "%s.responses", sec_name);
 
-    ptrigger = trigger_new(signal, mtth, repeatable);
+    ptrigger = trigger_new(sec_name, title, desc, mtth, repeatable, nresponses, responses);
 
-    reqs = lookup_req_list(file, sec_name, "reqs", signal);
+    reqs = lookup_req_list(file, sec_name, "reqs", sec_name);
     if (reqs == NULL) {
       ok = FALSE;
       break;
@@ -4625,17 +4630,17 @@ static bool load_ruleset_triggers(struct section_file *file)
       trigger_req_append(ptrigger, *preq);
     } requirement_vector_iterate_end;
 
-    reqs = lookup_req_list(file, sec_name, "nreqs", signal);
+    reqs = lookup_req_list(file, sec_name, "nreqs", sec_name);
     if (reqs == NULL) {
       ok = FALSE;
       break;
     }
-    requirement_vector_iterate(reqs, req) {
-      struct requirement *preq = fc_malloc(sizeof(*preq));
-
-      *preq = *req;
+    requirement_vector_iterate(reqs, preq) {
       trigger_req_append(ptrigger, *preq);
     } requirement_vector_iterate_end;
+
+    trigger_signal_create(ptrigger);
+
   } section_list_iterate_end;
   section_list_destroy(sec);
 

@@ -36,6 +36,9 @@
 #include "player.h"
 #include "tech.h"
 
+/* common/scriptcore */
+#include "luascript_types.h"
+
 /* server */
 #include "script_server.h"
 
@@ -43,7 +46,7 @@
 
 static void send_trigger(struct connection *pconn,
                          struct trigger *ptrigger);
-void get_trigger_signal_arg_list(const struct trigger * ptrigger, int args[]);
+void get_trigger_signal_arg_list(const struct trigger * ptrigger, int * nargs, int * args);
 
 static bool initialized = FALSE;
 
@@ -58,6 +61,9 @@ static bool initialized = FALSE;
 static struct {
   /* A single list containing every trigger. */
   struct trigger_list *triggers;
+
+  /* A single list containing triggers that are awaiting a response. */
+  struct trigger_response_list *responses;
 } trigger_cache;
 
 
@@ -72,16 +78,24 @@ struct trigger_list *get_triggers()
 /**************************************************************************
   Add trigger to ruleset cache.
 **************************************************************************/
-struct trigger *trigger_new(const char* signal, const char* mtth,
-                          bool repeatable)
+struct trigger *trigger_new(const char * name, const char * title, const char * desc,
+        const char * mtth, bool repeatable, int num_responses, const char **responses)
 {
   struct trigger *ptrigger;
+  int i;
 
   /* Create the trigger. */
   ptrigger = fc_malloc(sizeof(*ptrigger));
-  ptrigger->signal = signal;
-  ptrigger->mtth = mtth;
+  ptrigger->name = fc_strdup(name);
+  ptrigger->title = title == NULL ? NULL : fc_strdup(title);
+  ptrigger->desc = desc == NULL ? NULL : fc_strdup(desc);
+  ptrigger->mtth = mtth == NULL ? NULL : fc_strdup(mtth);
   ptrigger->repeatable = repeatable;
+  ptrigger->responses_num = num_responses;
+  ptrigger->responses = fc_malloc(num_responses * sizeof(const char *));
+  for (i = 0; i < num_responses; i++) {
+    ptrigger->responses[i] = fc_strdup(responses[i]);
+  }
 
   requirement_vector_init(&ptrigger->reqs);
 
@@ -106,14 +120,14 @@ void trigger_delete(struct trigger *ptrigger)
 **************************************************************************/
 struct trigger *trigger_copy(struct trigger *old)
 {
-  struct trigger *new_eff = trigger_new(old->signal, old->mtth,
-                                      old->repeatable);
+  struct trigger *new_trigger = trigger_new(old->name, old->title, old->desc,
+          old->mtth, old->repeatable, old->responses_num, old->responses);
 
   requirement_vector_iterate(&old->reqs, preq) {
-    trigger_req_append(new_eff, *preq);
+    trigger_req_append(new_trigger, *preq);
   } requirement_vector_iterate_end;
 
-  return new_eff;
+  return new_trigger;
 }
 
 /**************************************************************************
@@ -130,10 +144,10 @@ void trigger_req_append(struct trigger *ptrigger, struct requirement req)
 **************************************************************************/
 void trigger_signal_create(struct trigger *ptrigger)
 {
-  int nargs = ptrigger->reqs.size;
-  int args[nargs];
-  get_trigger_signal_arg_list(ptrigger, args);
-  script_server_trigger_signal_create(ptrigger->signal, nargs, args);
+  int nargs;
+  int args[ptrigger->reqs.size];
+  get_trigger_signal_arg_list(ptrigger, &nargs, &args);
+  script_server_trigger_signal_create(ptrigger->name, nargs, args);
 }
 
 /**************************************************************************
@@ -146,6 +160,7 @@ void trigger_cache_init(void)
   initialized = TRUE;
 
   trigger_cache.triggers = trigger_list_new();
+  trigger_cache.responses= trigger_response_list_new();
 }
 
 /**************************************************************************
@@ -155,6 +170,7 @@ void trigger_cache_init(void)
 void trigger_cache_free(void)
 {
   struct trigger_list *tracker_list = trigger_cache.triggers;
+  struct trigger_list *response_list = trigger_cache.responses;
 
   if (tracker_list) {
     trigger_list_iterate(tracker_list, ptrigger) {
@@ -163,6 +179,11 @@ void trigger_cache_free(void)
     } trigger_list_iterate_end;
     trigger_list_destroy(tracker_list);
     trigger_cache.triggers = NULL;
+  }
+
+  if (response_list) {
+    trigger_response_list_destroy(response_list);
+    trigger_cache.responses = NULL;
   }
 
   initialized = FALSE;
@@ -198,8 +219,8 @@ bool check_trigger(struct trigger *ptrigger,
       &(ptrigger->reqs), RPT_CERTAIN)) {
       int nargs = ptrigger->reqs.size;
       int args[nargs];
-      get_trigger_signal_arg_list(ptrigger, args);
-      script_server_trigger_emit(ptrigger->signal, nargs, args);
+      get_trigger_signal_arg_list(ptrigger, nargs, args);
+      script_server_trigger_emit(ptrigger->name, nargs, args);
       return TRUE;
   }
 
@@ -269,10 +290,45 @@ bool iterate_trigger_cache(itc_cb cb, void *data)
 
 
 **************************************************************************/
-void get_trigger_signal_arg_list(const struct trigger * ptrigger, int args[])
+void get_trigger_signal_arg_list(const struct trigger * ptrigger, int * nargs, int * args)
 {
+  *nargs = 0;
   requirement_vector_iterate(&ptrigger->reqs, preq) {
-
+    switch (preq->range) {
+    case REQ_RANGE_WORLD:
+      switch (preq->source.kind) {
+      case VUT_MINYEAR:
+        args[*nargs] = API_TYPE_INT;
+        break;
+      default:
+        continue;
+      }
+    case REQ_RANGE_PLAYER:
+      args[*nargs] = API_TYPE_PLAYER;
+      break;
+    case REQ_RANGE_CITY:
+      args[*nargs] = API_TYPE_CITY;
+      break;
+    case REQ_RANGE_CONTINENT:
+    case REQ_RANGE_ADJACENT:
+    case REQ_RANGE_CADJACENT:
+    case REQ_RANGE_LOCAL:
+      switch (preq->source.kind) {
+      case VUT_TERRAIN:
+        args[*nargs] = API_TYPE_TERRAIN;
+        break;
+      case VUT_UTYPE:
+      case VUT_UTFLAG:
+      case VUT_UCLASS:
+      case VUT_UCFLAG:
+        args[*nargs] = API_TYPE_UNIT;
+        break;
+      default:
+        continue;
+      }
+      break;
+    }
+    *nargs++;
   } requirement_vector_iterate_end;
 }
 
@@ -306,7 +362,7 @@ static void send_trigger(struct connection *pconn,
   struct packet_trigger packet;
   int i;
 
-  strcpy(packet.name, ptrigger->signal);
+  strcpy(packet.name, ptrigger->name);
   strcpy(packet.title, ptrigger->title);
   strcpy(packet.desc, ptrigger->desc);
   packet.responses_num = ptrigger->responses_num;
@@ -320,10 +376,55 @@ static void send_trigger(struct connection *pconn,
 /**************************************************************************
   Fire the trigger with the given name
 **************************************************************************/
-void trigger_by_name(struct player *pplayer, const char * name);
+void trigger_by_name_array(struct player *pplayer, const char * name, int nargs, void * args[])
 {
   struct trigger *ptrigger;
-  /* TODO: Find trigger by name */
+  struct trigger_response *presponse;
+
+  presponse = fc_malloc(sizeof(*presponse));
+  presponse->player = pplayer;
+  presponse->turn_fired = game.info.turn;
+
+  trigger_list_iterate(trigger_cache.triggers, ptrigger) {
+    if (strcmp(name, ptrigger->name) == 0) {
   trigger_for_player(pplayer, ptrigger);
+      presponse->trigger = ptrigger;
+      presponse->args = args;
+      presponse->nargs = nargs;
+      trigger_response_list_append(trigger_cache.responses, presponse);
+      return;
+    }
+  } trigger_list_iterate_end;
 }
 
+void trigger_by_name(struct player *pplayer, const char * name, int nargs, ...)
+{
+  va_list args;
+  int i;
+  void *arg_list[nargs * 2];
+
+  va_start(args, nargs);
+  for (i = 0; i < nargs * 2; i++) {
+    arg_list[i] = va_arg(args, void*);
+  }
+  va_end(args);
+
+  trigger_by_name_array(pplayer, name, nargs, arg_list);
+}
+
+struct trigger_response * remove_trigger_response_from_cache(struct player *pplayer, const char * name)
+{
+  struct trigger_response * matching_response = NULL;
+  struct trigger * matching_trigger = NULL;
+  trigger_response_list_iterate(trigger_cache.responses, presponse) {
+    if (player_number(presponse->player) == player_number(pplayer) && strcmp(name, presponse->trigger->name) == 0) {
+       matching_response = presponse;
+       break;
+    }
+  } trigger_response_list_iterate_end;
+  if (matching_response != NULL) {
+    trigger_response_list_remove(trigger_cache.responses, matching_response);
+    matching_trigger = (struct trigger *)matching_response->trigger;
+  }
+  return matching_trigger;
+}

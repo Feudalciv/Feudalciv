@@ -72,7 +72,7 @@ void luascript_log_vargs(struct fc_lua *fcl, enum log_level level,
                          const char *format, va_list args);
 
 void luascript_push_args(struct fc_lua *fcl, int nargs,
-                         enum api_types *parg_types, va_list args);
+                         enum api_types *parg_types, void *args[]);
 bool luascript_check_function(struct fc_lua *fcl, const char *funcname);
 
 int luascript_call(struct fc_lua *fcl, int narg, int nret, const char *code);
@@ -83,7 +83,7 @@ int luascript_do_file(struct fc_lua *fcl, const char *filename);
 /* Callback invocation function. */
 bool luascript_callback_invoke(struct fc_lua *fcl, const char *callback_name,
                                int nargs, enum api_types *parg_types,
-                               va_list args);
+                               void* args[]);
 
 void luascript_remove_exported_object(struct fc_lua *fcl, void *object);
 

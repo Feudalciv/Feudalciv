@@ -41,9 +41,9 @@ void script_server_state_save(struct section_file *file);
 
 /* Signals. */
 void script_server_signal_emit(const char *signal_name, int nargs, ...);
-void script_server_trigger_emit(const char *signal_name, int nargs, int args[]);
+void script_server_trigger_emit(const char *signal_name, int nargs, void * args[]);
 void script_server_trigger_signal_create(const char *signal_name,
-                             int nargs, int args[]);
+                             int nargs, enum api_types args[]);
 
 /* Functions */
 bool script_server_call(const char *func_name, int nargs, ...);

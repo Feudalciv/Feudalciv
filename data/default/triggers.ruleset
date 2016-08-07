@@ -1,0 +1,43 @@
+; Modifying this file:
+; You should not modify this file except to make bugfixes or
+; for other "maintenance".  If you want to make custom changes,
+; you should create a new datadir subdirectory and copy this file
+; into that directory, and then modify that copy.  Then use the
+; command "rulesetdir <mysubdir>" in the server to have freeciv
+; use your new customized file.
+
+; Note that the freeciv AI may not cope well with anything more
+; than minor changes.
+
+[datafile]
+description="Feudalciv trigger data for Freeciv"
+options="+Freeciv-2.5-ruleset"
+format_version=10
+
+; /* <-- avoid gettext warnings
+;
+; triggers
+;
+; signal                  = Name of function defined in script.lua that 
+;                           will be called when trigger is triggered
+; repeatable              = Whether or not the trigger can reoccur
+; mtth                    = The mean time for an trigger to occur, defined
+;                           as a calendar string (y:m:d) once an trigger fulfills
+;                           the requirements, this is the approximate amount
+;                           of time it will take for the trigger to trigger. 
+;                           Setting to 0 triggers immediately
+; reqs                    = Requirements for the trigger to be triggered.
+;                           See README.effects for help on requirements
+;
+; */ <-- avoid gettext warnings
+
+[trigger_call_to_arms]
+title = "Call to Arms"
+desc = "Your ally $2 asks for your aid against $3" 
+responses = "Accept", "Decline"
+reqs =
+    { "type", "name", "range"
+        "None", "None", "Player"
+        "None", "None", "Player"
+        "None", "None", "Player"
+    }

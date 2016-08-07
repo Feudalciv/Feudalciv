@@ -27,17 +27,18 @@ extern "C" {
 
 #include "requirements.h"
 
-/* An trigger is provided by a source.  If the source is present, and the
- * other conditions (described below) are met, the trigger will be active.
+/* TODO: New description */
+/* A trigger is provided by a source.  If the source is present, and the
+ * other conditions (described below) are met, the trigger will active.
  * Note the difference between trigger and trigger_type. */
 struct trigger {
-  const char * signal;
+  const char * name;
   const char * mtth;
   bool repeatable;
 
   const char * title;
   const char * desc;
-  const int responses_num;;
+  int responses_num;;
   const char ** responses;
 
   /* An trigger can have multiple requirements.  The trigger will only be
@@ -45,7 +46,15 @@ struct trigger {
   struct requirement_vector reqs;
 };
 
-/* An trigger_list is a list of triggers. */
+struct trigger_response {
+  const struct trigger *trigger;
+  const struct player *player;
+  int turn_fired;
+  int nargs;
+  void *args;
+};
+
+/* A trigger_list is a list of triggers. */
 #define SPECLIST_TAG trigger
 #define SPECLIST_TYPE struct trigger
 #include "speclist.h"
@@ -53,7 +62,16 @@ struct trigger {
   TYPED_LIST_ITERATE(struct trigger, trigger_list, ptrigger)
 #define trigger_list_iterate_end LIST_ITERATE_END
 
-struct trigger *trigger_new(const char * signal, const char * mtth, bool repeatable);
+/* A trigger_response_list is a list of trigger responses. */
+#define SPECLIST_TAG trigger_response
+#define SPECLIST_TYPE struct trigger_response
+#include "speclist.h"
+#define trigger_response_list_iterate(trigger_response_list, ptrigger_response) \
+  TYPED_LIST_ITERATE(struct trigger_response, trigger_response_list, ptrigger_response)
+#define trigger_response_list_iterate_end LIST_ITERATE_END
+
+struct trigger *trigger_new(const char * name, const char * title, const char * desc,
+        const char * mtth, bool repeatable, int num_responses, const char **responses);
 struct trigger *trigger_copy(struct trigger *old);
 void trigger_req_append(struct trigger *ptrigger, struct requirement req);
 void trigger_signal_create(struct trigger *ptrigger);
@@ -82,7 +100,10 @@ bool check_trigger(struct trigger *ptrigger,
                    const struct output_type *target_output,
                    const struct specialist *target_specialist);
 
-void trigger_by_name(struct player *pplayer, const char * name);
+void trigger_by_name(struct player *pplayer, const char * name, int nargs, ...);
+void trigger_by_name_array(struct player *pplayer, const char * name, int nargs, void * args[]);
+
+struct trigger_response * remove_trigger_response_from_cache(struct player *pplayer, const char * signal);
 
 #ifdef __cplusplus
 }

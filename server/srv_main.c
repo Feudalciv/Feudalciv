@@ -2917,6 +2917,7 @@ void server_game_init(void)
   identity_number_reserve(IDENTITY_NUMBER_ZERO);
 
   event_cache_init();
+  trigger_cache_init();
   game_init();
   /* game_init() set game.server.plr_colors to NULL. So we need to
    * initialize the colors after. */
@@ -2964,6 +2965,7 @@ void server_game_free(void)
   } players_iterate_end;
 
   event_cache_free();
+  trigger_cache_free();
   log_civ_score_free();
   playercolor_free();
   citymap_free();

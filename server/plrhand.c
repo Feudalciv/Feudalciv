@@ -60,6 +60,7 @@
 #include "spaceship.h"
 #include "spacerace.h"
 #include "techtools.h"
+#include "triggers.h"
 #include "unittools.h"
 #include "voting.h"
 
@@ -687,6 +688,15 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
     call_incident(INCIDENT_WAR, pplayer, pplayer2);
 
     enter_war(pplayer, pplayer2);
+    /* call allies */
+    players_iterate_alive(otherplayer) {
+      if (pplayers_allied(otherplayer, pplayer)) {
+        trigger_by_name(otherplayer, "trigger_call_to_arms", API_TYPE_PLAYER, pplayer, API_TYPE_PLAYER, pplayer2);
+      }
+      else if (pplayers_allied(otherplayer, pplayer2)) {
+        trigger_by_name(otherplayer, "trigger_call_to_arms", API_TYPE_PLAYER, pplayer2, API_TYPE_PLAYER, pplayer);
+      }
+    } players_iterate_alive_end;
   }
   ds_plrplr2->has_reason_to_cancel = 0;
 

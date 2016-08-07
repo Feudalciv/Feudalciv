@@ -160,7 +160,7 @@ static void signal_destroy(struct signal *psignal)
   Invoke all the callback functions attached to a given signal.
 *****************************************************************************/
 void luascript_signal_emit_array(struct fc_lua *fcl, const char *signal_name,
-                                 int nargs, int args[])
+                                 int nargs, void *args[])
 {
   struct signal *psignal;
 
@@ -176,13 +176,10 @@ void luascript_signal_emit_array(struct fc_lua *fcl, const char *signal_name,
       signal_callback_list_iterate(psignal->callbacks, pcallback) {
         va_list args_cb;
 
-        va_copy(args_cb, args);
         if (luascript_callback_invoke(fcl, pcallback->name, nargs,
-                                      psignal->arg_types, args_cb)) {
-          va_end(args_cb);
+                                      psignal->arg_types, args)) {
           break;
         }
-        va_end(args_cb);
       } signal_callback_list_iterate_end;
     }
   } else {
@@ -197,9 +194,10 @@ void luascript_signal_emit_array(struct fc_lua *fcl, const char *signal_name,
 void luascript_signal_emit_valist(struct fc_lua *fcl, const char *signal_name,
                                   int nargs, va_list args)
 {
-  int i, arg_list[nargs];
-  for (i = 0; i < nargs; i++) {
-    arg_list[i] = va_arg(args, int);
+  int i;
+  void *arg_list[nargs * 2];
+  for (i = 0; i < nargs * 2; i++) {
+    arg_list[i] = va_arg(args, void*);
   }
   luascript_signal_emit_array(fcl, signal_name, nargs, arg_list);
 }
@@ -222,7 +220,7 @@ void luascript_signal_emit(struct fc_lua *fcl, const char *signal_name,
 *****************************************************************************/
 void luascript_signal_create_array(struct fc_lua *fcl,
                                     const char *signal_name,
-                                    int nargs, int args[])
+                                    int nargs, enum api_types args[])
 {
   struct signal *psignal;
 
@@ -254,9 +252,10 @@ void luascript_signal_create_valist(struct fc_lua *fcl,
                                     const char *signal_name,
                                     int nargs, va_list args)
 {
-  int i, arg_list[nargs];
+  int i;
+  void *arg_list[nargs];
   for (i = 0; i < nargs; i++) {
-    arg_list[i] = va_arg(args, int);
+    arg_list[i] = va_arg(args, void*);
   }
   luascript_signal_create_array(fcl, signal_name, nargs, arg_list);
 }

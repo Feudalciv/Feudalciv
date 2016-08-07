@@ -6,6 +6,7 @@ pkgdatadir = $(datadir)/$(PACKAGE)/default
 pkgdata_DATA =          \
 	ai_effects.ruleset \
 	default.lua	\
+	triggers.ruleset\
 	nationlist.ruleset
 
 EXTRA_DIST = $(pkgdata_DATA)

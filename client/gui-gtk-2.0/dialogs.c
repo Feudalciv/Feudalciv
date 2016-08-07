@@ -186,7 +186,7 @@ static void notify_connect_msg_response(GtkWidget *w, gint response)
 static void notify_trigger_response(GtkWidget *w, gint response)
 {
   const char *id = g_object_get_data(G_OBJECT(w), "id");
-  dsend_packet_trigger_response(&client.conn, id, response);
+  dsend_packet_trigger_response(&client.conn, fc_strdup(id), response);
   gtk_widget_destroy(w);
 }
 
@@ -219,7 +219,7 @@ void popup_notify_trigger_dialog(const char * id, const char *headline,
     gtk_widget_show(command);
   }
 
-  g_object_set_data(G_OBJECT(shell), "id", id);
+  g_object_set_data(G_OBJECT(shell), "id", fc_strdup(id));
   g_signal_connect(shell, "response", G_CALLBACK(notify_trigger_response), NULL);
   gtk_widget_show(shell);
 }
