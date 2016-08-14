@@ -410,6 +410,34 @@ Player *api_edit_civil_war(lua_State *L, Player *pplayer, int probability)
 }
 
 /*****************************************************************************
+  Provoke two players to enter war.
+*****************************************************************************/
+bool api_edit_enter_war(lua_State *L, Player *pplayer, Player *pplayer2)
+{
+  LUASCRIPT_CHECK_STATE(L, NULL);
+  LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 2, Player, NULL);
+  LUASCRIPT_CHECK_ARG_NIL(L, pplayer2, 2, Player, NULL);
+
+  if (players_on_same_team(pplayer, pplayer2)) return false;
+
+  while (!pplayers_at_war(pplayer, pplayer2)) {
+    if (pplayers_allied(pplayer, pplayer2)) {
+        handle_diplomacy_cancel_pact(pplayer, player_number(pplayer2), CLAUSE_ALLIANCE);
+    }
+    else if (players_non_invade(pplayer, pplayer2)) {
+        handle_diplomacy_cancel_pact(pplayer, player_number(pplayer2), CLAUSE_PEACE);
+    }
+    else if (pplayers_non_attack(pplayer, pplayer2)) {
+        handle_diplomacy_cancel_pact(pplayer, player_number(pplayer2), CLAUSE_CEASEFIRE);
+    }
+    else {
+      return false;
+    }
+  }
+  return true;
+}
+
+/*****************************************************************************
   Make player winner of the scenario
 *****************************************************************************/
 void api_edit_player_victory(lua_State *L, Player *pplayer)

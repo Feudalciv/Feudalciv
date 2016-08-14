@@ -80,10 +80,13 @@ static void script_server_cmd_reply(struct fc_lua *fcl, enum log_level level,
 /*****************************************************************************
   Cache for triggers created before script_server_init is called
 *****************************************************************************/
-int trigger_signals = 0;
-const char *signal_names[256];
-int trigger_signal_nargs[256];
-enum api_types * trigger_signal_args[256];
+struct trigger_signal_list * trigger_signal_cache = NULL;
+
+struct trigger_signal {
+  const char * name;
+  int nargs;
+  enum api_types * args;
+};
 
 
 /*****************************************************************************
@@ -323,7 +326,6 @@ void script_server_signal_emit(const char *signal_name, int nargs, ...)
 *****************************************************************************/
 static void script_server_signal_create(void)
 {
-  int i;
   luascript_signal_create(fcl, "turn_started", 2,
                           API_TYPE_INT, API_TYPE_INT);
   luascript_signal_create(fcl, "unit_moved", 3,
@@ -376,9 +378,10 @@ static void script_server_signal_create(void)
 
   luascript_signal_create(fcl, "map_generated", 0);
 
-  for (i = 0; i < trigger_signals; i++) {
-    luascript_signal_create_array(fcl, signal_names[i], trigger_signal_nargs[i], trigger_signal_args[i]);
-    free(trigger_signal_args[i]);
+  if (trigger_signal_cache) {
+    trigger_signal_list_iterate(trigger_signal_cache, ptrigger) {
+      luascript_signal_create_array(fcl, ptrigger->name, ptrigger->nargs, ptrigger->args);
+    } trigger_signal_list_iterate_end;
   }
 }
 
@@ -389,12 +392,39 @@ void script_server_trigger_signal_create(const char *signal_name,
                              int nargs, enum api_types args[])
 {
   enum api_types *pargs = fc_malloc(sizeof(enum api_types) * nargs);
+  struct trigger_signal *psignal;
+  int i;
 
-  signal_names[trigger_signals] = fc_strdup(signal_name);
-  trigger_signal_nargs[trigger_signals] = nargs;
-  trigger_signal_args[trigger_signals] = pargs;
+  for(i = 0; i < nargs; i++) {
+    pargs[i] = args[i];
+  }
 
-  trigger_signals++;
+  psignal = fc_malloc(sizeof(*psignal));
+
+  psignal->name = fc_strdup(signal_name);
+  psignal->nargs = nargs;
+  psignal->args = pargs;
+
+  if (!trigger_signal_cache) {
+    trigger_signal_cache = trigger_signal_list_new();
+  }
+  trigger_signal_list_append(trigger_signal_cache, psignal);
+}
+
+/*****************************************************************************
+ Destroys existing trigger signals
+*****************************************************************************/
+void script_server_trigger_signals_destroy()
+{
+  if (trigger_signal_cache) {
+    trigger_signal_list_iterate(trigger_signal_cache, psignal) {
+      luascript_signal_free_by_name(fcl, psignal->name);
+      free(psignal->name);
+      free(psignal->args);
+      free(psignal);
+    } trigger_signal_list_iterate_end;
+    trigger_signal_list_clear(trigger_signal_cache);
+  }
 }
 
 /*****************************************************************************

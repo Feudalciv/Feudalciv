@@ -690,11 +690,11 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
     enter_war(pplayer, pplayer2);
     /* call allies */
     players_iterate_alive(otherplayer) {
-      if (pplayers_allied(otherplayer, pplayer)) {
-        trigger_by_name(otherplayer, "trigger_call_to_arms", API_TYPE_PLAYER, pplayer, API_TYPE_PLAYER, pplayer2);
+      if (pplayers_allied(otherplayer, pplayer) && player_number(otherplayer) != player_number(pplayer) && !pplayers_at_war(otherplayer, pplayer2)) {
+        trigger_by_name(otherplayer, "trigger_call_to_arms", 3, API_TYPE_PLAYER, otherplayer, API_TYPE_PLAYER, pplayer, API_TYPE_PLAYER, pplayer2);
       }
-      else if (pplayers_allied(otherplayer, pplayer2)) {
-        trigger_by_name(otherplayer, "trigger_call_to_arms", API_TYPE_PLAYER, pplayer2, API_TYPE_PLAYER, pplayer);
+      else if (pplayers_allied(otherplayer, pplayer2) && player_number(otherplayer) != player_number(pplayer) && !pplayers_at_war(otherplayer, pplayer)) {
+        trigger_by_name(otherplayer, "trigger_call_to_arms", 3, API_TYPE_PLAYER, otherplayer, API_TYPE_PLAYER, pplayer2, API_TYPE_PLAYER, pplayer);
       }
     } players_iterate_alive_end;
   }

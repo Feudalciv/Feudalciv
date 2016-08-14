@@ -188,3 +188,15 @@ function default_make_partisans_callback(city, loser, winner)
 end
 
 signal.connect("city_lost", "default_make_partisans_callback")
+
+function call_to_arms_callback(player, ally, enemy, response_index)
+  if player == nil or ally == nil or enemy == nil then
+    log.error("Unable to call to arms; one of the given players is invalid")
+  end
+  if response_index == 1 then
+    notify.embassies(player, nil, E.SCRIPT, player.name .. " has joined " .. ally.name .. "'s war against " .. enemy.name)
+    edit.enter_war(player, enemy)
+  end
+end
+
+signal.connect("trigger_call_to_arms", "call_to_arms_callback")

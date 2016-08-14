@@ -375,6 +375,14 @@ void luascript_signal_free(struct fc_lua *fcl)
 }
 
 /*****************************************************************************
+  Free single signal and callbacks.
+*****************************************************************************/
+void luascript_signal_free_by_name(struct fc_lua *fcl, const char * name)
+{
+    luascript_signal_hash_remove(fcl->signals, name);
+}
+
+/*****************************************************************************
   Return the name of the signal with the given index.
 *****************************************************************************/
 const char *luascript_signal_by_index(struct fc_lua *fcl, int index)

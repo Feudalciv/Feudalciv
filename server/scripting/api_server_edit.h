@@ -59,6 +59,8 @@ void api_edit_climate_change(lua_State *L, enum climate_change_type type,
                              int effect);
 Player *api_edit_civil_war(lua_State *L, Player *pplayer, int probability);
 
+bool api_edit_enter_war(lua_State *L, Player *pplayer, Player *pplayer2);
+
 
 void api_edit_player_victory(lua_State *L, Player *pplayer);
 bool api_edit_unit_move(lua_State *L, Unit *punit, Tile *ptile,

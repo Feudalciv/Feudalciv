@@ -45,7 +45,7 @@
 #include "triggers.h"
 
 static void send_trigger(struct connection *pconn,
-                         struct trigger *ptrigger);
+                         struct trigger *ptrigger, const char * desc);
 void get_trigger_signal_arg_list(const struct trigger * ptrigger, int * nargs, int * args);
 
 static bool initialized = FALSE;
@@ -145,7 +145,7 @@ void trigger_req_append(struct trigger *ptrigger, struct requirement req)
 void trigger_signal_create(struct trigger *ptrigger)
 {
   int nargs;
-  int args[ptrigger->reqs.size];
+  int args[ptrigger->reqs.size + 1];
   get_trigger_signal_arg_list(ptrigger, &nargs, &args);
   script_server_trigger_signal_create(ptrigger->name, nargs, args);
 }
@@ -328,14 +328,18 @@ void get_trigger_signal_arg_list(const struct trigger * ptrigger, int * nargs, i
       }
       break;
     }
-    *nargs++;
+    (*nargs)++;
   } requirement_vector_iterate_end;
+
+  /* Response is always last argument */
+  args[*nargs] = API_TYPE_INT;
+  (*nargs)++;
 }
 
 /**************************************************************************
  Fire trigger for given player
 **************************************************************************/
-static void trigger_for_player(struct player *pdest, struct trigger *ptrigger)
+static void trigger_for_player(struct player *pdest, struct trigger *ptrigger, const char * new_desc)
 {
   struct connection *dest = NULL;       /* The 'pdest' user. */
 
@@ -348,7 +352,7 @@ static void trigger_for_player(struct player *pdest, struct trigger *ptrigger)
   } conn_list_iterate_end;
 
   if (NULL != dest) {
-    send_trigger(dest, ptrigger);
+    send_trigger(dest, ptrigger, new_desc);
   }
 }
 
@@ -357,20 +361,35 @@ static void trigger_for_player(struct player *pdest, struct trigger *ptrigger)
   Send a trigger packet.
 **************************************************************************/
 static void send_trigger(struct connection *pconn,
-                          struct trigger *ptrigger)
+                          struct trigger *ptrigger, const char * desc)
 {
   struct packet_trigger packet;
   int i;
 
   strcpy(packet.name, ptrigger->name);
   strcpy(packet.title, ptrigger->title);
-  strcpy(packet.desc, ptrigger->desc);
+  strcpy(packet.desc, desc);
   packet.responses_num = ptrigger->responses_num;
   for (i = 0; i < ptrigger->responses_num; i++) {
     strcpy(packet.responses[i], ptrigger->responses[i]);
   }
 
   send_packet_trigger(pconn, &packet);
+}
+
+static const char * trigger_arg_to_string(enum api_types type, void * arg)
+{
+  switch (type) {
+  case API_TYPE_INT:
+    return sprintf("%d", (int)arg);
+  case API_TYPE_PLAYER:
+    return ((struct player *)arg)->name;
+  case API_TYPE_CITY:
+    return ((struct city *)arg)->name;
+  case API_TYPE_UNIT:
+    return unit_name_translation((struct unit *)arg);
+  }
+  return "INVALID_ARGUMENT";
 }
 
 /**************************************************************************
@@ -380,6 +399,8 @@ void trigger_by_name_array(struct player *pplayer, const char * name, int nargs,
 {
   struct trigger *ptrigger;
   struct trigger_response *presponse;
+  int i, len, index, tmplen;
+  const char *newdesc, *tmp, *tmpdesc;
 
   presponse = fc_malloc(sizeof(*presponse));
   presponse->player = pplayer;
@@ -387,29 +408,47 @@ void trigger_by_name_array(struct player *pplayer, const char * name, int nargs,
 
   trigger_list_iterate(trigger_cache.triggers, ptrigger) {
     if (strcmp(name, ptrigger->name) == 0) {
-  trigger_for_player(pplayer, ptrigger);
+      len = strlen(ptrigger->desc);
+      newdesc = fc_strdup(ptrigger->desc);
+      for (i = 0; i < len; i++) {
+        if (newdesc[i] == '$') {
+          index = atoi(&newdesc[i + 1]);
+          if (index == 0 || index > nargs) continue;
+          tmp = trigger_arg_to_string((enum api_types)args[(index - 1) * 2], (void *)args[(index - 1) * 2 + 1]);
+          tmplen = strlen(tmp);
+          tmpdesc = fc_realloc(fc_strdup(newdesc), (len + tmplen) * sizeof(const char *));
+          strncpy(&tmpdesc[i], tmp, tmplen);
+          strcpy(&tmpdesc[i + tmplen], &newdesc[i + (int)floor(log10(abs(index))) + 2]);
+          newdesc = tmpdesc;
+          len += tmplen;
+          i += tmplen;
+        }
+      }
+
       presponse->trigger = ptrigger;
       presponse->args = args;
       presponse->nargs = nargs;
       trigger_response_list_append(trigger_cache.responses, presponse);
+      trigger_for_player(pplayer, ptrigger, newdesc);
       return;
     }
   } trigger_list_iterate_end;
+  free(presponse);
 }
 
 void trigger_by_name(struct player *pplayer, const char * name, int nargs, ...)
 {
   va_list args;
   int i;
-  void *arg_list[nargs * 2];
+  void **arg_list = fc_malloc(sizeof(void*) * (nargs * 2));
 
   va_start(args, nargs);
   for (i = 0; i < nargs * 2; i++) {
-    arg_list[i] = va_arg(args, void*);
+    arg_list[i] = (void*)va_arg(args, void*);
   }
-  va_end(args);
 
   trigger_by_name_array(pplayer, name, nargs, arg_list);
+  va_end(args);
 }
 
 struct trigger_response * remove_trigger_response_from_cache(struct player *pplayer, const char * name)
@@ -424,7 +463,6 @@ struct trigger_response * remove_trigger_response_from_cache(struct player *ppla
   } trigger_response_list_iterate_end;
   if (matching_response != NULL) {
     trigger_response_list_remove(trigger_cache.responses, matching_response);
-    matching_trigger = (struct trigger *)matching_response->trigger;
   }
-  return matching_trigger;
+  return matching_response;
 }

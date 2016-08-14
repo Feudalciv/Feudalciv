@@ -26,6 +26,7 @@ struct fc_lua;
 
 void luascript_signal_init(struct fc_lua *fcl);
 void luascript_signal_free(struct fc_lua *fcl);
+void luascript_signal_free_by_name(struct fc_lua *fcl, const char *name);
 
 void luascript_signal_emit_valist(struct fc_lua *fcl, const char *signal_name,
                                   int nargs, va_list args);

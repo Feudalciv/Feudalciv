@@ -6084,6 +6084,9 @@ static void notify_ruleset_fallback(const char *msg)
 **************************************************************************/
 bool load_rulesets(const char *restore, bool act)
 {
+  // Trigger signals need to be cleared before loading rulesets
+  script_server_trigger_signals_destroy();
+
   if (load_rulesetdir(game.server.rulesetdir, act)) {
     return TRUE;
   }
@@ -6137,6 +6140,7 @@ static void nullcheck_secfile_destroy(struct section_file *file)
 **************************************************************************/
 void rulesets_deinit(void)
 {
+  script_server_trigger_signals_destroy();
   script_server_free();
   requirement_vector_free(&reqs_list);
 }
