@@ -558,45 +558,95 @@ reqs    =
     }
 
 
-[effect_castle]
+[effect_wooden_fort]
 type    = "Defend_Bonus"
 value	= 200
 reqs	=
     { "type", "name", "range"
-      "Building", "Castle", "City"
+      "Building", "Wooden Fort", "City"
       "UnitClass", "Land", "Local"
     }
 
-[effect_castle_0]
+[effect_wooden_fort_0]
 type    = "Unit_No_Lose_Pop"
 value	= 1
 reqs	=
     { "type", "name", "range"
-      "Building", "Castle", "City"
+      "Building", "Wooden Fort", "City"
     }
 
-[effect_castle_visible]
+[effect_wooden_fort_visible]
 type    = "Visible_Walls"
 value	= 1
 reqs	=
     { "type", "name", "range"
-      "Building", "Castle", "City"
+      "Building", "Wooden Fort", "City"
     }
 
-[effect_castle_vision]
+[effect_wooden_fort_vision]
 type    = "City_Vision_Radius_Sq"
 value   = 100
 reqs    =
     { "type", "name", "range"
-      "Building", "Castle", "City"
+      "Building", "Wooden Fort", "City"
     }
 
-[effect_castle_borders]
+[effect_wooden_fort_borders]
 type    = "City_Border_Radius_Sq"
 value   = 80
 reqs    =
     { "type", "name", "range"
-      "Building", "Castle", "City"
+      "Building", "Wooden Fort", "City"
+    }
+
+[effect_wooden_walls]
+type    = "Defend_Bonus"
+value	= 100
+reqs	=
+    { "type", "name", "range"
+      "Building", "Wooden Walls", "City"
+      "UnitClass", "Land", "Local"
+    }
+
+[effect_wooden_walls_0]
+type    = "Unit_No_Lose_Pop"
+value	= 1
+reqs	=
+    { "type", "name", "range"
+      "Building", "Wooden Walls", "City"
+    }
+
+[effect_wooden_walls_visible]
+type    = "Visible_Walls"
+value	= 1
+reqs	=
+    { "type", "name", "range"
+      "Building", "Wooden Walls", "City"
+    }
+
+[effect_roman_walls]
+type    = "Defend_Bonus"
+value	= 200
+reqs	=
+    { "type", "name", "range"
+      "Building", "Roman Walls", "City"
+      "UnitClass", "Land", "Local"
+    }
+
+[effect_roman_walls_0]
+type    = "Unit_No_Lose_Pop"
+value	= 1
+reqs	=
+    { "type", "name", "range"
+      "Building", "Roman Walls", "City"
+    }
+
+[effect_roman_walls_visible]
+type    = "Visible_Walls"
+value	= 1
+reqs	=
+    { "type", "name", "range"
+      "Building", "Roman Walls", "City"
     }
 
 # TODO: Change to increase food storage amount

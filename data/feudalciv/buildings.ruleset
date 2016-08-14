@@ -83,10 +83,10 @@ With a training ground, each new land unit built in a city will\
  restored.\
 ")
 
-[building_castle]
-name        = _("Castle")
+[building_wooden_fort]
+name        = _("Wooden Fort")
 genus       = "Improvement"
-reqs    = 
+reqs    =
     { "type", "name", "range"
     }
 graphic = "b.city_walls"
@@ -98,7 +98,48 @@ sabotage    = 200
 sound       = "b_city_walls"
 sound_alt   = "b_generic"
 helptext	= _("\
-Castles make it easier to defend a city.  They triple the defense\
+Forts make it easier to defend a city.  They triple the defense\
+ strength of units within the city against land units.\
+")
+
+[building_roman_walls]
+name        = _("Roman Walls")
+genus       = "Improvement"
+reqs    =
+    { "type", "name", "range"
+      "Building", "Roman Walls", "City"
+    }
+graphic = "b.city_walls"
+graphic_alt = "-"
+obsolete_by = "None"
+build_cost  = 100
+upkeep      = 2
+sabotage    = 200
+sound       = "b_city_walls"
+sound_alt   = "b_generic"
+helptext	= _("\
+Stone walls built by the Romans, generally in various states of disrepair\
+but are quite effective at defending a settlement.\
+Walls make it easier to defend a city.  They triple the defense\
+ strength of units within the city against land units.\ 
+")
+
+[building_wooden_walls]
+name        = _("Wooden Walls")
+genus       = "Improvement"
+reqs    =
+    { "type", "name", "range"
+    }
+graphic = "b.city_walls"
+graphic_alt = "-"
+obsolete_by = "None"
+build_cost  = 100
+upkeep      = 2
+sabotage    = 200
+sound       = "b_city_walls"
+sound_alt   = "b_generic"
+helptext	= _("\
+Walls make it easier to defend a city.  They triple the defense\
  strength of units within the city against land units.\ 
 ")
 
