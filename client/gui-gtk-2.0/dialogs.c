@@ -213,8 +213,7 @@ void popup_notify_trigger_dialog(const char * id, const char *headline,
   gtk_widget_show(label);
 
   for (i = 0; i < num_responses; i++) {
-    command = gtk_stockbutton_new(GTK_STOCK_BOLD,
-      responses[i]);
+    command = gtk_button_new_with_label(responses[i]);
     gtk_dialog_add_action_widget(GTK_DIALOG(shell), command, i + 1);
     gtk_widget_show(command);
   }
