@@ -216,7 +216,7 @@ void popup_notify_trigger_dialog(const char * id, const char *headline,
   gtk_window_set_position(GTK_WINDOW(shell), GTK_WIN_POS_CENTER_ON_PARENT);
 
   label = gtk_label_new(lines);
-  gtk_container_add(GTK_CONTAINER(GTK_DIALOG(shell)->vbox), label);
+  gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(shell))), label);
   gtk_widget_show(label);
 
   for (i = 0; i < num_responses; i++) {
