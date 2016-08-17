@@ -122,6 +122,11 @@ reqs    =
       "UnitClass", "Land", "Local"
     }
 
+; Base max city size of 6
+[effect_aqueduct_size]
+type    = "Size_Adj"
+value   = 6
+
 [effect_anarchy_upkeep]
 type    = "Upkeep_Free"
 value	= 99
