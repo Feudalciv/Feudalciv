@@ -263,6 +263,7 @@ artists = "
    Katanga		Lexicon and Froztbyte (Wikimedia Commons)
    Kazakhstan		-xfi-
    Keetoowah		Daniel Markstedt
+   Kent         Unknown (Wikimedia Commons)
    Kenya		James Ots
    Khazaria		J.M. Maalderink
    Khmer		Caleb Moore and Daniel Markstedt
@@ -834,6 +835,7 @@ sprites =
 		"f.katanga", "flags/katanga"
 		"f.kazakhstan", "flags/kazakhstan"
 		"f.keetoowah", "flags/keetoowah"	; used by Cherokee
+        "f.kent", "flags/kent"
 		"f.kenya", "flags/kenya"
 		"f.khazaria", "flags/khazaria"
 		"f.khmer", "flags/khmer"
