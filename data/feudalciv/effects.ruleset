@@ -66,13 +66,13 @@ reqs    =
       "OutputType", "luxury", "Local"
     }
 
-[effect_scientist]
+[effect_merchant]
 type    = "Specialist_Output"
 value   = 3
 reqs    =
     { "type", "name", "range"
-      "Specialist", "scientist", "Local"
-      "OutputType", "science", "Local"
+      "Specialist", "merchant", "Local"
+      "OutputType", "Trade", "Local"
     }
 
 [effect_taxman]

@@ -45,10 +45,10 @@ options="+Freeciv-2.5-ruleset"
 ;
 ; */ <-- avoid gettext warnings
 
-[specialist_elvis]
+[specialist_bard]
 name            = _("Entertainers")
 rule_name       = "elvis"
-short_name	= _("?Elvis:E")
+short_name	= _("?Bard:B")
 reqs		=
     { "type", "name", "range"
 ; Nothing
@@ -58,16 +58,16 @@ Each entertainer produces two luxury points for their city per turn. \
 See the section on Happiness for the effects of luxury points.\
 ")
 
-[specialist_scientist]
-name            = _("Scientists")
-rule_name       = "scientist"
-short_name	= _("?Scientist:S")
+[specialist_merchant]
+name            = _("Merchant")
+rule_name       = "merchant"
+short_name	= _("?Merchant:S")
 reqs		=
     { "type", "name", "range"
 ; Nothing
     }
 helptext        = _("\
-Each scientist adds three points to your empire's research output \
+Each merchant adds three points to your city's trade output \
 per turn.\
 ")
 
