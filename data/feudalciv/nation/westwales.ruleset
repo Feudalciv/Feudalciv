@@ -1,18 +1,18 @@
 [nation_cornwall]
 
-name = _("Cornwall")
-plural = _("?plural:Cornwall")
+name = _("West Wales")
+plural = _("?plural:West Wessex")
 groups= "Feudalciv" 
 legend=_("")
 
 leaders = {
  "name",                "sex"
- "Arthur Gernow",       "Male" ; King Arthur
+ "Donyarth",       "Male" ; King Arthur
 }
 
 ruler_titles = {
  "government",      "male_title",      "female_title"
- "Feudalism",        _("High King %s"), _("High Queen %s")
+ "Feudalism",        _("King %s"), _("Queen %s")
 }
 
 flag = "cornwall"

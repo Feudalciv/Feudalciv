@@ -9,7 +9,6 @@ pkgdata_DATA = \
 		berkshire.ruleset \
 		brycheiniog.ruleset \
 		buelt.ruleset \
-		cornwall.ruleset \
 		danelaw.ruleset \
 		devon.ruleset \
 		dorset.ruleset \
@@ -32,6 +31,7 @@ pkgdata_DATA = \
 		surrey.ruleset \
 		sussex.ruleset \
 		westmercia.ruleset \
+		westwales.ruleset \
 		wiltshire.ruleset 
 
 EXTRA_DIST = $(pkgdata_DATA) Makefile.am.sh
