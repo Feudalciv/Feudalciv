@@ -4629,6 +4629,11 @@ static bool load_ruleset_triggers(struct section_file *file)
       ok = FALSE;
       break;
     }
+    if (default_response == 0 || default_response > nresponses) {
+      ruleset_error(LOG_ERROR, "\"%s\" [%s] invalid default response; trigger default response should be indexed from 1.", filename, sec_name);
+      ok = FALSE;
+      break;
+    }
 
     ptrigger = trigger_new(sec_name, title, desc, mtth, repeatable, nresponses, responses, default_response);
 

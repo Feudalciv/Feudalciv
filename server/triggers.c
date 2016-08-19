@@ -349,16 +349,20 @@ static void trigger_for_player(struct player *pdest, struct trigger *ptrigger, c
 {
   struct connection *dest = NULL;       /* The 'pdest' user. */
 
-  /* Find the user of the player 'pdest'. */
-  conn_list_iterate(pdest->connections, pconn) {
-    if (!pconn->observer) {
-      dest = pconn;
-      break;
-    }
-  } conn_list_iterate_end;
+  if (ptrigger->responses_num == 0) {
+    handle_trigger_response_player(pdest, ptrigger->name, 0);
+  } else {
+    /* Find the user of the player 'pdest'. */
+    conn_list_iterate(pdest->connections, pconn) {
+      if (!pconn->observer) {
+        dest = pconn;
+        break;
+      }
+    } conn_list_iterate_end;
 
-  if (NULL != dest) {
-    send_trigger(dest, ptrigger, new_desc);
+    if (NULL != dest) {
+      send_trigger(dest, ptrigger, new_desc);
+    }
   }
 }
 
