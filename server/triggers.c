@@ -377,19 +377,30 @@ static void send_trigger(struct connection *pconn,
   send_packet_trigger(pconn, &packet);
 }
 
+/**************************************************************************
+  Stringifies a luascript argument for embedding in a trigger description
+**************************************************************************/
 static const char * trigger_arg_to_string(enum api_types type, void * arg)
 {
+  const char * tmp = fc_malloc(sizeof(const char *) * 256);
+
   switch (type) {
   case API_TYPE_INT:
-    return sprintf("%d", (int)arg);
+    sprintf(tmp, "%d", (int)arg);
+    break;
   case API_TYPE_PLAYER:
-    return ((struct player *)arg)->name;
+    strcpy(tmp, ((struct player *)arg)->name);
+    break;
   case API_TYPE_CITY:
-    return ((struct city *)arg)->name;
+    strcpy(tmp, ((struct city *)arg)->name);
+    break;
   case API_TYPE_UNIT:
-    return unit_name_translation((struct unit *)arg);
+    strcpy(tmp,  unit_name_translation((struct unit *)arg));
+    break;
+  default:
+    strcpy(tmp, "INVALID_ARGUMENT");
   }
-  return "INVALID_ARGUMENT";
+  return tmp;
 }
 
 /**************************************************************************
@@ -418,6 +429,7 @@ void trigger_by_name_array(struct player *pplayer, const char * name, int nargs,
           tmplen = strlen(tmp);
           tmpdesc = fc_realloc(fc_strdup(newdesc), (len + tmplen) * sizeof(const char *));
           strncpy(&tmpdesc[i], tmp, tmplen);
+          free(tmp);
           strcpy(&tmpdesc[i + tmplen], &newdesc[i + (int)floor(log10(abs(index))) + 2]);
           newdesc = tmpdesc;
           len += tmplen;
