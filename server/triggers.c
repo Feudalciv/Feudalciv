@@ -41,6 +41,7 @@
 
 /* server */
 #include "script_server.h"
+#include "triggerhand.h"
 
 #include "triggers.h"
 
@@ -49,6 +50,8 @@ static void send_trigger(struct connection *pconn,
 void get_trigger_signal_arg_list(const struct trigger * ptrigger, int * nargs, int * args);
 
 static bool initialized = FALSE;
+
+static int trigger_timeout = 3;
 
 /**************************************************************************
   The code creates a ruleset cache on ruleset load.
@@ -79,7 +82,8 @@ struct trigger_list *get_triggers()
   Add trigger to ruleset cache.
 **************************************************************************/
 struct trigger *trigger_new(const char * name, const char * title, const char * desc,
-        const char * mtth, bool repeatable, int num_responses, const char **responses)
+        const char * mtth, bool repeatable, int num_responses, const char **responses,
+        int default_response)
 {
   struct trigger *ptrigger;
   int i;
@@ -93,6 +97,7 @@ struct trigger *trigger_new(const char * name, const char * title, const char * 
   ptrigger->repeatable = repeatable;
   ptrigger->responses_num = num_responses;
   ptrigger->responses = fc_malloc(num_responses * sizeof(const char *));
+  ptrigger->default_response = default_response;
   for (i = 0; i < num_responses; i++) {
     ptrigger->responses[i] = fc_strdup(responses[i]);
   }
@@ -121,7 +126,8 @@ void trigger_delete(struct trigger *ptrigger)
 struct trigger *trigger_copy(struct trigger *old)
 {
   struct trigger *new_trigger = trigger_new(old->name, old->title, old->desc,
-          old->mtth, old->repeatable, old->responses_num, old->responses);
+          old->mtth, old->repeatable, old->responses_num, old->responses,
+          old->default_response);
 
   requirement_vector_iterate(&old->reqs, preq) {
     trigger_req_append(new_trigger, *preq);
@@ -477,4 +483,34 @@ struct trigger_response * remove_trigger_response_from_cache(struct player *ppla
     trigger_response_list_remove(trigger_cache.responses, matching_response);
   }
   return matching_response;
+}
+
+void send_pending_triggers(struct connection *pconn)
+{
+  const struct player *pplayer = conn_get_player(pconn);
+  bool is_global_observer = conn_is_global_observer(pconn);
+  if (!pplayer) return;
+
+  if (!is_global_observer) {
+    trigger_response_list_iterate(trigger_cache.responses, presponse) {
+      if (presponse->player && player_number(presponse->player) == player_number(pplayer)) {
+        trigger_by_name_array(pplayer, presponse->trigger->name, presponse->nargs, presponse->args);
+      }
+    } trigger_response_list_iterate_end;
+  }
+}
+
+void handle_expired_triggers()
+{
+  trigger_response_list_iterate(trigger_cache.responses, presponse) {
+    if (game.info.turn - presponse->turn_fired > trigger_timeout) {
+      /* Trigger has expired, fire default response */
+      handle_trigger_response_player(presponse->player, presponse->trigger->name, presponse->trigger->default_response);
+    }
+  } trigger_response_list_iterate_end;
+}
+
+void set_trigger_timeout(int timeout)
+{
+  trigger_timeout = timeout;
 }

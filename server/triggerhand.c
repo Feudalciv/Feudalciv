@@ -27,7 +27,13 @@
 
 void handle_trigger_response(struct connection *pc, const char *name, int response)
 {
-  struct trigger_response * presponse = remove_trigger_response_from_cache(pc->playing, name);
+  handle_trigger_response_player(pc->playing, name, response);
+}
+
+
+void handle_trigger_response_player(struct player *pplayer, const char *name, int response)
+{
+  struct trigger_response * presponse = remove_trigger_response_from_cache(pplayer, name);
   presponse->nargs++;
   presponse->args = fc_realloc(presponse->args, presponse->nargs * sizeof(void *) * 2);
   void ** args = presponse->args;

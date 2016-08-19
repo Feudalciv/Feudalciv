@@ -4575,6 +4575,7 @@ static bool load_ruleset_triggers(struct section_file *file)
   struct section_list *sec;
   const char *filename;
   bool ok = TRUE;
+  int timeout;
 
   filename = secfile_name(file);
   if (check_ruleset_capabilities(file, RULESET_CAPABILITIES, filename) == NULL) {
@@ -4582,6 +4583,10 @@ static bool load_ruleset_triggers(struct section_file *file)
   }
 
   (void) secfile_entry_by_path(file, "datafile.description");   /* unused */
+
+  if (secfile_lookup_int(file, &timeout, "trigger_timeout")) {
+    set_trigger_timeout(timeout);
+  }
 
   /* Parse triggers and add them to the triggers ruleset cache. */
   sec = secfile_sections_by_name_prefix(file, TRIGGER_SECTION_PREFIX);
@@ -4595,6 +4600,7 @@ static bool load_ruleset_triggers(struct section_file *file)
     const char *sec_name = section_name(psection);
     const char **responses;
     struct requirement_vector *reqs;
+    int default_response;
 
     title = secfile_lookup_str(file, "%s.title", sec_name);
 
@@ -4618,7 +4624,13 @@ static bool load_ruleset_triggers(struct section_file *file)
 
     responses = secfile_lookup_str_vec(file, &nresponses, "%s.responses", sec_name);
 
-    ptrigger = trigger_new(sec_name, title, desc, mtth, repeatable, nresponses, responses);
+    if (!secfile_lookup_int(file, &default_response, "%s.default_response", sec_name) && nresponses > 0) {
+      ruleset_error(LOG_ERROR, "\"%s\" [%s] missing trigger default response but trigger has %d responses.", filename, sec_name, nresponses);
+      ok = FALSE;
+      break;
+    }
+
+    ptrigger = trigger_new(sec_name, title, desc, mtth, repeatable, nresponses, responses, default_response);
 
     reqs = lookup_req_list(file, sec_name, "reqs", sec_name);
     if (reqs == NULL) {

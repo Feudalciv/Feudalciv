@@ -17,4 +17,6 @@
 
 #include "hand_gen.h"
 
+void handle_trigger_response_player(struct player *pplayer, const char *name, int response);
+
 #endif  /* FC__TRIGGERHAND_H */

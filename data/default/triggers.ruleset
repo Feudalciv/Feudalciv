@@ -31,10 +31,13 @@ format_version=10
 ;
 ; */ <-- avoid gettext warnings
 
+trigger_timeout = 2
+
 [trigger_call_to_arms]
 title = "Call to Arms"
 desc = "Your ally $2 asks for your aid against $3" 
 responses = "Accept", "Decline"
+default_response = 0
 reqs =
     { "type", "name", "range"
         "None", "None", "Player"

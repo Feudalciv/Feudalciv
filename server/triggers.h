@@ -40,6 +40,7 @@ struct trigger {
   const char * desc;
   int responses_num;;
   const char ** responses;
+  int default_response;
 
   /* An trigger can have multiple requirements.  The trigger will only be
    * active if all of these requirement are met. */
@@ -71,7 +72,8 @@ struct trigger_response {
 #define trigger_response_list_iterate_end LIST_ITERATE_END
 
 struct trigger *trigger_new(const char * name, const char * title, const char * desc,
-        const char * mtth, bool repeatable, int num_responses, const char **responses);
+        const char * mtth, bool repeatable, int num_responses, const char **responses,
+        int default_response);
 struct trigger *trigger_copy(struct trigger *old);
 void trigger_req_append(struct trigger *ptrigger, struct requirement req);
 void trigger_signal_create(struct trigger *ptrigger);
@@ -104,6 +106,10 @@ void trigger_by_name(struct player *pplayer, const char * name, int nargs, ...);
 void trigger_by_name_array(struct player *pplayer, const char * name, int nargs, void * args[]);
 
 struct trigger_response * remove_trigger_response_from_cache(struct player *pplayer, const char * signal);
+
+void send_pending_triggers(struct connection *pconn);
+
+void set_trigger_timeout(int timout);
 
 #ifdef __cplusplus
 }
