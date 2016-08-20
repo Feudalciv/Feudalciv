@@ -196,6 +196,9 @@ function call_to_arms_callback(player, ally, enemy, response_index)
   if response_index == 1 then
     notify.embassies(player, nil, E.SCRIPT, player.name .. " has joined " .. ally.name .. "'s war against " .. enemy.name)
     edit.enter_war(player, enemy)
+  else
+    notify.embassies(player, nil, E.SCRIPT, player.name .. " has refused to join " .. ally.name .. "'s war against " .. enemy.name)
+    edit.break_pact(player, ally)
   end
 end
 

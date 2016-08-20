@@ -135,6 +135,8 @@ module edit {
     @ civil_war(lua_State *L, Player *pplayer, int probability);
   void api_edit_enter_war
     @ enter_war(lua_State *L, Player *pplayer, Player *pplayer2);
+  void api_edit_break_pact
+    @ break_pact(lua_State *L, Player *pplayer, Player *pplayer2);
   void api_edit_unit_turn
     @ unit_turn(lua_State *L, Unit *punit, Direction dir);
   void api_edit_player_victory
@@ -226,6 +228,10 @@ end
 
 function Player:enter_war(otherplayer)
   return edit.enter_war(self, otherplayer)
+end
+
+function Player:break_pact(otherplayer)
+  return edit.break_pact(self, otherplayer)
 end
 
 function Player:victory()
