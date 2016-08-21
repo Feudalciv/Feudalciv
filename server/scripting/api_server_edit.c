@@ -420,19 +420,8 @@ bool api_edit_enter_war(lua_State *L, Player *pplayer, Player *pplayer2)
 
   if (players_on_same_team(pplayer, pplayer2)) return FALSE;
 
-  while (!pplayers_at_war(pplayer, pplayer2)) {
-    if (pplayers_allied(pplayer, pplayer2)) {
-        handle_diplomacy_cancel_pact(pplayer, player_number(pplayer2), CLAUSE_ALLIANCE);
-    }
-    else if (players_non_invade(pplayer, pplayer2)) {
-        handle_diplomacy_cancel_pact(pplayer, player_number(pplayer2), CLAUSE_PEACE);
-    }
-    else if (pplayers_non_attack(pplayer, pplayer2)) {
-        handle_diplomacy_cancel_pact(pplayer, player_number(pplayer2), CLAUSE_CEASEFIRE);
-    }
-    else {
-      return FALSE;
-    }
+  if (!pplayers_at_war(pplayer, pplayer2)) {
+    handle_diplomacy_cancel_pact(pplayer, player_number(pplayer2), CLAUSE_LAST);
   }
   return TRUE;
 }
