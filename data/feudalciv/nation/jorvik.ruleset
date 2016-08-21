@@ -7,7 +7,7 @@ legend=_("")
 
 leaders = {
  "name",                        "sex"
- "John",    "Male"
+ "Ecgberht",    "Male"
 }
 
 ruler_titles = {
