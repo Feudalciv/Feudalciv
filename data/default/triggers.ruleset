@@ -38,6 +38,7 @@ title = "Call to Arms"
 desc = "Your ally $2 asks for your aid against $3" 
 responses = "Accept", "Decline"
 default_response = 2
+ai_response = 1
 reqs =
     { "type", "name", "range"
         "None", "None", "Player"

@@ -41,6 +41,7 @@ struct trigger {
   int responses_num;;
   const char ** responses;
   int default_response;
+  int ai_response;
 
   /* An trigger can have multiple requirements.  The trigger will only be
    * active if all of these requirement are met. */
@@ -73,7 +74,7 @@ struct trigger_response {
 
 struct trigger *trigger_new(const char * name, const char * title, const char * desc,
         const char * mtth, bool repeatable, int num_responses, const char **responses,
-        int default_response);
+        int default_response, int ai_response);
 struct trigger *trigger_copy(struct trigger *old);
 void trigger_req_append(struct trigger *ptrigger, struct requirement req);
 void trigger_signal_create(struct trigger *ptrigger);

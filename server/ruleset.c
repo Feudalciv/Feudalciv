@@ -4600,7 +4600,7 @@ static bool load_ruleset_triggers(struct section_file *file)
     const char *sec_name = section_name(psection);
     const char **responses;
     struct requirement_vector *reqs;
-    int default_response;
+    int default_response, ai_response;
 
     title = secfile_lookup_str(file, "%s.title", sec_name);
 
@@ -4635,7 +4635,18 @@ static bool load_ruleset_triggers(struct section_file *file)
       break;
     }
 
-    ptrigger = trigger_new(sec_name, title, desc, mtth, repeatable, nresponses, responses, default_response);
+    if (!secfile_lookup_int(file, &ai_response, "%s.ai_response", sec_name) && nresponses > 0) {
+      ruleset_error(LOG_ERROR, "\"%s\" [%s] missing trigger ai response but trigger has %d responses.", filename, sec_name, nresponses);
+      ok = FALSE;
+      break;
+    }
+    if (ai_response == 0 || ai_response > nresponses) {
+      ruleset_error(LOG_ERROR, "\"%s\" [%s] invalid ai response; trigger ai response should be indexed from 1.", filename, sec_name);
+      ok = FALSE;
+      break;
+    }
+
+    ptrigger = trigger_new(sec_name, title, desc, mtth, repeatable, nresponses, responses, default_response, ai_response);
 
     reqs = lookup_req_list(file, sec_name, "reqs", sec_name);
     if (reqs == NULL) {

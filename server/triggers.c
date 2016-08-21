@@ -83,7 +83,7 @@ struct trigger_list *get_triggers()
 **************************************************************************/
 struct trigger *trigger_new(const char * name, const char * title, const char * desc,
         const char * mtth, bool repeatable, int num_responses, const char **responses,
-        int default_response)
+        int default_response, int ai_response)
 {
   struct trigger *ptrigger;
   int i;
@@ -98,6 +98,7 @@ struct trigger *trigger_new(const char * name, const char * title, const char * 
   ptrigger->responses_num = num_responses;
   ptrigger->responses = fc_malloc(num_responses * sizeof(const char *));
   ptrigger->default_response = default_response;
+  ptrigger->ai_response = ai_response;
   for (i = 0; i < num_responses; i++) {
     ptrigger->responses[i] = fc_strdup(responses[i]);
   }
@@ -127,7 +128,7 @@ struct trigger *trigger_copy(struct trigger *old)
 {
   struct trigger *new_trigger = trigger_new(old->name, old->title, old->desc,
           old->mtth, old->repeatable, old->responses_num, old->responses,
-          old->default_response);
+          old->default_response, old->ai_response);
 
   requirement_vector_iterate(&old->reqs, preq) {
     trigger_req_append(new_trigger, *preq);
@@ -351,6 +352,8 @@ static void trigger_for_player(struct player *pdest, struct trigger *ptrigger, c
 
   if (ptrigger->responses_num == 0) {
     handle_trigger_response_player(pdest, ptrigger->name, 0);
+  } else if (pdest->ai_controlled) {
+    handle_trigger_response_player(pdest, ptrigger->name, ptrigger->ai_response);
   } else {
     /* Find the user of the player 'pdest'. */
     conn_list_iterate(pdest->connections, pconn) {
