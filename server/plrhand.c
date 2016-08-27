@@ -63,6 +63,7 @@
 #include "triggers.h"
 #include "unittools.h"
 #include "voting.h"
+#include "war.h"
 
 /* server/advisors */
 #include "advdata.h"
@@ -584,6 +585,19 @@ void enter_war(struct player *pplayer, struct player *pplayer2)
 }
 
 /**************************************************************************
+   Handles a player starting a new war with another player
+   is now called when joining via call to arms or breaking a ceasefire
+**************************************************************************/
+void handle_diplomacy_declare_war(struct player *pplayer,
+                  int other_player_id,
+                  enum clause_type oldstate,
+                  const char * casus_belli)
+{
+  start_war(pplayer, player_by_number(other_player_id), fc_strdup(casus_belli));
+  handle_diplomacy_cancel_pact(pplayer, other_player_id, oldstate);
+}
+
+/**************************************************************************
   Handles a player cancelling a "pact" with another player.
 
   packet.id is id of player we want to cancel a pact with
@@ -688,23 +702,6 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
     call_incident(INCIDENT_WAR, pplayer, pplayer2);
 
     enter_war(pplayer, pplayer2);
-    /* call allies */
-    players_iterate_alive(otherplayer) {
-      if (pplayers_allied(otherplayer, pplayer) &&
-              player_number(otherplayer) != player_number(pplayer) &&
-              !pplayers_at_war(otherplayer, pplayer2)) {
-        trigger_by_name(otherplayer, "trigger_call_to_arms", 3, API_TYPE_PLAYER, otherplayer,
-                                                                API_TYPE_PLAYER, pplayer,
-                                                                API_TYPE_PLAYER, pplayer2);
-      }
-      else if (pplayers_allied(otherplayer, pplayer2) &&
-              player_number(otherplayer) != player_number(pplayer) &&
-              !pplayers_at_war(otherplayer, pplayer)) {
-        trigger_by_name(otherplayer, "trigger_call_to_arms", 3, API_TYPE_PLAYER, otherplayer,
-                                                                API_TYPE_PLAYER, pplayer2,
-                                                                API_TYPE_PLAYER, pplayer);
-      }
-    } players_iterate_alive_end;
   }
   ds_plrplr2->has_reason_to_cancel = 0;
 

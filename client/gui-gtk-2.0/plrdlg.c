@@ -768,6 +768,30 @@ static void confirm_cancel_pact(enum clause_type clause, int plrno,
 }
 
 /**************************************************************************
+  Confirm declaring war on player
+  Frees strings passed in.
+**************************************************************************/
+static void confirm_declare_war(enum clause_type clause, int plrno,
+                                char *title, char *question)
+{
+  GtkWidget *shell;
+
+  shell = gtk_message_dialog_new(NULL, 0,
+                                 GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO,
+                                 "%s", question);
+  gtk_window_set_title(GTK_WINDOW(shell), title);
+  setup_dialog(shell, toplevel);
+  gtk_dialog_set_default_response(GTK_DIALOG(shell), GTK_RESPONSE_NO);
+
+  if (gtk_dialog_run(GTK_DIALOG(shell)) == GTK_RESPONSE_YES) {
+    dsend_packet_diplomacy_declare_war(&client.conn, plrno, clause, "NO_CB");
+  }
+  gtk_widget_destroy(shell);
+  FC_FREE(title);
+  FC_FREE(question);
+}
+
+/**************************************************************************
   Pact cancellation requested
 **************************************************************************/
 void players_war_callback(GtkMenuItem *item, gpointer data)
@@ -802,9 +826,15 @@ void players_war_callback(GtkMenuItem *item, gpointer data)
                diplstate_text(newstate));
     }
 
-    /* can be any pact clause */
-    confirm_cancel_pact(CLAUSE_CEASEFIRE, plrno,
-                        astr_to_str(&title), astr_to_str(&question));
+    if (newstate == DS_WAR && oldstate != CLAUSE_CEASEFIRE) {
+      /* Declare new war */
+      confirm_declare_war(CLAUSE_PEACE, plrno,
+                          astr_to_str(&title), astr_to_str(&question));
+    } else {
+      /* can be any pact clause */
+      confirm_cancel_pact(CLAUSE_CEASEFIRE, plrno,
+                          astr_to_str(&title), astr_to_str(&question));
+    }
   }
 }
 

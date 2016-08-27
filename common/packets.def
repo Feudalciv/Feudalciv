@@ -3,7 +3,7 @@
 Max used id:
 ============
 
-Max id: 238
+Max id: 239
 
 Packets are not ordered by their id, but by their category. New packet
 with higher id may get added to existing category, and not to the end of file.
@@ -1066,6 +1066,12 @@ end
 PACKET_DIPLOMACY_CANCEL_PACT = 105; cs, dsend
   PLAYER other_player_id;
   CLAUSE clause;
+end
+
+PACKET_DIPLOMACY_DECLARE_WAR = 239; cs, dsend
+  PLAYER other_player_id;
+  CLAUSE clause;
+  STRING casus_belli[MAX_LEN_MSG];
 end
 
 /**************  Report packets **********************/
