@@ -83,8 +83,8 @@ With a training ground, each new land unit built in a city will\
  restored.\
 ")
 
-[building_wooden_fort]
-name        = _("Wooden Fort")
+[building_fort]
+name        = _("Fort")
 genus       = "Improvement"
 reqs    =
     { "type", "name", "range"

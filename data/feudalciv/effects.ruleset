@@ -563,45 +563,45 @@ reqs    =
     }
 
 
-[effect_wooden_fort]
+[effect_fort]
 type    = "Defend_Bonus"
 value	= 200
 reqs	=
     { "type", "name", "range"
-      "Building", "Wooden Fort", "City"
+      "Building", "Fort", "City"
       "UnitClass", "Land", "Local"
     }
 
-[effect_wooden_fort_0]
+[effect_fort_0]
 type    = "Unit_No_Lose_Pop"
 value	= 1
 reqs	=
     { "type", "name", "range"
-      "Building", "Wooden Fort", "City"
+      "Building", "Fort", "City"
     }
 
-[effect_wooden_fort_visible]
+[effect_fort_visible]
 type    = "Visible_Walls"
 value	= 1
 reqs	=
     { "type", "name", "range"
-      "Building", "Wooden Fort", "City"
+      "Building", "Fort", "City"
     }
 
-[effect_wooden_fort_vision]
+[effect_fort_vision]
 type    = "City_Vision_Radius_Sq"
-value   = 100
+value   = 20
 reqs    =
     { "type", "name", "range"
-      "Building", "Wooden Fort", "City"
+      "Building", "Fort", "City"
     }
 
-[effect_wooden_fort_borders]
+[effect_fort_borders]
 type    = "City_Border_Radius_Sq"
-value   = 80
+value   = 20
 reqs    =
     { "type", "name", "range"
-      "Building", "Wooden Fort", "City"
+      "Building", "Fort", "City"
     }
 
 [effect_wooden_walls]
