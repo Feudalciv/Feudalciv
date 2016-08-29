@@ -9,7 +9,7 @@ legend=_("")
 
 leaders = {
  "name",                        "sex"
- "Alfred the Great",            "Male" ; a.k.a. "Alfred of Wessex"
+ "Alfred",            "Male" ; a.k.a. "Alfred of Wessex"
 }
 
 ruler_titles = {
