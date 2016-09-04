@@ -842,10 +842,64 @@ value   = 4
 type    = "City_Vision_Radius_Sq"
 value   = 2
 
-; City radius 2 - radius is sqrt(2+3) = 2.24
+; City radius 2 - radius of vision is sqrt(2+3) = 2.24
+[effect_city_vision_1]
+type    = "City_Vision_Radius_Sq"
+value   = 3
+reqs    =
+    { "type", "name", "range"
+      "MinSize", "2", "City"
+    }
+
+; City radius 3 - radius of vision is sqrt(2+3+5) = 3.16
+[effect_city_vision_2]
+type    = "City_Vision_Radius_Sq"
+value   = 5
+reqs    =
+    { "type", "name", "range"
+      "MinSize", "3", "City"
+    }
+
+; City radius 4 - radius of vision is sqrt(2+3+5+5) = 3.87
+[effect_city_vision_3]
+type    = "City_Vision_Radius_Sq"
+value   = 5
+reqs    =
+    { "type", "name", "range"
+      "MinSize", "4", "City"
+    }
+
+; City radius 5 - radius of vision is sqrt(2+3+5+5+5) = 4.47
+[effect_city_vision_4]
+type    = "City_Vision_Radius_Sq"
+value   = 5
+reqs    =
+    { "type", "name", "range"
+      "MinSize", "5", "City"
+    }
+
+; City radius 6 - radius of vision is sqrt(2+3+5+5+5+5) = 5
+[effect_city_vision_5]
+type    = "City_Vision_Radius_Sq"
+value   = 5
+reqs    =
+    { "type", "name", "range"
+      "MinSize", "6", "City"
+    }
+
+; City radius 1 - radius is sqrt(5) = 2.24
+[effect_city_radius_0]
+type    = "City_Radius_Sq"
+value   = 5
+reqs    =
+    { "type", "name", "range"
+      "MinSize", "2", "City"
+    }
+
+; City radius 2 - radius is sqrt(5 + 5) = 3.16
 [effect_city_radius_1]
 type    = "City_Radius_Sq"
-value   = 10
+value   = 5
 reqs    =
     { "type", "name", "range"
       "MinSize", "3", "City"
@@ -859,19 +913,30 @@ reqs    =
       "MinSize", "3", "City"
     }
 
-; City radius 2 - radius of vision is sqrt(2+3) = 2.24
-[effect_city_vision_1]
-type    = "City_Vision_Radius_Sq"
-value   = 3
-reqs    =
-    { "type", "name", "range"
-      "MinSize", "3", "City"
-    }
 
-; City radius 3 - radius is sqrt(2+3+5) = 3.16
+
+; City radius 3 - radius is sqrt(5 + 5 + 5) = 3.87
 [effect_city_radius_2]
 type    = "City_Radius_Sq"
-value   = 20
+value   = 5
+reqs    =
+    { "type", "name", "range"
+      "MinSize", "4", "City"
+    }
+
+; City radius 3 - radius is sqrt(5 + 5 + 5 + 5) = 3.87
+[effect_city_radius_3]
+type    = "City_Radius_Sq"
+value   = 5
+reqs    =
+    { "type", "name", "range"
+      "MinSize", "5", "City"
+    }
+
+; City radius 4 - radius is sqrt(5 + 5 + 5 + 5 + 5) = 5
+[effect_city_radius_4]
+type    = "City_Radius_Sq"
+value   = 5
 reqs    =
     { "type", "name", "range"
       "MinSize", "6", "City"
@@ -880,15 +945,6 @@ reqs    =
 [effect_city_image_2]
 type    = "City_Image"
 value   = 1
-reqs    =
-    { "type", "name", "range"
-      "MinSize", "10", "City"
-    }
-
-; City radius 3 - radius of vision is sqrt(2+3+5) = 3.16
-[effect_city_vision_2]
-type    = "City_Vision_Radius_Sq"
-value   = 5
 reqs    =
     { "type", "name", "range"
       "MinSize", "10", "City"
@@ -904,7 +960,7 @@ reqs    =
     }
 
 ; City radius 4 - radius is sqrt(2+3+5+7) = 4.12
-[effect_city_radius_3]
+[effect_city_radius_5]
 type    = "City_Radius_Sq"
 value   = 30
 reqs    =
@@ -915,15 +971,6 @@ reqs    =
 [effect_city_image_3]
 type    = "City_Image"
 value   = 1
-reqs    =
-    { "type", "name", "range"
-      "MinSize", "30", "City"
-    }
-
-; City radius 4 - radius of vision is sqrt(2+3+5+7) = 4.12
-[effect_city_vision_3]
-type    = "City_Vision_Radius_Sq"
-value   = 7
 reqs    =
     { "type", "name", "range"
       "MinSize", "30", "City"
