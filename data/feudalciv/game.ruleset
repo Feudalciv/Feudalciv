@@ -189,10 +189,10 @@ tired_attack = FALSE
 
 [borders]
 ; Base border radius from city.
-radius_sq_city = 1
+radius_sq_city = 0
 
 ; Border radius square increased by this amount / point of city size
-size_effect    = 1
+size_effect    = 4
 
 [research]
 ; Method of paying tech upkeep
