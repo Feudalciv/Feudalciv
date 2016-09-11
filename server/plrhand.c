@@ -2950,3 +2950,27 @@ void player_set_under_human_control(struct player *pplayer)
   }
   cancel_all_meetings(pplayer);
 }
+
+/****************************************************************************
+  Pay tributes
+****************************************************************************/
+void pay_necessary_tribute(struct player *pplayer)
+{
+  struct player *overlord = get_player_overlord(pplayer);
+  int gold;
+  int income = 0, paid;
+
+  if (overlord != NULL) {
+   income = player_get_expected_gross_income(pplayer);
+
+    /* Ignore defecit for now, will be dealt with when updating cities */
+    /* FIXME: Could cause issues when upkeep_style != 2 and treasury is close to empty
+     * since income could drop below 0 after paying tributes, causing buildings/units
+     * to be sold or disbanded even if the income from other cities is enough to bring
+     * the treasury back to positive
+     * Ideally, tributes could be paid last, but overlords may run into the same situation
+     * if relying on tributes */
+    pplayer->economic.gold -= income * 0.1;
+    overlord->economic.gold += income * 0.1;
+  }
+}

@@ -363,6 +363,8 @@ int num_known_tech_with_flag(const struct player *pplayer,
 			     enum tech_flag_id flag);
 int player_get_expected_income(const struct player *pplayer);
 
+int player_get_expected_gross_income(const struct player *pplayer);
+
 struct city *player_capital(const struct player *pplayer);
 
 bool ai_handicap(const struct player *pplayer, enum handicap_type htype);
@@ -405,7 +407,7 @@ static inline bool is_barbarian(const struct player *pplayer)
   return pplayer->ai_common.barbarian_type != NOT_A_BARBARIAN;
 }
 
-const struct player * get_player_overlord(const struct player *pplayer);
+struct player * get_player_overlord(const struct player *pplayer);
 
 bool gives_shared_vision(const struct player *me, const struct player *them);
 

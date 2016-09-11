@@ -1087,6 +1087,11 @@ static void end_phase(void)
     }
   } phase_players_iterate_end;
 
+  /* Pay tributes */
+  phase_players_iterate(pplayer) {
+    pay_necessary_tribute(pplayer);
+  } phase_players_iterate_end;
+
   /* Refresh cities */
   phase_players_iterate(pplayer) {
     player_research_get(pplayer)->got_tech = FALSE;

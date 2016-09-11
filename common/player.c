@@ -1114,8 +1114,44 @@ int player_get_expected_income(const struct player *pplayer)
     }
   } city_list_iterate_end;
 
+  if (get_player_overlord(pplayer) != NULL) {
+    /* Overlord gets 10% of income */
+    income = income - income * 0.1;
+  }
+
+  player_subjects_iterate(pplayer, subject) {
+    income += player_get_expected_gross_income(subject) * 0.1;
+  } player_subjects_iterate_end;
+
   return income;
 }
+
+/**************************************************************************
+  Return the expected net income of the player this turn.  This includes
+  tax revenue and upkeep, but not one-time purchases or found gold.
+
+  This function depends on pcity->prod[O_GOLD] being set for all cities, so
+  make sure the player's cities have been refreshed.
+**************************************************************************/
+int player_get_expected_gross_income(const struct player *pplayer)
+{
+  int income = 0;
+
+  city_list_iterate(pplayer->cities, pcity) {
+    income += pcity->prod[O_GOLD];
+    if (city_production_has_flag(pcity, IF_GOLD)) {
+      income += MAX(0, pcity->surplus[O_SHIELD]);
+    }
+  } city_list_iterate_end;
+
+  player_subjects_iterate(pplayer, subject) {
+    income += player_get_expected_gross_income(subject) * 0.1;
+  } player_subjects_iterate_end;
+
+  return income;
+}
+
+
 
 /**************************************************************************
  Returns TRUE iff the player knows at least one tech which has the
@@ -1369,7 +1405,7 @@ bool players_on_same_team(const struct player *pplayer1,
   Returns the overlord of the given player or NULL if the player has no
   overlord
  *************************************************************************/
-const struct player * get_player_overlord(const struct player *pplayer)
+struct player * get_player_overlord(const struct player *pplayer)
 {
 
   players_iterate_alive(pplayer2) {
