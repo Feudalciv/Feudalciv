@@ -1,0 +1,25 @@
+[nation_danishanglia]
+
+translation_domain="freeciv"
+
+name=_("Danish Anglia")
+plural=_("?plural:Danish Anglia")
+groups="Feudalciv"
+legend=_("")
+
+leaders = {
+ "name",                "sex"
+ "Guthrum",             "Male"
+}
+
+ruler_titles = {
+ "government",   "male_title",           "female_title"
+}
+
+flag="viking"
+flag_alt="norway"
+city_style="European"
+
+init_techs=""
+init_buildings=""
+init_units=""
