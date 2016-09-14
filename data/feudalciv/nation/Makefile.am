@@ -22,14 +22,15 @@ pkgdata_DATA = \
 		hwicce.ruleset \
 		jorvik.ruleset \
 		kent.ruleset \
-		mercia.ruleset \
 		middleanglia.ruleset \
 		norfolk.ruleset \
+		northmercia.ruleset \
 		northumbria.ruleset \
 		pirate.ruleset \
 		powys.ruleset \
 		seisyllwg.ruleset \
 		somerset.ruleset \
+		southmercia.ruleset \
 		suffolk.ruleset \
 		surrey.ruleset \
 		sussex.ruleset \
