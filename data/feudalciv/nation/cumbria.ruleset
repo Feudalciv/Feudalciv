@@ -1,0 +1,46 @@
+[nation_cumbria]
+
+name=_("Cumbria")
+plural=_("?plural:Cumbria")
+groups="Feudalciv"
+
+leaders = {
+ "name",        "sex"
+
+; Kings of Bernicia:
+ "Esa",         "Male"
+ "Eoppa",       "Male"
+ "Glappa",      "Male"
+ "Æðelric",     "Male"
+ "Þeodric",     "Male"
+ "Friþuwald",   "Male"
+ "Æðelfriþ",    "Male"
+ "Eanfriþ",     "Male"
+
+; Kings of Deira:
+ "Edwin",       "Male"
+ "Osric",       "Male"
+ "Oswald",      "Male"
+ "Æðelwold",    "Male"
+ "Alchfriþ",    "Male"
+ "Ælfwine",     "Male"
+ "Ealdfriþ",    "Male"
+ "Ecgfriþ",     "Male"
+ "Osred",       "Male"
+}
+
+ruler_titles = {
+ "government",      "male_title",      "female_title"
+}
+
+flag = "northumbria"
+flag_alt = "england"
+city_style = "European"
+init_techs="" 
+init_buildings="" 
+init_units="" 
+
+;Cities names comes from http://www.futers.unisonplus.net/places.htm
+
+cities =
+  "Berwick"

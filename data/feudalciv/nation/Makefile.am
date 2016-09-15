@@ -9,6 +9,7 @@ pkgdata_DATA = \
 		berkshire.ruleset \
 		brycheiniog.ruleset \
 		buelt.ruleset \
+		cumbria.ruleset \
 		danishanglia.ruleset \
 		danishmercia.ruleset \
 		devon.ruleset \
