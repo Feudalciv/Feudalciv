@@ -23,6 +23,7 @@ pkgdata_DATA = \
 		hwicce.ruleset \
 		jorvik.ruleset \
 		kent.ruleset \
+		magonsaete.ruleset \
 		middleanglia.ruleset \
 		norfolk.ruleset \
 		northmercia.ruleset \
@@ -35,9 +36,9 @@ pkgdata_DATA = \
 		suffolk.ruleset \
 		surrey.ruleset \
 		sussex.ruleset \
-		westmercia.ruleset \
 		westwales.ruleset \
-		wiltshire.ruleset 
+		wiltshire.ruleset \
+		wreocensaete.ruleset 
 
 EXTRA_DIST = $(pkgdata_DATA) Makefile.am.sh
 
