@@ -145,7 +145,7 @@ Walls make it easier to defend a city.  They triple the defense\
 
 [building_cathedral]
 name		= _("Cathedral")
-genus		= "Improvement"
+genus		= "SmallWonder"
 reqs	=
     { "type", "name", "range"
       "Tech", "Monotheism", "Player"
@@ -252,7 +252,7 @@ Increases the luxury and tax output in a city by 50%.\
 
 [building_mint]
 name		= _("Mint")
-genus		= "Improvement"
+genus		= "SmallWonder"
 reqs	=
     { "type", "name", "range"
       "Tech", "Currency", "Player"

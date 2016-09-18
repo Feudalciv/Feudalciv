@@ -365,51 +365,6 @@ flags         = "DamageSlows", "AttFromNonNative"
 ;
 ; */ <-- avoid gettext warnings
 
-[unit_settlers]
-name          = _("Settlers")
-class         = "Land"
-tech_req      = "None"
-obsolete_by   = "None"
-graphic       = "u.settlers"
-graphic_alt   = "-"
-sound_move    = "m_settlers"
-sound_move_alt = "m_generic"
-sound_fight   = "f_settlers"
-sound_fight_alt = "f_generic"
-build_cost    = 40
-pop_cost      = 1
-attack        = 0
-defense       = 1
-hitpoints     = 20
-firepower     = 1
-move_rate     = 1
-vision_radius_sq = 2
-transport_cap = 0
-fuel          = 0
-uk_happy      = 0
-uk_shield     = 1
-uk_food       = 1
-uk_gold       = 0
-flags         = "Settlers", "NonMil", "AddToCity", "Cities"
-; No veteran levels (level name is never displayed)
-veteran_names = _("green")
-veteran_raise_chance = 0
-veteran_work_raise_chance = 0
-veteran_power_fact = 100
-veteran_move_bonus = 0
-roles         = "Cities"
-helptext      = _("\
-Settlers are one of the key units in the game, as they are your main\
- means of founding new cities.\
-"), _("\
-Settlers can also perform some of the same terrain alterations as\
- Workers.\
-"), _("\
-Upkeep for Settlers is in food as well as production, and a Settler\
- can die if its supporting city runs out of food. Settlers in a\
- Republic or Democracy require twice as much food per turn.\
-")
-
 [unit_worker]
 name          = _("?unit:Workers")
 class         = "Land"
@@ -502,7 +457,7 @@ uk_happy      = 1
 uk_shield     = 0
 uk_food       = 0
 uk_gold       = 2
-flags         = ""
+flags         = "Unique"
 roles         = "DefendGood", "FirstBuild"
 helptext      = _("\
 Saxon noblemen and their personal armies\
@@ -595,7 +550,7 @@ uk_happy      = 1
 uk_shield     = 0
 uk_food       = 0
 uk_gold       = 2
-flags         = ""
+flags         = "Unique"
 roles         = "DefendOk"
 helptext      = _("\
 Norse noblemen and their retinue\
