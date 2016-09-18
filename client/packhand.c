@@ -704,6 +704,7 @@ void handle_city_info(const struct packet_city_info *packet)
           != packet->unhappy_penalty[O_SCIENCE])
       || pcity->prod[O_SCIENCE] != packet->prod[O_SCIENCE]
       || pcity->citizen_base[O_SCIENCE] != packet->citizen_base[O_SCIENCE]
+      || pcity->building_base[O_SCIENCE] != packet->building_base[O_SCIENCE]
       || pcity->usage[O_SCIENCE] != packet->usage[O_SCIENCE]) {
     need_science_dialog_update = TRUE;
   }
@@ -736,6 +737,7 @@ void handle_city_info(const struct packet_city_info *packet)
     pcity->unhappy_penalty[o] = packet->unhappy_penalty[o];
     pcity->prod[o] = packet->prod[o];
     pcity->citizen_base[o] = packet->citizen_base[o];
+    pcity->building_base[o] = packet->building_base[o];
     pcity->usage[o] = packet->usage[o];
   } output_type_iterate_end;
 

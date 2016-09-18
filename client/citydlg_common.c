@@ -450,6 +450,10 @@ void get_city_dialog_output_text(const struct city *pcity,
 	       _("%+4d : Citizens\n"), pcity->citizen_base[otype]);
   total += pcity->citizen_base[otype];
 
+  cat_snprintf(buf, bufsz,
+	       _("%+4d : Buildings\n"), pcity->building_base[otype]);
+  total += pcity->building_base[otype];
+
   /* Hack to get around the ugliness of add_tax_income. */
   memset(tax, 0, O_LAST * sizeof(*tax));
   add_tax_income(city_owner(pcity), pcity->prod[O_TRADE], tax);

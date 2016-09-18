@@ -691,6 +691,16 @@ reqs	=
       "OutputType", "Luxury", "Local"
     }
 
+[effect_mint]
+type    = "Building_Output"
+value	= 3
+reqs	=
+    { "type", "name", "range"
+      "Building", "Mint", "City"
+      "OutputType", "Gold", "Local"
+    }
+
+
 [effect_palace]
 type    = "Output_Waste_Pct"
 value	= 50

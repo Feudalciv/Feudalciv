@@ -2381,6 +2381,7 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
     packet->unhappy_penalty[o] = pcity->unhappy_penalty[o];
     packet->prod[o] = pcity->prod[o];
     packet->citizen_base[o] = pcity->citizen_base[o];
+    packet->building_base[o] = pcity->building_base[o];
     packet->usage[o] = pcity->usage[o];
   } output_type_iterate_end;
 

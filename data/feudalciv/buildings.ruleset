@@ -228,6 +228,26 @@ helptext	= _("\
 Increases the luxury and tax output in a city by 50%.\
 ")
 
+[building_mint]
+name		= _("Mint")
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Currency", "Player"
+    }
+graphic	= "b.marketplace"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 60
+upkeep		= 0
+sabotage	= 100
+sound		= "b_marketplace"
+sound_alt	= "b_generic"
+; /* xgettext:no-c-format */
+helptext	= _("\
+Increases the tax output in a city by 3.\
+")
+
 [building_palace]
 name		= _("Palace")
 genus		= "SmallWonder"

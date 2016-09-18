@@ -245,8 +245,10 @@ struct requirement;
 /* add to default squared city border radius */
 #define SPECENUM_VALUE93 EFT_CITY_BORDER_RADIUS_SQ
 #define SPECENUM_VALUE93NAME "City_Border_Radius_SQ"
+#define SPECENUM_VALUE94 EFT_BUILDING_OUTPUT
+#define SPECENUM_VALUE94NAME "Building_Output"
 /* keep this last */
-#define SPECENUM_VALUE94 EFT_LAST
+#define SPECENUM_VALUE95 EFT_LAST
 #include "specenum_gen.h"
 
 /* An effect is provided by a source.  If the source is present, and the
@@ -336,6 +338,8 @@ int get_city_output_bonus(const struct city *pcity,
 int get_building_bonus(const struct city *pcity,
 		       const struct impr_type *building,
 		       enum effect_type effect_type);
+int* get_building_output_bonus(const struct city *pcity);
+
 int get_unittype_bonus(const struct player *pplayer,
 		       const struct tile *ptile, /* pcity is implied */
 		       const struct unit_type *punittype,

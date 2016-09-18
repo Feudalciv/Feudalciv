@@ -332,6 +332,7 @@ struct city {
   int unhappy_penalty[O_LAST]; /* Penalty from unhappy cities. */
   int prod[O_LAST]; /* Production is total minus waste and penalty. */
   int citizen_base[O_LAST]; /* Base production from citizens. */
+  int building_base[O_LAST]; /* Base production from buildings. */
   int usage[O_LAST]; /* Amount of each resource being used. */
 
   /* Cached values for CPU savings. */

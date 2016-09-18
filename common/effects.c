@@ -938,6 +938,32 @@ int get_building_bonus(const struct city *pcity,
 }
 
 /**************************************************************************
+  Returns the output bonus of a building
+**************************************************************************/
+int* get_building_output_bonus(const struct city *pcity)
+{
+  int * bonus = fc_calloc(num_output_types, sizeof(int));
+
+  if (!initialized) {
+    return 0;
+  }
+
+  fc_assert_ret_val(NULL != pcity, 0);
+
+  output_type_iterate(stat) {
+    bonus[stat] += get_target_bonus_effects(NULL,
+                             city_owner(pcity), pcity,
+                             NULL,
+                             NULL, NULL, get_output_type(stat), NULL,
+                             EFT_BUILDING_OUTPUT);
+
+  } output_type_iterate_end;
+
+  return bonus;
+}
+
+
+/**************************************************************************
   Returns the effect bonus that applies at a tile for a given unittype.
 
   For instance with EFT_DEFEND_BONUS the attacker's unittype and the
