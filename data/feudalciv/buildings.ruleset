@@ -148,7 +148,7 @@ name		= _("Cathedral")
 genus		= "SmallWonder"
 reqs	=
     { "type", "name", "range"
-      "Tech", "Monotheism", "Player"
+      "Tech", "Christianity", "Player"
       "Building", "Church", "City"
     }
 graphic	= "b.cathedral"
@@ -171,7 +171,6 @@ name		= _("Granary")
 genus		= "Improvement"
 reqs	=
     { "type", "name", "range"
-      "Tech", "Pottery", "Player"
     }
 graphic	= "b.granary"
 graphic_alt	= "-"
@@ -276,7 +275,6 @@ genus		= "SmallWonder"
 flags		= "SaveSmallWonder"
 reqs	=
     { "type", "name", "range"
-      "Tech", "Masonry", "Player"
     }
 graphic	= "b.palace"
 graphic_alt	= "-"
@@ -315,7 +313,7 @@ name		= _("Church")
 genus		= "Improvement"
 reqs	=
     { "type", "name", "range"
-      "Tech", "Ceremonial Burial", "Player"
+      "Tech", "Christianity", "Player"
     }
 graphic	= "b.temple"
 graphic_alt	= "-"
@@ -336,7 +334,7 @@ name		= _("Abbey")
 genus		= "Improvement"
 reqs	=
     { "type", "name", "range"
-      "Tech", "Ceremonial Burial", "Player"
+      "Tech", "Christianity", "Player"
     }
 graphic	= "b.temple"
 graphic_alt	= "-"

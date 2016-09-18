@@ -106,7 +106,6 @@ value   = 8
 reqs    =
     { "type", "name", "range"
       "Base", "Fortress", "tile"
-      "Tech", "Invention", "player"
       "UnitClass", "Land", "Local"
     }
 
@@ -117,7 +116,6 @@ value   = 8
 reqs    =
     { "type", "name", "range"
       "Base", "Fortress", "tile"
-      "Tech", "Invention", "player"
       "UnitClass", "Big Land", "Local"
     }
 

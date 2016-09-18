@@ -368,7 +368,7 @@ flags         = "DamageSlows", "AttFromNonNative"
 [unit_worker]
 name          = _("?unit:Workers")
 class         = "Land"
-tech_req      = "Pottery"
+tech_req      = "None"
 obsolete_by   = "None"
 graphic       = "u.worker"
 graphic_alt   = "u.engineers" ; for compatibility
@@ -435,7 +435,7 @@ these actions.\
 [unit_earldormen]
 name          = _("Earldormen")
 class         = "Land"
-tech_req      = "None"
+tech_req      = "Anglo-Saxon Culture"
 obsolete_by   = "None"
 graphic       = "u.warriors"
 graphic_alt   = "-"
@@ -466,7 +466,7 @@ Saxon noblemen and their personal armies\
 [unit_fyrdsmen]
 name          = _("Fyrdsmen")
 class         = "Land"
-tech_req      = "None"
+tech_req      = "Anglo-Saxon Culture"
 obsolete_by   = "None"
 graphic       = "u.warriors"
 graphic_alt   = "-"
@@ -497,7 +497,7 @@ Levied part time soldiers, part time farmers\
 [unit_fyrdsmen_archers]
 name          = _("Fyrdsmen Archers")
 class         = "Land"
-tech_req      = "Warrior Code"
+tech_req      = "Anglo-Saxon Culture"
 obsolete_by   = "None"
 graphic       = "u.archers"
 graphic_alt   = "-"
@@ -528,7 +528,7 @@ Fyrdsmen armed with bows\
 [unit_jarls]
 name          = _("Jarls")
 class         = "Land"
-tech_req      = "None"
+tech_req      = "Norse Culture"
 obsolete_by   = "None"
 graphic       = "u.legion"
 graphic_alt   = "-"
@@ -559,7 +559,7 @@ Norse noblemen and their retinue\
 [unit_viking_raiders]
 name          = _("Viking Raiders")
 class         = "Land"
-tech_req      = "None"
+tech_req      = "Norse Culture"
 obsolete_by   = "None"
 graphic       = "u.legion"
 graphic_alt   = "-"
@@ -624,7 +624,7 @@ Horsemen are mounted warriors and an early\
 ; /* TRANS: unit type */
 name          = _("Longship")
 class         = "Trireme"
-tech_req      = "Map Making"
+tech_req      = "Norse Culture"
 obsolete_by   = "None"
 graphic       = "u.trireme"
 graphic_alt   = "-"
@@ -656,7 +656,7 @@ helptext      = _("\
 [unit_cog]
 name          = _("Cog")
 class         = "Sea"
-tech_req      = "Navigation"
+tech_req      = "None"
 obsolete_by   = "None"
 graphic       = "u.caravel"
 graphic_alt   = "-"
@@ -721,7 +721,7 @@ A Norse ship built for long sea voyages and used during the Viking expansion.\
 [unit_diplomat]
 name          = _("Diplomat")
 class         = "Land"
-tech_req      = "Writing"
+tech_req      = "None"
 obsolete_by   = "None"
 graphic       = "u.diplomat"
 graphic_alt   = "-"
