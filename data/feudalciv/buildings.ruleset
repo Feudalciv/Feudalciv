@@ -208,6 +208,28 @@ Gives one extra food resource on all Oceanic tiles.  The city needs\
 Allos the construction of ships.\
 ")
 
+[building_shipyard]
+name            = _("Shipyard")
+rule_name       = "Shipyard"     ; en_GB spelling used originally
+genus		= "Improvement"
+reqs	=
+    { "type", "name", "range"
+      "Tech", "Seafaring", "Player"
+      "TerrainClass", "Oceanic", "Adjacent"
+      "Building", "Harbour", "Local"
+    }
+graphic	= "b.harbour"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 40
+upkeep		= 1
+sabotage	= 100
+sound		= "b_harbour"
+sound_alt	= "b_generic"
+helptext	= _("\
+Allows the construction of veteran ships.\
+")
+
 [building_marketplace]
 name		= _("Marketplace")
 genus		= "Improvement"

@@ -84,6 +84,20 @@ reqs    =
       "OutputType", "gold", "Local"
     }
 
+[effect_shipyard]
+type    = "Veteran_Build"
+value	= 1
+reqs	=
+    { "type", "name", "range"
+      "Building", "Shipyard", "City"
+      "UnitClass", "Sea", "Local"
+    }
+nreqs   =
+    { "type", "name", "range"
+      "UnitFlag", "NonMil", "Local"
+      "UnitFlag", "NoVeteran", "Local"
+    }
+
 
 ; Vision benefit from fortress watchtowers to Land units
 [effect_fortress_vision]
