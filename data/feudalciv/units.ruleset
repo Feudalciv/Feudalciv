@@ -625,6 +625,7 @@ Horsemen are mounted warriors and an early\
 name          = _("Longship")
 class         = "Trireme"
 tech_req      = "Norse Culture"
+impr_req      = "Shipyard"
 obsolete_by   = "None"
 graphic       = "u.trireme"
 graphic_alt   = "-"
@@ -689,6 +690,7 @@ Square-rigged ship based on the Norse Knarr that appeared during the 10th centur
 name          = _("Knarr")
 class         = "Sea"
 tech_req      = "Navigation"
+impr_req      = "Shipyard"
 obsolete_by   = "None"
 graphic       = "u.caravel"
 graphic_alt   = "-"

@@ -356,4 +356,5 @@ set =
       "ec_chat", TRUE, FALSE
       "ec_info", TRUE, FALSE
       "techlossforgiveness", 15, FALSE
+      "sciencebox", 2000, FALSE
     }
