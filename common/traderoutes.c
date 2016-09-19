@@ -297,6 +297,7 @@ int trade_between_cities(const struct city *pc1, const struct city *pc2)
     bonus = bonus * trade_route_type_trade_pct(cities_trade_route_type(pc1, pc2)) / 100;
 
     bonus /= 12;
+    if (bonus == 0) bonus = 1;
   }
 
   return bonus;
