@@ -1326,33 +1326,6 @@ restart:
         a->require[AR_ROOT] = a_none;
       }
     } advance_iterate_end;
-
-    /* Some more consistency checking: 
-       Non-removed techs depending on removed techs is too
-       broken to fix by default, so die.
-    */
-    advance_iterate(A_FIRST, a) {
-      if (valid_advance(a)) {
-        /* We check for recursive tech loops later,
-         * in build_required_techs_helper. */
-        if (!valid_advance(a->require[AR_ONE])) {
-          ruleset_error(LOG_ERROR,
-                        "\"%s\" tech \"%s\": req1 leads to removed tech.",
-                        filename,
-                        advance_rule_name(a));
-          ok = FALSE;
-          break;
-        }
-        if (!valid_advance(a->require[AR_TWO])) {
-          ruleset_error(LOG_ERROR,
-                        "\"%s\" tech \"%s\": req2 leads to removed tech.",
-                        filename,
-                        advance_rule_name(a));
-          ok = FALSE;
-          break;
-        }
-      }
-    } advance_iterate_end;
   }
 
   section_list_destroy(sec);
@@ -2146,14 +2119,6 @@ static bool load_ruleset_units(struct section_file *file)
   if (ok) { 
     /* Some more consistency checking: */
     unit_type_iterate(u) {
-      if (!valid_advance(u->require_advance)) {
-        ruleset_error(LOG_ERROR, "\"%s\" unit_type \"%s\": depends on removed tech \"%s\".",
-                       filename, utype_rule_name(u),
-                       advance_rule_name(u->require_advance));
-        u->require_advance = A_NEVER;
-        ok = FALSE;
-        break;
-      }
 
       if (utype_has_flag(u, UTYF_SETTLERS)
           && u->city_size <= 0) {

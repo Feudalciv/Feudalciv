@@ -373,9 +373,6 @@ void player_research_update(struct player *pplayer)
   player_invention_set(pplayer, A_NONE, TECH_KNOWN);
 
   advance_index_iterate(A_FIRST, i) {
-    if (!player_invention_reachable(pplayer, i, FALSE)) {
-      player_invention_set(pplayer, i, TECH_UNKNOWN);
-    } else {
       if (player_invention_state(pplayer, i) == TECH_PREREQS_KNOWN) {
         player_invention_set(pplayer, i, TECH_UNKNOWN);
       }
@@ -388,7 +385,6 @@ void player_research_update(struct player *pplayer)
         player_invention_set(pplayer, i, TECH_PREREQS_KNOWN);
         researchable++;
       }
-    }
     build_required_techs(pplayer, i);
   } advance_index_iterate_end;
 
