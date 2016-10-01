@@ -677,14 +677,7 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
   }
 
   if (city_size_get(pcity) <= pop_loss) {
-
-    script_server_signal_emit("city_destroyed", 3,
-                              API_TYPE_CITY, pcity,
-                              API_TYPE_PLAYER, pcity->owner,
-                              API_TYPE_PLAYER, destroyer);
-
-    remove_city(pcity);
-    return FALSE;
+     pop_loss = city_size_get(pcity) - 1;
   }
   old_radius_sq = tile_border_source_radius_sq(pcity->tile);
   city_size_add(pcity, -pop_loss);
@@ -946,7 +939,7 @@ static void city_populate(struct city *pcity, struct player *nationality)
 
         notify_player(city_owner(pcity), city_tile(pcity),
                       E_UNIT_LOST_MISC, ftc_server,
-                      _("Famine feared in %s, %s lost!"), 
+                      _("Famine feared in %s, %s lost!"),
                       city_link(pcity), unit_tile_link(punit));
 
         wipe_unit(punit, ULR_STARVED, NULL);
@@ -1066,7 +1059,7 @@ static bool worklist_change_build_target(struct player *pplayer,
 	/* Yep, we can go after pupdate instead.  Joy! */
         notify_player(pplayer, city_tile(pcity), E_WORKLIST, ftc_server,
                       _("Production of %s is upgraded to %s in %s."),
-                      utype_name_translation(ptarget), 
+                      utype_name_translation(ptarget),
                       utype_name_translation(pupdate),
                       city_link(pcity));
 	target.value.utype = pupdate;
@@ -1370,7 +1363,7 @@ static bool worklist_change_build_target(struct player *pplayer,
 	/* Hey, we can upgrade the improvement!  */
         notify_player(pplayer, city_tile(pcity), E_WORKLIST, ftc_server,
                       _("Production of %s is upgraded to %s in %s."),
-                      city_improvement_name_translation(pcity, ptarget), 
+                      city_improvement_name_translation(pcity, ptarget),
                       city_improvement_name_translation(pcity, pupdate),
                       city_link(pcity));
 	target.value.building = pupdate;
@@ -1528,7 +1521,7 @@ static void upgrade_unit_prod(struct city *pcity)
                   E_UNIT_UPGRADED, ftc_server,
 		  _("Production of %s is upgraded to %s in %s."),
 		  utype_name_translation(producing),
-		  utype_name_translation(upgrading), 
+		  utype_name_translation(upgrading),
 		  city_link(pcity));
     pcity->production.value.utype = upgrading;
   }
@@ -2323,7 +2316,7 @@ int city_incite_cost(struct player *pplayer, struct city *pcity)
     int tgt_cit = citizens_nation_get(pcity, pplayer->slot);
     int third_party = pcity->size - natives - tgt_cit;
 
-    cost = cost_per_citizen * (natives + 0.7 * third_party + 0.5 * tgt_cit); 
+    cost = cost_per_citizen * (natives + 0.7 * third_party + 0.5 * tgt_cit);
   }
 
   cost += (cost * get_city_bonus(pcity, EFT_INCITE_COST_PCT)) / 100;
@@ -2427,7 +2420,7 @@ static void update_city_activity(struct city *pcity)
 
       if (city_illness_check(pcity)) {
         notify_player(pplayer, city_tile(pcity), E_CITY_PLAGUE, ftc_server,
-                      _("%s has been struck by a plague! Population lost!"), 
+                      _("%s has been struck by a plague! Population lost!"),
                       city_link(pcity));
         city_reduce_size(pcity, 1, NULL);
         pcity->turn_plague = game.info.turn;
@@ -2560,12 +2553,12 @@ static bool disband_city(struct city *pcity)
    * to rcity.  transfer_city_units does not make sure no units are
    * left floating without a transport, but since all units are
    * transferred this is not a problem. */
-  transfer_city_units(pplayer, pplayer, pcity->units_supported, rcity, 
+  transfer_city_units(pplayer, pplayer, pcity->units_supported, rcity,
                       pcity, -1, TRUE);
 
   notify_player(pplayer, ptile, E_UNIT_BUILT, ftc_server,
                 /* TRANS: "<city> is disbanded into Settler." */
-                _("%s is disbanded into %s."), 
+                _("%s is disbanded into %s."),
                 city_tile_link(pcity), utype_name_translation(utype));
 
   script_server_signal_emit("city_destroyed", 3,
