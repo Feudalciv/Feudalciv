@@ -588,7 +588,7 @@ static int target_get_section(struct universal target)
       return 3;
     }
   } else {
-    if (improvement_has_flag(target.value.building, IF_GOLD)) {
+    if (improvement_has_flag(target.value.building, IF_GOLD) || improvement_has_flag(target.value.building, IF_NONE)) {
       return 1;
     } else if (is_small_wonder(target.value.building)) {
       return 4;
@@ -645,7 +645,7 @@ void name_and_sort_items(struct universal *targets, int num_targets,
       cost = utype_build_shield_cost(target.value.utype);
     } else {
       name = city_improvement_name_translation(pcity, target.value.building);
-      if (improvement_has_flag(target.value.building, IF_GOLD)) {
+      if (improvement_has_flag(target.value.building, IF_GOLD) || improvement_has_flag(target.value.building, IF_NONE)) {
 	cost = -1;
       } else {
 	cost = impr_build_shield_cost(target.value.building);
@@ -1124,7 +1124,7 @@ void cityrep_buy(struct city *pcity)
 {
   int value;
 
-  if (city_production_has_flag(pcity, IF_GOLD)) {
+  if (city_production_has_flag(pcity, IF_GOLD) || city_production_has_flag(pcity, IF_NONE)) {
     create_event(pcity->tile, E_BAD_COMMAND, ftc_client,
                  _("You can't buy %s in %s!"),
                  improvement_name_translation(pcity->production.value.building),

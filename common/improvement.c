@@ -215,7 +215,7 @@ int impr_buy_gold_cost(const struct impr_type *pimprove, int shields_in_stock)
   int cost = 0;
   const int missing = impr_build_shield_cost(pimprove) - shields_in_stock;
 
-  if (improvement_has_flag(pimprove, IF_GOLD)) {
+  if (improvement_has_flag(pimprove, IF_GOLD) || improvement_has_flag(pimprove, IF_NONE)) {
     /* Can't buy capitalization. */
     return 0;
   }
@@ -367,7 +367,7 @@ bool is_improvement_redundant(const struct city *pcity,
                               struct impr_type *pimprove)
 {
   /* A capitalization production is never redundant. */
-  if (improvement_has_flag(pimprove, IF_GOLD)) {
+  if (improvement_has_flag(pimprove, IF_GOLD) || improvement_has_flag(pimprove, IF_NONE)) {
     return FALSE;
   }
 

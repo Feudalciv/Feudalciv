@@ -350,4 +350,58 @@ Increases happiness in the city where it is built.\
 As a place of learning increases tech output by 50%.\
 "), _("\
 The work of the monks also reduces the effect of plague in the city.\
+"
+
+[building_capitalization]
+name		= _("Coinage")
+genus		= "Special"
+flags		= "Gold"
+reqs	=
+    { "type", "name", "range"
+      "Building", "Mint", "City"
+    }
+graphic	= "b.capitalization"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 999
+upkeep		= 0
+sabotage	= 0
+; FIXME: this is the real helptext; restore when have a subordnate analogue
+; /* (ignore for gettext until fixed)
+;helptext	= _("\
+;This is not a normal improvement.  Instead, setting a city's\
+; production to Capitalization means its shield production is\
+; converted to tax output (money).\
+;")
+; */
+helptext	= _("\
+This is not a normal improvement.  Instead, setting a city's\
+ production to Coinage means its shield production is\
+ converted to tax output (money, coins!).\
+")
+
+[building_none]
+name		= _("None")
+genus		= "Special"
+flags       = "None"
+reqs	=
+    { "type", "name", "range"
+    }
+graphic	= "-"
+graphic_alt	= "-"
+obsolete_by	= "None"
+build_cost	= 999
+upkeep		= 0
+sabotage	= 0
+; FIXME: this is the real helptext; restore when have a subordnate analogue
+; /* (ignore for gettext until fixed)
+;helptext	= _("\
+;This is not a normal improvement.  Instead, setting a city's\
+; production to Capitalization means its shield production is\
+; converted to tax output (money).\
+;")
+; */
+helptext	= _("\
+This is not a normal improvement. Setting a town's production to None 
+makes it produce nothing\
 ")

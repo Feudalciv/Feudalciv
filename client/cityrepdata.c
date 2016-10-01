@@ -520,8 +520,10 @@ static const char *cr_entry_building(const struct city *pcity,
   const char *from_worklist =
     worklist_is_empty(&pcity->worklist) ? "" :
     concise_city_production ? "+" : _("(worklist)");
-
-  if (city_production_has_flag(pcity, IF_GOLD)) {
+  if (city_production_has_flag(pcity, IF_NONE)) {
+    fc_snprintf(buf, sizeof(buf), "%s",
+                city_production_name_translation(pcity));
+  } else if (city_production_has_flag(pcity, IF_GOLD)) {
     fc_snprintf(buf, sizeof(buf), "%s (%d)%s",
                 city_production_name_translation(pcity),
                 MAX(0, pcity->surplus[O_SHIELD]), from_worklist);
@@ -550,7 +552,7 @@ static const char *cr_entry_build_cost(const struct city *pcity,
   int price;
   int turns;
 
-  if (city_production_has_flag(pcity, IF_GOLD)) {
+  if (city_production_has_flag(pcity, IF_GOLD) || city_production_has_flag(pcity, IF_NONE)) {
     fc_snprintf(buf, sizeof(buf), "*");
     return buf;
   }

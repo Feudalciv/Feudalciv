@@ -54,6 +54,8 @@ struct strvec;          /* Actually defined in "utility/string_vector.h". */
 /* when built, gives gold */
 #define SPECENUM_VALUE2 IF_GOLD
 #define SPECENUM_VALUE2NAME "Gold"
+#define SPECENUM_VALUE3 IF_NONE
+#define SPECENUM_VALUE3NAME "None"
 #define SPECENUM_COUNT IF_COUNT
 #include "specenum_gen.h"
 
