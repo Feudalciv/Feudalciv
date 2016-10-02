@@ -12,6 +12,8 @@ pkgdata_DATA =          \
 	governments.ruleset \
 	nations.ruleset	\
 	nationlist.ruleset	\
+	roads.png	\
+	roads.spec	\
 	techs.ruleset	\
 	terrain.ruleset	\
 	units.ruleset
