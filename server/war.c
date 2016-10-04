@@ -40,7 +40,24 @@ struct war_list *wars;
 void start_war(struct player * aggressor, struct player * defender, const char * casus_belli)
 {
   struct war *pwar;
+  struct player *overlord;
+
   pwar = fc_malloc(sizeof(*pwar));
+
+  overlord = get_player_overlord(defender);
+  if (overlord != NULL && player_number(overlord) != player_number(get_player_overlord(aggressor))
+          && player_number(aggressor) != player_number(overlord)) {
+    /* bring overlord into the war if attacked by a foreign power*/
+    notify_player(overlord, NULL, E_TREATY_BROKEN, ftc_server,
+                  _("%s declared war on our subject %s. "
+                    "We are obligated to defend our subject %s and have taken control of the conflict."),
+                  player_name(aggressor),
+                  player_name(defender),
+                  player_name(defender));
+    handle_diplomacy_cancel_pact(aggressor, player_number(overlord), CLAUSE_LAST);
+    /* Overlord becomes the defender */
+    defender = overlord;
+  }
 
   pwar->aggressor = aggressor;
   pwar->defender = defender;
