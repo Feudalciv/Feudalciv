@@ -614,6 +614,9 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
         }
 
         set_peace(pgiver, pdest);
+        if (old_diplstate == DS_WAR || old_diplstate == DS_CEASEFIRE) {
+            update_wars_for_peace_treaty(pgiver, pdest);
+        }
 
         if (old_diplstate == DS_ALLIANCE) {
           update_players_after_alliance_breakup(pgiver, pdest,
@@ -622,14 +625,6 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
           unit_list_destroy(pgiver_seen_units);
           unit_list_destroy(pdest_seen_units);
         }
-
-        player_subjects_iterate(pgiver, giversubject) {
-          set_peace(giversubject, pdest);
-          player_subjects_iterate(pdest, destsubject) {
-            set_peace(destsubject, pgiver);
-            set_peace(giversubject, destsubject);
-          } player_subjects_iterate_end;
-        } player_subjects_iterate_end;
 
         worker_refresh_required = TRUE;
 	break;

@@ -45,7 +45,9 @@ void start_war(struct player * aggressor, struct player * defender, const char *
 
 bool join_war(struct player * leader, struct player *ally);
 
-void end_war(struct war *pwar);
+bool leave_war(struct player * leader, struct war *pwar);
+
+void update_wars_for_peace_treaty(struct player *pplayer1, struct player *pplayer2);
 
 void war_cache_init();
 

@@ -27,6 +27,7 @@
 #include "luascript_types.h"
 
 /* server */
+#include "diplhand.h"
 #include "notify.h"
 #include "triggers.h"
 
@@ -107,7 +108,7 @@ bool join_war(struct player * leader, struct player *ally)
 *************************************************************************/
 static bool players_should_be_at_war(struct player *pplayer, struct player *pplayer2)
 {
-  struct player * defender, aggressor;
+  struct player *defender, *aggressor;
 
   war_list_iterate(pplayer->current_wars, pwar) {
     aggressor = defender = NULL;
@@ -137,19 +138,55 @@ static bool players_should_be_at_war(struct player *pplayer, struct player *ppla
 }
 
 /**************************************************************************
+  Makes peace between a player and the players on the other side in a war
+**************************************************************************/
+static void make_peace(struct player *pplayer, struct war *pwar)
+{
+  war_list_remove(pplayer->current_wars, pwar);
+  if (player_list_remove(pwar->defenders, pplayer)) {
+    player_list_iterate(pwar->aggressors, aggressor) {
+      if (!players_should_be_at_war(pplayer, aggressor)) {
+        set_peace(pplayer, aggressor);
+      }
+    } player_list_iterate_end;
+  } else if (player_list_remove(pwar->aggressors, pplayer)) {
+    player_list_iterate(pwar->defenders, defender) {
+      if (!players_should_be_at_war(pplayer, defender)) {
+        set_peace(pplayer, defender);
+      }
+    } player_list_iterate_end;
+  }
+}
+
+/**************************************************************************
+  Makes a player make peace with an enemy and leave all wars with that enemy
+**************************************************************************/
+bool leave_war(struct player * pplayer, struct war *pwar)
+{
+  if (player_list_remove(pwar->defenders, pplayer)) {
+    war_list_remove(pplayer->current_wars, pwar);
+    make_peace(pplayer, pwar);
+  } else if (player_list_remove(pwar->aggressors, pplayer)) {
+    war_list_remove(pplayer->current_wars, pwar);
+    make_peace(pplayer, pwar);
+  }
+}
+
+/**************************************************************************
   Ends a war
 **************************************************************************/
 void end_war(struct war *pwar)
 {
   war_list_remove(wars, pwar);
-  player_list_iterate(pwar->aggressors, pplayer) {
-    war_list_remove(pplayer->current_wars, pwar);
-    player_list_iterate(pwar->defenders, pplayer) {
-      if (!players_should_be_at_war(pplayer, defender)) {
-        /* TODO: make peace with defender*/
 
-      }
-    } player_list_iterate_end;
+  /* Update state for primary participants first,
+     note that other wars may cause them to still be at war despite the peace treaty */
+  make_peace(pwar->defender, pwar);
+  make_peace(pwar->aggressor, pwar);
+
+  /* Update state of aggressors */
+  player_list_iterate(pwar->aggressors, pplayer) {
+    make_peace(pplayer, pwar);
     notify_player(pplayer, NULL, E_TREATY_PEACE, ftc_server,
                           _("Your ally %s has made peace with %s. "
                             "%s's war %s has ended."),
@@ -160,14 +197,9 @@ void end_war(struct war *pwar)
 
   } player_list_iterate_end;
 
+  /* Update state of defenders*/
   player_list_iterate(pwar->defenders, pplayer) {
-    war_list_remove(pplayer->current_wars, pwar);
-    player_list_iterate(pwar->aggressors, aggressor) {
-      if (!players_should_be_at_war(pplayer, aggressor)) {
-        /* TODO: make peace with aggressor*/
-
-      }
-    } player_list_iterate_end;
+    make_peace(pplayer, pwar);
     notify_player(pplayer, NULL, E_TREATY_PEACE, ftc_server,
                           _("Your ally %s has made peace with %s. "
                             "%s's war %s has ended."),
@@ -179,6 +211,30 @@ void end_war(struct war *pwar)
 
   free(pwar->casus_belli);
   free(pwar);
+}
+
+
+/**************************************************************************
+  Updates the state of the wars when a certain peace treaty is made between
+    two players
+**************************************************************************/
+void update_wars_for_peace_treaty(struct player *pplayer1, struct player *pplayer2)
+{
+  int pn1 = player_number(pplayer1);
+  int pn2 = player_number(pplayer2);
+  int pndef, pnagg;
+
+  war_list_iterate(wars, pwar) {
+    pndef = player_number(pwar->defender);
+    pnagg = player_number(pwar->aggressor);
+    if ((pn1 == pndef && pn2 == pnagg) || (pn1 == pnagg && pn2 == pndef)) {
+      end_war(pwar);
+    } else if (pn1 == pndef || pn1 == pnagg) {
+      leave_war(pplayer2, pwar);
+    } else if (pn2 == pndef || pn2 == pnagg) {
+      leave_war(pplayer1, pwar);
+    }
+  } war_list_iterate_end;
 }
 
 /**************************************************************************
