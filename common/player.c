@@ -560,6 +560,7 @@ static void player_defaults(struct player *pplayer)
   pplayer->city_style = 0;            /* should be first basic style */
   pplayer->cities = city_list_new();
   pplayer->units = unit_list_new();
+  pplayer->current_wars = war_list_new();
 
   pplayer->economic.gold    = 0;
   pplayer->economic.tax     = PLAYER_DEFAULT_TAX_RATE;
@@ -709,6 +710,8 @@ void player_destroy(struct player *pplayer)
   unit_list_destroy(pplayer->units);
   fc_assert(0 == city_list_size(pplayer->cities));
   city_list_destroy(pplayer->cities);
+  fc_assert(0 == war_list_size(pplayer->current_wars));
+  war_list_destroy(pplayer->current_wars);
 
   fc_assert(conn_list_size(pplayer->connections) == 0);
   conn_list_destroy(pplayer->connections);

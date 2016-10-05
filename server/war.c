@@ -63,6 +63,8 @@ void start_war(struct player * aggressor, struct player * defender, const char *
   pwar->defender = defender;
   pwar->casus_belli = fc_strdup(casus_belli);
   war_list_append(wars, pwar);
+  war_list_append(aggressor->current_wars, pwar);
+  war_list_append(defender->current_wars, pwar);
 
   players_iterate_alive(otherplayer) {
     if (pplayers_allied(otherplayer, aggressor) &&
@@ -91,11 +93,47 @@ bool join_war(struct player * leader, struct player *ally)
   war_list_iterate(wars, pwar) {
     if (player_number(pwar->aggressor) == player_number(leader)) {
       player_list_append(pwar->aggressors, ally);
+      war_list_append(ally->current_wars, pwar);
     }
     else if (player_number(pwar->defender) == player_number(leader)) {
       player_list_append(pwar->defenders, ally);
+      war_list_append(ally->current_wars, pwar);
     }
   } war_list_iterate_end;
+}
+
+/*************************************************************************
+  Checks whether or not two players are currently in a war against each other
+*************************************************************************/
+static bool players_should_be_at_war(struct player *pplayer, struct player *pplayer2)
+{
+  struct player * defender, aggressor;
+
+  war_list_iterate(pplayer->current_wars, pwar) {
+    aggressor = defender = NULL;
+
+    player_list_iterate(pwar->aggressors, aggressor) {
+      if (player_number(aggressor) == player_number(pplayer2)) {
+        aggressor = pplayer2;
+        break;
+      } else if (player_number(aggressor) == player_number(pplayer)) {
+        aggressor = pplayer;
+        break;
+      }
+    } player_list_iterate_end;
+    player_list_iterate(pwar->defenders, defender) {
+      if (player_number(defender) == player_number(pplayer2)) {
+        defender = pplayer2;
+        break;
+      } else if (player_number(defender) == player_number(pplayer)) {
+        defender = pplayer;
+        break;
+      }
+    } player_list_iterate_end;
+
+    if (aggressor != NULL && defender != NULL) return TRUE;
+  } war_list_iterate_end;
+  return FALSE;
 }
 
 /**************************************************************************
@@ -105,7 +143,13 @@ void end_war(struct war *pwar)
 {
   war_list_remove(wars, pwar);
   player_list_iterate(pwar->aggressors, pplayer) {
-    /* TODO: Update diplomatic state of aggressors now that war is over */
+    war_list_remove(pplayer->current_wars, pwar);
+    player_list_iterate(pwar->defenders, pplayer) {
+      if (!players_should_be_at_war(pplayer, defender)) {
+        /* TODO: make peace with defender*/
+
+      }
+    } player_list_iterate_end;
     notify_player(pplayer, NULL, E_TREATY_PEACE, ftc_server,
                           _("Your ally %s has made peace with %s. "
                             "%s's war %s has ended."),
@@ -117,7 +161,13 @@ void end_war(struct war *pwar)
   } player_list_iterate_end;
 
   player_list_iterate(pwar->defenders, pplayer) {
-    /* TODO: Update diplomatic state of defenders now that war is over */
+    war_list_remove(pplayer->current_wars, pwar);
+    player_list_iterate(pwar->aggressors, aggressor) {
+      if (!players_should_be_at_war(pplayer, aggressor)) {
+        /* TODO: make peace with aggressor*/
+
+      }
+    } player_list_iterate_end;
     notify_player(pplayer, NULL, E_TREATY_PEACE, ftc_server,
                           _("Your ally %s has made peace with %s. "
                             "%s's war %s has ended."),

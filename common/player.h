@@ -238,6 +238,8 @@ struct player {
 
   struct dbv tile_known;
 
+  struct war_list *current_wars;
+
   struct rgbcolor *rgb;
 
   union {
