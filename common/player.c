@@ -1220,24 +1220,37 @@ const char *love_text(const int love)
   }
 }
 
+static const char *ds_names[DS_LAST] =
+{
+  N_("?diplomatic_state:Armistice"),
+  N_("?diplomatic_state:War"),
+  N_("?diplomatic_state:Cease-fire"),
+  N_("?diplomatic_state:Peace"),
+  N_("?diplomatic_state:Alliance"),
+  N_("?diplomatic_state:Never met"),
+  N_("?diplomatic_state:Team"),
+  N_("?diplomatic_state:Subject"),
+  N_("?diplomatic_state:Overlord")
+};
+
+static const char *ds_simple_names[DS_LAST] =
+{
+  N_("Armistice"),
+  N_("War"),
+  N_("Cease-fire"),
+  N_("Peace"),
+  N_("Alliance"),
+  N_("Never met"),
+  N_("Team"),
+  N_("Subject"),
+  N_("Overlord")
+};
+
 /**************************************************************************
   Return a diplomatic state as a human-readable string
 **************************************************************************/
 const char *diplstate_text(const enum diplstate_type type)
 {
-  static const char *ds_names[DS_LAST] =
-  {
-    N_("?diplomatic_state:Armistice"),
-    N_("?diplomatic_state:War"),
-    N_("?diplomatic_state:Cease-fire"),
-    N_("?diplomatic_state:Peace"),
-    N_("?diplomatic_state:Alliance"),
-    N_("?diplomatic_state:Never met"),
-    N_("?diplomatic_state:Team"),
-    N_("?diplomatic_state:Subject"),
-    N_("?diplomatic_state:Overlord")
-  };
-
   fc_assert_ret_val_msg(0 <= type && type < DS_LAST, NULL,
                         "Bad diplstate_type: %d.", type);
   return Q_(ds_names[type]);
