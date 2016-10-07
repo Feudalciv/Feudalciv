@@ -458,7 +458,7 @@ struct trigger_response * remove_trigger_response_from_cache(const struct player
 {
   struct trigger_response * matching_response = NULL;
   trigger_response_list_iterate(trigger_cache.responses, presponse) {
-    if (player_number(presponse->player) == player_number(pplayer) && strcmp(name, presponse->trigger->name) == 0) {
+    if (((presponse->player == NULL && pplayer == NULL) || (pplayer != NULL && player_number(presponse->player) == player_number(pplayer))) && strcmp(name, presponse->trigger->name) == 0) {
        matching_response = presponse;
        break;
     }
