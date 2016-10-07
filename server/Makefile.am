@@ -110,8 +110,8 @@ libfreeciv_srv_la_SOURCES = \
 		unittools.h	\
 		voting.c	\
 		voting.h	\
-		war.c		\
-		war.h
+		warhand.c	\
+		warhand.h
 
 # hand_gen.c & hand_gen.h are generated files, but as they are generated
 # outside this directory (when building common) there's no point in

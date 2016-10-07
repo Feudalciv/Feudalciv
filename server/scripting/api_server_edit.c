@@ -38,6 +38,7 @@
 #include "stdinhand.h"
 #include "techtools.h"
 #include "unittools.h"
+#include "warhand.h"
 
 /* server/scripting */
 #include "script_server.h"

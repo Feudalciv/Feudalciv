@@ -22,6 +22,7 @@
 /* common */
 #include "game.h"
 #include "player.h"
+#include "war.h"
 
 /* common/scriptcore */
 #include "luascript_types.h"
@@ -31,15 +32,16 @@
 #include "notify.h"
 #include "triggers.h"
 
-#include "war.h"
-
-struct war_list *wars;
+#include "warhand.h"
 
 /**************************************************************************
   Starts a war between two players
 **************************************************************************/
 void start_war(struct player * aggressor, struct player * defender, const char * casus_belli)
 {
+  fc_assert(NULL != aggressor);
+  fc_assert(NULL != defender);
+
   struct war *pwar;
   struct player *overlord;
 
@@ -63,6 +65,10 @@ void start_war(struct player * aggressor, struct player * defender, const char *
   pwar->aggressor = aggressor;
   pwar->defender = defender;
   pwar->casus_belli = fc_strdup(casus_belli);
+  pwar->aggressors = player_list_new();
+  pwar->defenders = player_list_new();
+  player_list_append(pwar->aggressors, aggressor);
+  player_list_append(pwar->defenders, defender);
   war_list_append(wars, pwar);
   war_list_append(aggressor->current_wars, pwar);
   war_list_append(defender->current_wars, pwar);
@@ -89,18 +95,42 @@ void start_war(struct player * aggressor, struct player * defender, const char *
 /**************************************************************************
   Makes a player join another player's existing wars
 **************************************************************************/
-bool join_war(struct player * leader, struct player *ally)
+bool join_war(struct player * pplayer, struct player *ally, struct player *enemy)
 {
+  fc_assert_ret_val(NULL != pplayer, FALSE);
+  fc_assert_ret_val(NULL != ally, FALSE);
+  fc_assert_ret_val(NULL != enemy, FALSE);
+
   war_list_iterate(wars, pwar) {
-    if (player_number(pwar->aggressor) == player_number(leader)) {
-      player_list_append(pwar->aggressors, ally);
-      war_list_append(ally->current_wars, pwar);
+    if (player_number(pwar->aggressor) == player_number(ally) && player_number(pwar->defender == player_number(enemy))) {
+      player_list_iterate(pwar->defenders, defender) {
+        handle_diplomacy_cancel_pact(pplayer, player_number(defender), CLAUSE_LAST);
+      } player_list_iterate_end;
+      player_list_append(pwar->aggressors, pplayer);
+      war_list_append(pplayer->current_wars, pwar);
+      player_subjects_iterate(pplayer, subject) {
+        trigger_by_name(subject, "trigger_call_to_arms", 3, API_TYPE_PLAYER, subject,
+                                                            API_TYPE_PLAYER, pwar->aggressor,
+                                                            API_TYPE_PLAYER, pwar->defender);
+      } player_subjects_iterate_end;
+      return TRUE;
     }
-    else if (player_number(pwar->defender) == player_number(leader)) {
-      player_list_append(pwar->defenders, ally);
-      war_list_append(ally->current_wars, pwar);
+    else if (player_number(pwar->defender) == player_number(ally) && player_number(pwar->aggressor) == player_number(enemy)) {
+      player_list_iterate(pwar->aggressors, aggressor) {
+        handle_diplomacy_cancel_pact(aggressor, player_number(pplayer), CLAUSE_LAST);
+      } player_list_iterate_end;
+      player_list_append(pwar->defenders, pplayer);
+      war_list_append(pplayer->current_wars, pwar);
+      player_subjects_iterate(pplayer, subject) {
+        trigger_by_name(subject, "trigger_call_to_arms", 3, API_TYPE_PLAYER, subject,
+                                                            API_TYPE_PLAYER, pwar->defender,
+                                                            API_TYPE_PLAYER, pwar->aggressor);
+      } player_subjects_iterate_end;
+      return TRUE;
     }
   } war_list_iterate_end;
+
+  return FALSE;
 }
 
 /*************************************************************************
@@ -109,6 +139,8 @@ bool join_war(struct player * leader, struct player *ally)
 static bool players_should_be_at_war(struct player *pplayer, struct player *pplayer2)
 {
   struct player *defender, *aggressor;
+
+  if (pplayer == NULL || pplayer2 == NULL) return FALSE;
 
   war_list_iterate(pplayer->current_wars, pwar) {
     aggressor = defender = NULL;
@@ -142,6 +174,9 @@ static bool players_should_be_at_war(struct player *pplayer, struct player *ppla
 **************************************************************************/
 static void make_peace(struct player *pplayer, struct war *pwar)
 {
+  fc_assert(NULL != pplayer);
+  fc_assert(NULL != pwar);
+
   war_list_remove(pplayer->current_wars, pwar);
   if (player_list_remove(pwar->defenders, pplayer)) {
     player_list_iterate(pwar->aggressors, aggressor) {
@@ -163,6 +198,9 @@ static void make_peace(struct player *pplayer, struct war *pwar)
 **************************************************************************/
 bool leave_war(struct player * pplayer, struct war *pwar)
 {
+  fc_assert(NULL != pplayer);
+  fc_assert(NULL != pwar);
+
   if (player_list_remove(pwar->defenders, pplayer)) {
     war_list_remove(pplayer->current_wars, pwar);
     make_peace(pplayer, pwar);
@@ -177,6 +215,8 @@ bool leave_war(struct player * pplayer, struct war *pwar)
 **************************************************************************/
 void end_war(struct war *pwar)
 {
+  fc_assert(NULL != pwar);
+
   war_list_remove(wars, pwar);
 
   /* Update state for primary participants first,
@@ -209,6 +249,8 @@ void end_war(struct war *pwar)
                           pwar->casus_belli);
   } player_list_iterate_end;
 
+  player_list_destroy(pwar->defenders);
+  player_list_destroy(pwar->aggressors);
   free(pwar->casus_belli);
   free(pwar);
 }
@@ -220,6 +262,9 @@ void end_war(struct war *pwar)
 **************************************************************************/
 void update_wars_for_peace_treaty(struct player *pplayer1, struct player *pplayer2)
 {
+  fc_assert(NULL != pplayer1);
+  fc_assert(NULL != pplayer2);
+
   int pn1 = player_number(pplayer1);
   int pn2 = player_number(pplayer2);
   int pndef, pnagg;
@@ -235,27 +280,4 @@ void update_wars_for_peace_treaty(struct player *pplayer1, struct player *pplaye
       leave_war(pplayer1, pwar);
     }
   } war_list_iterate_end;
-}
-
-/**************************************************************************
-  Initialize the war cache
-**************************************************************************/
-void initialize_wars()
-{
-  wars = war_list_new();
-}
-
-/**************************************************************************
-  Free the war cache
-**************************************************************************/
-void war_cache_free()
-{
-  if (wars) {
-    war_list_iterate(wars, pwar) {
-      free(pwar->casus_belli);
-      free(pwar);
-    } war_list_iterate_end;
-    war_list_destroy(wars);
-    wars = NULL;
-  }
 }

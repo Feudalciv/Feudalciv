@@ -10,7 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC_WAR_H_
+#ifndef FC_WAR_H
 #define FC_WAR_H
 
 #ifdef __cplusplus
@@ -37,17 +37,11 @@ struct war {
 #define SPECLIST_TYPE struct war
 #include "speclist.h"
 
+struct war_list *wars;
+
 #define war_list_iterate(warlist, pwar) \
     TYPED_LIST_ITERATE(struct war, warlist, pwar)
 #define war_list_iterate_end  LIST_ITERATE_END
-
-void start_war(struct player * aggressor, struct player * defender, const char * casus_belli);
-
-bool join_war(struct player * leader, struct player *ally);
-
-bool leave_war(struct player * leader, struct war *pwar);
-
-void update_wars_for_peace_treaty(struct player *pplayer1, struct player *pplayer2);
 
 void war_cache_init();
 
@@ -57,4 +51,4 @@ void war_cache_free();
 }
 #endif /* __cplusplus */
 
-#endif /* FC__DIPTREATY_H */
+#endif /* FC__WARY_H */

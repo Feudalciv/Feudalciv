@@ -38,6 +38,7 @@
 #include "unit.h"
 #include "unitlist.h"
 #include "vision.h"
+#include "war.h"
 
 #include "player.h"
 
