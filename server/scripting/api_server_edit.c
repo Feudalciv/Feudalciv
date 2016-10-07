@@ -413,18 +413,17 @@ Player *api_edit_civil_war(lua_State *L, Player *pplayer, int probability)
 /*****************************************************************************
   Provoke two players to enter war.
 *****************************************************************************/
-bool api_edit_enter_war(lua_State *L, Player *pplayer, Player *pplayer2)
+bool api_edit_enter_war(lua_State *L, Player *pplayer, Player *ally, Player *enemy)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
   LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 2, Player, NULL);
-  LUASCRIPT_CHECK_ARG_NIL(L, pplayer2, 2, Player, NULL);
+  LUASCRIPT_CHECK_ARG_NIL(L, ally, 3, Player, NULL);
+  LUASCRIPT_CHECK_ARG_NIL(L, enemy, 4, Player, NULL);
 
-  if (players_on_same_team(pplayer, pplayer2)) return FALSE;
+  if (players_on_same_team(pplayer, enemy)) return FALSE;
 
-  if (!pplayers_at_war(pplayer, pplayer2)) {
-    handle_diplomacy_cancel_pact(pplayer, player_number(pplayer2), CLAUSE_LAST);
-  }
-  return TRUE;
+  log_debug("%s is joinging %s's war against %s", pplayer, ally, enemy);
+  return join_war(pplayer, ally, enemy);
 }
 
 /*****************************************************************************
