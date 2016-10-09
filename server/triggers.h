@@ -53,7 +53,7 @@ struct trigger_response {
   const struct player *player;
   int turn_fired;
   int nargs;
-  void *args;
+  void **args;
 };
 
 /* A trigger_list is a list of triggers. */
@@ -111,6 +111,10 @@ struct trigger_response * remove_trigger_response_from_cache(struct player *ppla
 void send_pending_triggers(struct connection *pconn);
 
 void set_trigger_timeout(int timout);
+
+void trigger_cache_load(struct section_file *file, const char *section);
+
+void trigger_cache_save(struct section_file *file, const char *section);
 
 #ifdef __cplusplus
 }

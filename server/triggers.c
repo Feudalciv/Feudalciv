@@ -416,6 +416,20 @@ static const char * trigger_arg_to_string(enum api_types type, void * arg)
   return tmp;
 }
 
+/*************************************************************************
+  Returns the trigger for the specified name
+*************************************************************************/
+static struct trigger * get_trigger_by_name(const char * name)
+{
+  trigger_list_iterate(trigger_cache.triggers, ptrigger) {
+    if (strcmp(name, ptrigger->name) == 0) {
+      return ptrigger;
+    }
+  } trigger_list_iterate_end;
+  return NULL;
+}
+
+
 /**************************************************************************
   Fire the trigger with the given name
 **************************************************************************/
@@ -426,39 +440,38 @@ void trigger_by_name_array(struct player *pplayer, const char * name, int nargs,
   int i, len, index, tmplen;
   const char *newdesc, *tmp, *tmpdesc;
 
+  if ((ptrigger = get_trigger_by_name(name)) == NULL) {
+    log_verbose("[trigger %s] cannot find trigger", name);
+    return;
+  }
+
   presponse = fc_malloc(sizeof(*presponse));
   presponse->player = pplayer;
   presponse->turn_fired = game.info.turn;
 
-  trigger_list_iterate(trigger_cache.triggers, ptrigger) {
-    if (strcmp(name, ptrigger->name) == 0) {
-      len = strlen(ptrigger->desc);
-      newdesc = fc_strdup(ptrigger->desc);
-      for (i = 0; i < len; i++) {
-        if (newdesc[i] == '$') {
-          index = atoi(&newdesc[i + 1]);
-          if (index == 0 || index > nargs) continue;
-          tmp = trigger_arg_to_string((enum api_types)args[(index - 1) * 2], (void *)args[(index - 1) * 2 + 1]);
-          tmplen = strlen(tmp);
-          tmpdesc = fc_realloc(fc_strdup(newdesc), (len + tmplen) * sizeof(const char *));
-          strncpy(&tmpdesc[i], tmp, tmplen);
-          free(tmp);
-          strcpy(&tmpdesc[i + tmplen], &newdesc[i + (int)floor(log10(abs(index))) + 2]);
-          newdesc = tmpdesc;
-          len += tmplen;
-          i += tmplen;
-        }
-      }
-
-      presponse->trigger = ptrigger;
-      presponse->args = args;
-      presponse->nargs = nargs;
-      trigger_response_list_append(trigger_cache.responses, presponse);
-      trigger_for_player(pplayer, ptrigger, newdesc);
-      return;
+  len = strlen(ptrigger->desc);
+  newdesc = fc_strdup(ptrigger->desc);
+  for (i = 0; i < len; i++) {
+    if (newdesc[i] == '$') {
+      index = atoi(&newdesc[i + 1]);
+      if (index == 0 || index > nargs) continue;
+      tmp = trigger_arg_to_string((enum api_types)args[(index - 1) * 2], (void *)args[(index - 1) * 2 + 1]);
+      tmplen = strlen(tmp);
+      tmpdesc = fc_realloc(fc_strdup(newdesc), (len + tmplen) * sizeof(const char *));
+      strncpy(&tmpdesc[i], tmp, tmplen);
+      free(tmp);
+      strcpy(&tmpdesc[i + tmplen], &newdesc[i + (int)floor(log10(abs(index))) + 2]);
+      newdesc = tmpdesc;
+      len += tmplen;
+      i += tmplen;
     }
-  } trigger_list_iterate_end;
-  free(presponse);
+  }
+
+  presponse->trigger = ptrigger;
+  presponse->args = args;
+  presponse->nargs = nargs;
+  trigger_response_list_append(trigger_cache.responses, presponse);
+  trigger_for_player(pplayer, ptrigger, newdesc);
 }
 
 void trigger_by_name(struct player *pplayer, const char * name, int nargs, ...)
@@ -520,4 +533,239 @@ void handle_expired_triggers()
 void set_trigger_timeout(int timeout)
 {
   trigger_timeout = timeout;
+}
+
+/***************************************************************
+  Save the trigger response argument into the savegame.
+***************************************************************/
+void save_trigger_arg(struct section_file *file, const char *section,
+        struct trigger_response *presponse, int arg_index, int response_count)
+{
+  /* Save Argument type */
+  secfile_insert_int(file, presponse->args[arg_index * 2], "%s.pendingtriggers%d.arg%d", section, response_count, 2 * arg_index);
+
+  /* Save Argument */
+  void * arg = presponse->args[arg_index * 2 + 1];
+  int index = 2 * arg_index + 1;
+  switch(((enum api_types)presponse->args[arg_index * 2])) {
+  case API_TYPE_INT:
+    secfile_insert_int(file, (int)arg, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_BOOL:
+    secfile_insert_bool(file, (bool)arg, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_STRING:
+    secfile_insert_str(file, (char *)arg, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_PLAYER:
+    secfile_insert_int(file, player_number((int)arg), "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_CITY:
+    secfile_insert_int(file, ((struct city*)arg)->id, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_UNIT:
+    secfile_insert_int(file, ((struct unit*)arg)->id, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_TILE:
+    secfile_insert_int(file, ((struct tile*)arg)->index, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_GOVERNMENT:
+    secfile_insert_int(file, ((struct government*)arg)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_BUILDING_TYPE:
+    secfile_insert_int(file, ((struct impr_type*)arg)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_NATION_TYPE:
+    secfile_insert_int(file, ((struct nation_type*)arg)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_UNIT_TYPE:
+    secfile_insert_int(file, ((struct unit_type*)arg)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_TECH_TYPE:
+    secfile_insert_int(file, ((struct advance*)arg)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_TERRAIN:
+    secfile_insert_int(file, ((struct terrain*)arg)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_DISASTER:
+    secfile_insert_int(file, ((struct disaster_type*)arg)->id, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  }
+}
+
+/***************************************************************
+  Load the trigger response argument from the savegame.
+***************************************************************/
+static bool load_trigger_arg(struct section_file *file, const char *section,
+        void **args, int arg_index, int response_count)
+{
+  int tmp;
+
+  /* Load Argument Type */
+  if (!secfile_lookup_int(file, &(args[arg_index * 2]), "%s.pendingtriggers%d.arg%d",
+              section, response_count, 2 * arg_index)) {
+    log_verbose("[Trigger cache %4d] Unable to load trigger argument type at %d.", response_count, arg_index);
+    return FALSE;
+  }
+
+  /* Load Argument */
+  void ** arg_address = &(args[arg_index * 2 + 1]);
+  int index = 2 * arg_index + 1;
+  bool success = TRUE;
+  switch(((enum api_types)args[arg_index * 2])) {
+  case API_TYPE_INT:
+    success = secfile_lookup_int(file, arg_address, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_BOOL:
+    success = secfile_lookup_bool(file, arg_address, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    break;
+  case API_TYPE_STRING:
+    *arg_address = secfile_lookup_str(file, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    if (*arg_address == NULL) success = FALSE;
+    break;
+  case API_TYPE_PLAYER:
+    success = secfile_lookup_int(file, &tmp, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    if (success) *arg_address = player_by_number(tmp);
+    break;
+  case API_TYPE_CITY:
+    success = secfile_lookup_int(file, &tmp, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    if (success) *arg_address = game_city_by_number(tmp);
+    break;
+  case API_TYPE_UNIT:
+    success = secfile_lookup_int(file, &tmp, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    if (success) *arg_address = game_unit_by_number(tmp);
+    break;
+  case API_TYPE_TILE:
+    success = secfile_lookup_int(file, &tmp, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    if (success) *arg_address = index_to_tile(tmp);
+    break;
+  case API_TYPE_GOVERNMENT:
+    success = secfile_lookup_int(file, &tmp, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    if (success) *arg_address = government_by_number(tmp);
+    break;
+  case API_TYPE_BUILDING_TYPE:
+    success = secfile_lookup_int(file, &tmp, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    if (success) *arg_address = improvement_by_number(tmp);
+    break;
+  case API_TYPE_NATION_TYPE:
+    success = secfile_lookup_int(file, ((struct nation_type*)arg_address)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    if (success) *arg_address = nation_by_number(tmp);
+    break;
+  case API_TYPE_UNIT_TYPE:
+    success = secfile_lookup_int(file, ((struct unit_type*)arg_address)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    if (success) *arg_address = utype_by_number(tmp);
+    break;
+  case API_TYPE_TECH_TYPE:
+    success = secfile_lookup_int(file, ((struct advance*)arg_address)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    if (success) *arg_address = advance_by_number(tmp);
+    break;
+  case API_TYPE_TERRAIN:
+    success = secfile_lookup_int(file, ((struct terrain*)arg_address)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    if (success) *arg_address = terrain_by_number(tmp);
+    break;
+  case API_TYPE_DISASTER:
+    success = secfile_lookup_int(file, ((struct disaster_type*)arg_address)->id, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    if (success) *arg_address = disaster_by_number(tmp);
+    break;
+  }
+  if (!success) {
+    log_verbose("[Trigger cache %4d] Unable to load trigger argument value at %d.", response_count, arg_index);
+    return FALSE;
+  }
+  return TRUE;
+}
+
+
+/***************************************************************
+  Save the trigger cache into the savegame.
+***************************************************************/
+void trigger_cache_save(struct section_file *file, const char *section)
+{
+  int response_count = 0;
+  int i;
+
+  trigger_response_list_iterate(trigger_cache.responses, presponse) {
+    secfile_insert_str(file, presponse->trigger->name,
+                       "%s.pendingtriggers%d.trigger", section, response_count);
+    secfile_insert_int(file, player_number(presponse->player), "%s.pendingtriggers%d.player", section, response_count);
+    secfile_insert_int(file, presponse->turn_fired, "%s.pendingtriggers%d.turn", section, response_count);
+    secfile_insert_int(file, presponse->nargs, "%s.pendingtriggers%d.nargs", section, response_count);
+    for (i = 0; i < presponse->nargs; i++) {
+      save_trigger_arg(file, section, presponse, i, response_count);
+    }
+  } trigger_response_list_iterate_end;
+
+  /* save the number of pending trigger responses in the trigger response cache */
+  secfile_insert_int(file, response_count, "%s.count", section);
+
+  log_verbose("Pending trigger responses saved: %d.", response_count);
+}
+
+/***************************************************************
+  Save the trigger cache into the savegame.
+***************************************************************/
+void trigger_cache_load(struct section_file *file, const char *section)
+{
+  struct trigger_response * presponse;
+  struct trigger * ptrigger;
+  struct player *pplayer;
+  int response_count = 0;
+  int i, j;
+  int player_num, turn_fired, nargs;
+  char * trigger_name;
+  void ** args;
+  bool valid = TRUE;
+
+  response_count = secfile_lookup_int_default(file, 0, "%s.count", section);
+
+  for (i = 0; i < response_count; i++) {
+
+    trigger_name = secfile_lookup_str(file, "%s.pendingtriggers%d.trigger", section, i);
+    if (NULL == trigger_name) {
+      log_verbose("[Trigger cache %4d] Missing trigger name.", i);
+      continue;
+    }
+
+    ptrigger = get_trigger_by_name(trigger_name);
+    if (NULL == ptrigger) {
+      log_verbose("[Trigger cache %d] Trigger name does not correspond to a valid trigger", i);
+      continue;
+    }
+
+    if (!secfile_lookup_int(file, &turn_fired, "%s.pendingtriggers%d.turn", section, i)) {
+      log_verbose("[Trigger cache %4d] Missing trigger turn.", i);
+      continue;
+    }
+
+    if (secfile_lookup_int(file, player_num, "%s.pendingtriggers%d.player", section, i)) {
+      pplayer = player_by_number(player_num);
+    } else {
+      pplayer = NULL;
+    }
+
+    if (!secfile_lookup_int(file, &nargs, "%s.pendingtriggers%d.nargs", section, i)) {
+      log_verbose("[Trigger cache %4d] Missing trigger nargs.", i);
+      continue;
+    }
+
+    args = fc_malloc(sizeof(void*) * nargs * 2);
+    for (j = 0; j < nargs; j++) {
+      if (!load_trigger_arg(file, section, args, j, i)) {
+          free(args);
+          valid = FALSE;
+      }
+    }
+    if (!valid) {
+      valid = TRUE;
+      continue;
+    }
+
+    presponse = fc_malloc(sizeof(*presponse));
+    presponse->trigger = ptrigger;
+    presponse->nargs = nargs;
+    presponse->args = args;
+    presponse->turn_fired = turn_fired;
+    presponse->player = pplayer;
+    trigger_response_list_append(trigger_cache.responses, presponse);
+  }
 }
