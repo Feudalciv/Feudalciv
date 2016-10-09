@@ -193,6 +193,8 @@ bool luascript_func_call_valist(struct fc_lua *fcl, const char *func_name,
   struct luascript_func *pfunc;
   int ret = -1; /* -1 as invalid value */
   bool success = FALSE;
+  int i;
+  void *arg_list[nargs * 2];
 
   fc_assert_ret_val(fcl, FALSE);
   fc_assert_ret_val(fcl->state, FALSE);
@@ -223,7 +225,10 @@ bool luascript_func_call_valist(struct fc_lua *fcl, const char *func_name,
     return FALSE;
   }
 
-  luascript_push_args(fcl, nargs, pfunc->arg_types, args);
+  for (i = 0; i < nargs * 2; i++) {
+    arg_list[i] = va_arg(args, void*);
+  }
+  luascript_push_args(fcl, nargs, pfunc->arg_types, arg_list);
 
   /* Call the function with nargs arguments, return 1 results */
   if (luascript_call(fcl, nargs, 1, NULL) == 0) {

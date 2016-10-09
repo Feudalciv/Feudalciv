@@ -436,7 +436,7 @@ void luascript_push_args(struct fc_lua *fcl, int nargs,
   for (i = 0; i < nargs; i++) {
     int type;
 
-    type = (int)args[2 * i];
+    type = (long)args[2 * i];
     fc_assert_ret(api_types_is_valid(type));
     fc_assert_ret(type == *(parg_types + i));
 
@@ -445,7 +445,7 @@ void luascript_push_args(struct fc_lua *fcl, int nargs,
         {
           int arg;
 
-          arg = (int)args[2 * i + 1];
+          arg = (long)args[2 * i + 1];
           tolua_pushnumber(fcl->state, (lua_Number)arg);
         }
         break;
@@ -453,7 +453,7 @@ void luascript_push_args(struct fc_lua *fcl, int nargs,
         {
           int arg;
 
-          arg = (int)args[2 * i + 1];
+          arg = (long)args[2 * i + 1];
           tolua_pushboolean(fcl->state, (bool)arg);
         }
         break;

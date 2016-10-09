@@ -145,8 +145,13 @@ bool script_server_do_file(struct connection *caller, const char *filename)
 bool script_server_callback_invoke(const char *callback_name, int nargs,
                                    enum api_types *parg_types, va_list args)
 {
+  int i;
+  void *arg_list[nargs * 2];
+  for (i = 0; i < nargs * 2; i++) {
+    arg_list[i] = va_arg(args, void*);
+  }
   return luascript_callback_invoke(fcl, callback_name, nargs, parg_types,
-                                   args);
+                                   arg_list);
 }
 
 /*****************************************************************************
@@ -419,7 +424,7 @@ void script_server_trigger_signals_destroy()
   if (trigger_signal_cache) {
     trigger_signal_list_iterate(trigger_signal_cache, psignal) {
       luascript_signal_free_by_name(fcl, psignal->name);
-      free(psignal->name);
+      free((char*)psignal->name);
       free(psignal->args);
       free(psignal);
     } trigger_signal_list_iterate_end;

@@ -174,8 +174,6 @@ void luascript_signal_emit_array(struct fc_lua *fcl, const char *signal_name,
                     psignal->nargs, nargs);
     } else {
       signal_callback_list_iterate(psignal->callbacks, pcallback) {
-        va_list args_cb;
-
         if (luascript_callback_invoke(fcl, pcallback->name, nargs,
                                       psignal->arg_types, args)) {
           break;
@@ -253,9 +251,9 @@ void luascript_signal_create_valist(struct fc_lua *fcl,
                                     int nargs, va_list args)
 {
   int i;
-  void *arg_list[nargs];
+  enum api_types arg_list[nargs];
   for (i = 0; i < nargs; i++) {
-    arg_list[i] = va_arg(args, void*);
+    arg_list[i] = va_arg(args, enum api_types);
   }
   luascript_signal_create_array(fcl, signal_name, nargs, arg_list);
 }
