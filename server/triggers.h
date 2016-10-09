@@ -108,7 +108,7 @@ void trigger_by_name_array(struct player *pplayer, const char * name, int nargs,
 
 struct trigger_response * remove_trigger_response_from_cache(struct player *pplayer, const char * signal);
 
-void send_pending_triggers(struct connection *pconn);
+void send_pending_triggers(struct conn_list *dest);
 
 void set_trigger_timeout(int timout);
 

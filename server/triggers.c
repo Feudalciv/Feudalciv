@@ -505,19 +505,24 @@ struct trigger_response * remove_trigger_response_from_cache(struct player *ppla
   return matching_response;
 }
 
-void send_pending_triggers(struct connection *pconn)
+void send_pending_triggers(struct conn_list *dest)
 {
-  const struct player *pplayer = conn_get_player(pconn);
-  bool is_global_observer = conn_is_global_observer(pconn);
-  if (!pplayer) return;
+  conn_list_do_buffer(dest);
+  conn_list_iterate(dest, pconn) {
+    const struct player *pplayer = conn_get_player(pconn);
+    bool is_global_observer = conn_is_global_observer(pconn);
+    if (!pplayer) continue;
 
-  if (!is_global_observer) {
-    trigger_response_list_iterate(trigger_cache.responses, presponse) {
-      if (presponse->player && player_number(presponse->player) == player_number(pplayer)) {
-        trigger_by_name_array(pplayer, presponse->trigger->name, presponse->nargs, presponse->args);
-      }
-    } trigger_response_list_iterate_end;
-  }
+    if (!is_global_observer) {
+      trigger_response_list_iterate(trigger_cache.responses, presponse) {
+        if (presponse->player && player_number(presponse->player) == player_number(pplayer)) {
+          trigger_by_name_array(pplayer, presponse->trigger->name, presponse->nargs, presponse->args);
+        }
+      } trigger_response_list_iterate_end;
+    }
+  } conn_list_iterate_end;
+  conn_list_do_unbuffer(dest);
+  flush_packets();
 }
 
 void handle_expired_triggers()

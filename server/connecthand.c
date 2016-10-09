@@ -241,7 +241,6 @@ void establish_new_connection(struct connection *pconn)
   if (NULL == pplayer) {
     /* Else this has already been done in connection_attach_real(). */
     send_pending_events(pconn, TRUE);
-    send_pending_triggers(pconn);
     send_running_votes(pconn, FALSE);
     restore_access_level(pconn);
     send_conn_info(dest, game.est_connections);
@@ -642,7 +641,6 @@ static bool connection_attach_real(struct connection *pconn,
   switch (server_state()) {
   case S_S_INITIAL:
     send_pending_events(pconn, connecting);
-    send_pending_triggers(pconn);
     send_running_votes(pconn, !connecting);
     break;
 
@@ -658,7 +656,6 @@ static bool connection_attach_real(struct connection *pconn,
     /* Must be after C_S_RUNNING client state to be effective. */
     send_diplomatic_meetings(pconn);
     send_pending_events(pconn, connecting);
-    send_pending_triggers(pconn);
     send_running_votes(pconn, !connecting);
     break;
 
@@ -671,7 +668,6 @@ static bool connection_attach_real(struct connection *pconn,
     conn_compression_thaw(pconn);
     report_final_scores(pconn->self);
     send_pending_events(pconn, connecting);
-    send_pending_triggers(pconn);
     send_running_votes(pconn, !connecting);
     if (!connecting) {
       /* Send information about delegation(s). */
