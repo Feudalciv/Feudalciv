@@ -826,7 +826,7 @@ void players_war_callback(GtkMenuItem *item, gpointer data)
                diplstate_text(newstate));
     }
 
-    if (newstate == DS_WAR && oldstate != CLAUSE_CEASEFIRE) {
+    if (newstate == DS_WAR && oldstate != DS_CEASEFIRE) {
       /* Declare new war */
       confirm_declare_war(CLAUSE_PEACE, plrno,
                           astr_to_str(&title), astr_to_str(&question));
