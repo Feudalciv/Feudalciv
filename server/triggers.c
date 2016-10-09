@@ -41,12 +41,13 @@
 
 /* server */
 #include "script_server.h"
+#include "sernet.h"
 #include "triggerhand.h"
 
 #include "triggers.h"
 
 static void send_trigger(struct connection *pconn,
-                         struct trigger *ptrigger, const char * desc);
+                         const struct trigger *ptrigger, const char * desc);
 void get_trigger_signal_arg_list(const struct trigger * ptrigger, int * nargs, int * args);
 
 static bool initialized = FALSE;
@@ -153,8 +154,8 @@ void trigger_signal_create(struct trigger *ptrigger)
 {
   int nargs;
   int args[ptrigger->reqs.size + 1];
-  get_trigger_signal_arg_list(ptrigger, &nargs, &args);
-  script_server_trigger_signal_create(ptrigger->name, nargs, args);
+  get_trigger_signal_arg_list(ptrigger, &nargs, (int*)&args);
+  script_server_trigger_signal_create(ptrigger->name, nargs, (enum api_types*)args);
 }
 
 /**************************************************************************
@@ -177,7 +178,7 @@ void trigger_cache_init(void)
 void trigger_cache_free(void)
 {
   struct trigger_list *tracker_list = trigger_cache.triggers;
-  struct trigger_list *response_list = trigger_cache.responses;
+  struct trigger_response_list *response_list = trigger_cache.responses;
 
   if (tracker_list) {
     trigger_list_iterate(tracker_list, ptrigger) {
@@ -194,44 +195,6 @@ void trigger_cache_free(void)
   }
 
   initialized = FALSE;
-}
-
-/**************************************************************************
-  Checks the trigger with the given target, triggers it and returns true
-  if the trigger should be triggered. Otherwise returns false and nothing
-  is done.
-  Note that due to the mtth mechanic a trigger will not always be  triggered
-  when it's requirements are met.
-
-  (player,city,building,tile) give the exact target
-  trigger_type gives the trigger type to be considered
-
-**************************************************************************/
-bool check_trigger(struct trigger *ptrigger,
-                   const struct player *target_player,
-                   const struct player *other_player,
-                   const struct city *target_city,
-                   const struct impr_type *target_building,
-                   const struct tile *target_tile,
-                   const struct unit *target_unit,
-                   const struct unit_type *target_unittype,
-                   const struct output_type *target_output,
-                   const struct specialist *target_specialist)
-{
-  /* For each trigger, see if it is active. */
-  if (are_reqs_active(target_player, target_city,
-                      target_building, target_tile,
-                      target_unittype,
-                      target_output, target_specialist,
-      &(ptrigger->reqs), RPT_CERTAIN)) {
-      int nargs = ptrigger->reqs.size;
-      int args[nargs];
-      get_trigger_signal_arg_list(ptrigger, nargs, args);
-      script_server_trigger_emit(ptrigger->name, nargs, args);
-      return TRUE;
-  }
-
-  return FALSE;
 }
 
 /**************************************************************************
@@ -334,6 +297,8 @@ void get_trigger_signal_arg_list(const struct trigger * ptrigger, int * nargs, i
         continue;
       }
       break;
+    default:
+      continue;
     }
     (*nargs)++;
   } requirement_vector_iterate_end;
@@ -346,7 +311,7 @@ void get_trigger_signal_arg_list(const struct trigger * ptrigger, int * nargs, i
 /**************************************************************************
  Fire trigger for given player
 **************************************************************************/
-static void trigger_for_player(struct player *pdest, struct trigger *ptrigger, const char * new_desc)
+static void trigger_for_player(const struct player *pdest, const struct trigger *ptrigger, const char * new_desc)
 {
   struct connection *dest = NULL;       /* The 'pdest' user. */
 
@@ -374,7 +339,7 @@ static void trigger_for_player(struct player *pdest, struct trigger *ptrigger, c
   Send a trigger packet.
 **************************************************************************/
 static void send_trigger(struct connection *pconn,
-                          struct trigger *ptrigger, const char * desc)
+                         const struct trigger *ptrigger, const char * desc)
 {
   struct packet_trigger packet;
   int i;
@@ -393,13 +358,13 @@ static void send_trigger(struct connection *pconn,
 /**************************************************************************
   Stringifies a luascript argument for embedding in a trigger description
 **************************************************************************/
-static const char * trigger_arg_to_string(enum api_types type, void * arg)
+static char * trigger_arg_to_string(enum api_types type, void * arg)
 {
-  const char * tmp = fc_malloc(sizeof(const char *) * 256);
+  char * tmp = fc_malloc(sizeof(const char *) * 256);
 
   switch (type) {
   case API_TYPE_INT:
-    sprintf(tmp, "%d", (int)arg);
+    sprintf(tmp, "%ld", (long)arg);
     break;
   case API_TYPE_PLAYER:
     strcpy(tmp, ((struct player *)arg)->name);
@@ -433,12 +398,12 @@ static struct trigger * get_trigger_by_name(const char * name)
 /**************************************************************************
   Fire the trigger with the given name
 **************************************************************************/
-void trigger_by_name_array(struct player *pplayer, const char * name, int nargs, void * args[])
+void trigger_by_name_array(const struct player *pplayer, const char * name, int nargs, void * args[])
 {
   struct trigger *ptrigger;
   struct trigger_response *presponse;
   int i, len, index, tmplen;
-  const char *newdesc, *tmp, *tmpdesc;
+  char *newdesc, *tmp, *tmpdesc;
 
   if ((ptrigger = get_trigger_by_name(name)) == NULL) {
     log_verbose("[trigger %s] cannot find trigger", name);
@@ -474,7 +439,7 @@ void trigger_by_name_array(struct player *pplayer, const char * name, int nargs,
   trigger_for_player(pplayer, ptrigger, newdesc);
 }
 
-void trigger_by_name(struct player *pplayer, const char * name, int nargs, ...)
+void trigger_by_name(const struct player *pplayer, const char * name, int nargs, ...)
 {
   va_list args;
   int i;
@@ -489,10 +454,9 @@ void trigger_by_name(struct player *pplayer, const char * name, int nargs, ...)
   va_end(args);
 }
 
-struct trigger_response * remove_trigger_response_from_cache(struct player *pplayer, const char * name)
+struct trigger_response * remove_trigger_response_from_cache(const struct player *pplayer, const char * name)
 {
   struct trigger_response * matching_response = NULL;
-  struct trigger * matching_trigger = NULL;
   trigger_response_list_iterate(trigger_cache.responses, presponse) {
     if (player_number(presponse->player) == player_number(pplayer) && strcmp(name, presponse->trigger->name) == 0) {
        matching_response = presponse;
@@ -547,14 +511,14 @@ void save_trigger_arg(struct section_file *file, const char *section,
         struct trigger_response *presponse, int arg_index, int response_count)
 {
   /* Save Argument type */
-  secfile_insert_int(file, presponse->args[arg_index * 2], "%s.pendingtriggers%d.arg%d", section, response_count, 2 * arg_index);
+  secfile_insert_int(file, (long)presponse->args[arg_index * 2], "%s.pendingtriggers%d.arg%d", section, response_count, 2 * arg_index);
 
   /* Save Argument */
   void * arg = presponse->args[arg_index * 2 + 1];
   int index = 2 * arg_index + 1;
   switch(((enum api_types)presponse->args[arg_index * 2])) {
   case API_TYPE_INT:
-    secfile_insert_int(file, (int)arg, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    secfile_insert_int(file, (long)arg, "%s.pendingtriggers%d.arg%d", section, response_count, index);
     break;
   case API_TYPE_BOOL:
     secfile_insert_bool(file, (bool)arg, "%s.pendingtriggers%d.arg%d", section, response_count, index);
@@ -563,7 +527,7 @@ void save_trigger_arg(struct section_file *file, const char *section,
     secfile_insert_str(file, (char *)arg, "%s.pendingtriggers%d.arg%d", section, response_count, index);
     break;
   case API_TYPE_PLAYER:
-    secfile_insert_int(file, player_number((int)arg), "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    secfile_insert_int(file, player_number((struct player*)arg), "%s.pendingtriggers%d.arg%d", section, response_count, index);
     break;
   case API_TYPE_CITY:
     secfile_insert_int(file, ((struct city*)arg)->id, "%s.pendingtriggers%d.arg%d", section, response_count, index);
@@ -595,6 +559,10 @@ void save_trigger_arg(struct section_file *file, const char *section,
   case API_TYPE_DISASTER:
     secfile_insert_int(file, ((struct disaster_type*)arg)->id, "%s.pendingtriggers%d.arg%d", section, response_count, index);
     break;
+  case API_TYPE_DIRECTION:
+  case API_TYPE_CONNECTION:
+    log_verbose("[Trigger cache %4d] Trying to save unsupported trigger response argument type %ld", response_count, (long)presponse->args[arg_index * 2]);
+    break;
   }
 }
 
@@ -607,7 +575,7 @@ static bool load_trigger_arg(struct section_file *file, const char *section,
   int tmp;
 
   /* Load Argument Type */
-  if (!secfile_lookup_int(file, &(args[arg_index * 2]), "%s.pendingtriggers%d.arg%d",
+  if (!secfile_lookup_int(file, (int*)&(args[arg_index * 2]), "%s.pendingtriggers%d.arg%d",
               section, response_count, 2 * arg_index)) {
     log_verbose("[Trigger cache %4d] Unable to load trigger argument type at %d.", response_count, arg_index);
     return FALSE;
@@ -619,13 +587,13 @@ static bool load_trigger_arg(struct section_file *file, const char *section,
   bool success = TRUE;
   switch(((enum api_types)args[arg_index * 2])) {
   case API_TYPE_INT:
-    success = secfile_lookup_int(file, arg_address, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    success = secfile_lookup_int(file, (int*)arg_address, "%s.pendingtriggers%d.arg%d", section, response_count, index);
     break;
   case API_TYPE_BOOL:
-    success = secfile_lookup_bool(file, arg_address, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    success = secfile_lookup_bool(file, (bool*)arg_address, "%s.pendingtriggers%d.arg%d", section, response_count, index);
     break;
   case API_TYPE_STRING:
-    *arg_address = secfile_lookup_str(file, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    *arg_address = (char *)secfile_lookup_str(file, "%s.pendingtriggers%d.arg%d", section, response_count, index);
     if (*arg_address == NULL) success = FALSE;
     break;
   case API_TYPE_PLAYER:
@@ -653,24 +621,28 @@ static bool load_trigger_arg(struct section_file *file, const char *section,
     if (success) *arg_address = improvement_by_number(tmp);
     break;
   case API_TYPE_NATION_TYPE:
-    success = secfile_lookup_int(file, ((struct nation_type*)arg_address)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    success = secfile_lookup_int(file, &tmp, "%s.pendingtriggers%d.arg%d", section, response_count, index);
     if (success) *arg_address = nation_by_number(tmp);
     break;
   case API_TYPE_UNIT_TYPE:
-    success = secfile_lookup_int(file, ((struct unit_type*)arg_address)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    success = secfile_lookup_int(file, &tmp, "%s.pendingtriggers%d.arg%d", section, response_count, index);
     if (success) *arg_address = utype_by_number(tmp);
     break;
   case API_TYPE_TECH_TYPE:
-    success = secfile_lookup_int(file, ((struct advance*)arg_address)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    success = secfile_lookup_int(file, &tmp, "%s.pendingtriggers%d.arg%d", section, response_count, index);
     if (success) *arg_address = advance_by_number(tmp);
     break;
   case API_TYPE_TERRAIN:
-    success = secfile_lookup_int(file, ((struct terrain*)arg_address)->item_number, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    success = secfile_lookup_int(file, &tmp, "%s.pendingtriggers%d.arg%d", section, response_count, index);
     if (success) *arg_address = terrain_by_number(tmp);
     break;
   case API_TYPE_DISASTER:
-    success = secfile_lookup_int(file, ((struct disaster_type*)arg_address)->id, "%s.pendingtriggers%d.arg%d", section, response_count, index);
+    success = secfile_lookup_int(file, &tmp, "%s.pendingtriggers%d.arg%d", section, response_count, index);
     if (success) *arg_address = disaster_by_number(tmp);
+    break;
+  case API_TYPE_DIRECTION:
+  case API_TYPE_CONNECTION:
+    log_verbose("[Trigger cache %4d] Trying to save unsupported trigger response argument type %ld", response_count, (long)args[arg_index * 2]);
     break;
   }
   if (!success) {
@@ -717,7 +689,7 @@ void trigger_cache_load(struct section_file *file, const char *section)
   int response_count = 0;
   int i, j;
   int player_num, turn_fired, nargs;
-  char * trigger_name;
+  const char * trigger_name;
   void ** args;
   bool valid = TRUE;
 
@@ -742,7 +714,7 @@ void trigger_cache_load(struct section_file *file, const char *section)
       continue;
     }
 
-    if (secfile_lookup_int(file, player_num, "%s.pendingtriggers%d.player", section, i)) {
+    if (secfile_lookup_int(file, &player_num, "%s.pendingtriggers%d.player", section, i)) {
       pplayer = player_by_number(player_num);
     } else {
       pplayer = NULL;

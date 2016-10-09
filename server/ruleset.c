@@ -4593,9 +4593,7 @@ static bool load_ruleset_triggers(struct section_file *file)
   section_list_iterate(sec, psection) {
     const char *mtth, *title, *desc;
     int nresponses;
-    const char ** args;
     bool repeatable;
-    struct multiplier *pmul;
     struct trigger *ptrigger;
     const char *sec_name = section_name(psection);
     const char **responses;
@@ -4622,7 +4620,7 @@ static bool load_ruleset_triggers(struct section_file *file)
 
     mtth = secfile_lookup_str(file, "%s.mtth", sec_name);
 
-    responses = secfile_lookup_str_vec(file, &nresponses, "%s.responses", sec_name);
+    responses = secfile_lookup_str_vec(file, (size_t*)&nresponses, "%s.responses", sec_name);
 
     if (!secfile_lookup_int(file, &default_response, "%s.default_response", sec_name) && nresponses > 0) {
       ruleset_error(LOG_ERROR, "\"%s\" [%s] missing trigger default response but trigger has %d responses.", filename, sec_name, nresponses);

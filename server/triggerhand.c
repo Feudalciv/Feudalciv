@@ -25,13 +25,15 @@
 #include "triggers.h"
 #include "script_server.h"
 
+#include "triggerhand.h"
+
 void handle_trigger_response(struct connection *pc, const char *name, int response)
 {
   handle_trigger_response_player(pc->playing, name, response);
 }
 
 
-void handle_trigger_response_player(struct player *pplayer, const char *name, int response)
+void handle_trigger_response_player(const struct player *pplayer, const char *name, int response)
 {
   struct trigger_response * presponse = remove_trigger_response_from_cache(pplayer, name);
   presponse->nargs++;
@@ -39,8 +41,8 @@ void handle_trigger_response_player(struct player *pplayer, const char *name, in
   void ** args = presponse->args;
 
   /* Response is always last */
-  args[presponse->nargs * 2 - 2] = API_TYPE_INT;
-  args[presponse->nargs * 2 - 1] = response;
+  args[presponse->nargs * 2 - 2] = (void*)(long)API_TYPE_INT;
+  args[presponse->nargs * 2 - 1] = (void*)(long)response;
   script_server_trigger_emit(presponse->trigger->name, presponse->nargs, presponse->args);
   free(presponse->args);
   free(presponse);

@@ -92,21 +92,10 @@ void trigger_cache_free(void);
 typedef bool (*itc_cb)(struct trigger*, void *data);
 bool iterate_trigger_cache(itc_cb cb, void *data);
 
-bool check_trigger(struct trigger *ptrigger,
-                   const struct player *target_player,
-                   const struct player *other_player,
-                   const struct city *target_city,
-                   const struct impr_type *target_building,
-                   const struct tile *target_tile,
-                   const struct unit *target_unit,
-                   const struct unit_type *target_unittype,
-                   const struct output_type *target_output,
-                   const struct specialist *target_specialist);
+void trigger_by_name(const struct player *pplayer, const char * name, int nargs, ...);
+void trigger_by_name_array(const struct player *pplayer, const char * name, int nargs, void * args[]);
 
-void trigger_by_name(struct player *pplayer, const char * name, int nargs, ...);
-void trigger_by_name_array(struct player *pplayer, const char * name, int nargs, void * args[]);
-
-struct trigger_response * remove_trigger_response_from_cache(struct player *pplayer, const char * signal);
+struct trigger_response * remove_trigger_response_from_cache(const struct player *pplayer, const char * signal);
 
 void send_pending_triggers(struct conn_list *dest);
 
