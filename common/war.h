@@ -47,6 +47,10 @@ void war_cache_init();
 
 void war_cache_free();
 
+void war_cache_load(struct section_file *file, const char *section);
+
+void war_cache_save(struct section_file *file, const char *section);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
