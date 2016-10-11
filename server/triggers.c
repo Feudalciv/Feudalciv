@@ -670,6 +670,8 @@ void trigger_cache_save(struct section_file *file, const char *section)
     for (i = 0; i < presponse->nargs; i++) {
       save_trigger_arg(file, section, presponse, i, response_count);
     }
+
+    response_count++;
   } trigger_response_list_iterate_end;
 
   /* save the number of pending trigger responses in the trigger response cache */
