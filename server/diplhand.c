@@ -645,6 +645,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
         give_allied_visibility(pdest, pgiver);
 
         worker_refresh_required = TRUE;
+        break;
       case CLAUSE_BECOME_SUBJECT:
         ds_giverdest->type = DS_OVERLORD;
         ds_destgiver->type = DS_SUBJECT;
