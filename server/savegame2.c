@@ -4695,6 +4695,7 @@ static void sg_save_player_cities(struct savedata *saving,
     secfile_insert_int(saving->file, player_number(pcity->original),
                        "%s.original", buf);
     secfile_insert_int(saving->file, city_size_get(pcity), "%s.size", buf);
+    secfile_insert_int(saving->file, city_population(pcity), "%s.population", buf);
 
     specialist_type_iterate(sp) {
       secfile_insert_int(saving->file, pcity->specialists[sp], "%s.n%s", buf,
