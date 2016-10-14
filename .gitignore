@@ -55,6 +55,9 @@ server/freeciv-server
 data/Freeciv
 data/scenarios/earth
 data/stdsounds/wakeup.ogg
+data/civclient.dsc
+data/civserver.dsc
+data/civserver.room
 dependencies/tinycthread/Version
 dependencies/tolua-5.2/Version
 dependencies/tolua-5.2/freeciv_tolua.patch
