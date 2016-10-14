@@ -50,6 +50,7 @@ for file0 in $files; do
   convert -resize $((2*$WIDTH))x$((2*$HEIGHT)) -fill black -draw "rectangle 0,0 $((2*$WIDTH)),$((2*$HEIGHT))" $file1 $file2
   convert -crop $((2+$WIDTH))x$((2+$HEIGHT))+0x0 $file2 $file3
   composite -gravity center -compose src-over $file1 $file3 $file4
+  convert -unsharp 0x1 $file4 $file4
 
   rm -f $file1 $file2 $file3 "$filebase-4-fs8.png"
 
@@ -61,9 +62,10 @@ for file0 in $files; do
   WIDTH=$(($SHIELD_WIDTH-2))
   HEIGHT=$(($SHIELD_HEIGHT-2))
 
-  # The following assumes that the drawing has the same dimensions as the page
-  DRAWING_WIDTH=$($RENDERER -f $file0 -W)
-  DRAWING_HEIGHT=$($RENDERER -f $file0 -H)
+  # Ugly way to determine width and height.  There must be a better way!
+  SIZE=`identify "$file0" | sed "s/^.*PNG //" | sed "s/ .*\$//"`
+  DRAWING_WIDTH=`echo $SIZE | sed "s/x.*\$//"`
+  DRAWING_HEIGHT=`echo $SIZE | sed "s/^.*x//"`
   X0=$(awk -v drawing_width=${DRAWING_WIDTH} 'BEGIN { print int((drawing_width / 6) + 0.5) }')
   X1=$(awk -v x0=${X0} 'BEGIN{ print int((x0 * 5) + 0.5) }')
   Y0=0
@@ -74,7 +76,7 @@ for file0 in $files; do
 
   composite -gravity center -compose src-over $file1 mask.png $file2
   composite -gravity center -compose src-over mask.png $file2 $file3
-  convert -transparent magenta $file3 $file4
+  convert -unsharp 0x1 -transparent magenta $file3 $file4
 
   rm -f $file1 $file2 $file3 "$filebase-4-fs8.png"
 
@@ -101,6 +103,7 @@ for file0 in $files; do
   convert -resize $((2*$WIDTH))x$((2*$HEIGHT)) -fill black -draw "rectangle 0,0 $((2*$WIDTH)),$((2*$HEIGHT))" $file1 $file2
   convert -crop $((2+$WIDTH))x$((2+$HEIGHT))+0x0 $file2 $file3
   composite -gravity center -compose src-over $file1 $file3 $file4
+  convert -unsharp 0x1 $file4 $file4
 
   rm -f $file1 $file2 $file3 "$filebase-4-fs8.png"
 
@@ -112,9 +115,11 @@ for file0 in $files; do
   WIDTH=$(($SHIELD_WIDTH_LARGE-2))
   HEIGHT=$(($SHIELD_HEIGHT_LARGE-2))
 
-  # The following assumes that the drawing has the same dimensions as the page
-  DRAWING_WIDTH=$($RENDERER -f $file0 -W)
-  DRAWING_HEIGHT=$($RENDERER -f $file0 -H)
+  # Ugly way to determine width and height.  There must be a better way!
+  SIZE=`identify "$file0" | sed "s/^.*PNG //" | sed "s/ .*\$//"`
+  DRAWING_WIDTH=`echo $SIZE | sed "s/x.*\$//"`
+  DRAWING_HEIGHT=`echo $SIZE | sed "s/^.*x//"`
+
   X0=$(awk -v drawing_width=${DRAWING_WIDTH} 'BEGIN { print int((drawing_width / 6) + 0.5) }')
   X1=$(awk -v x0=${X0} 'BEGIN{ print int((x0 * 5) + 0.5) }')
   Y0=0
@@ -125,7 +130,7 @@ for file0 in $files; do
 
   composite -gravity center -compose src-over $file1 mask-large.png $file2
   composite -gravity center -compose src-over mask-large.png $file2 $file3
-  convert -transparent magenta $file3 $file4
+  convert -unsharp 0x1 -transparent magenta $file3 $file4
 
   rm -f $file1 $file2 $file3 "$filebase-4-fs8.png"
 done
