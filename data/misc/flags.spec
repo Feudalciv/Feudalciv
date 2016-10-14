@@ -146,12 +146,15 @@ artists = "
    Darfur		Daniel Markstedt
    DDR			Jwnabd (Wikimedia Commons)
    Denmark		Jens Bech Madsen
+   Devon        Greentubing (Wikimedia Commons)
    DGB			Precious alex (Wikimedia Commons)
    Djibouti		Open Clip Art
    Dominica		Caleb Moore and Christian Schaller
    Dominican Republic	Daniel Markstedt and capellan2000 (Open Clip Art)
+   Dorset       Stephen Coombs & Dave White (Wikimedia Commons)
    DR Congo		Drieskamp (Wikimedia Commons)
    Dryad		Ivan Alvarado
+   East Anglia  Oren neu dag (Creative Commons Attribution-Share Alike 3.0 Unported)
    East Timor		SKopp (Wikimedia Commons)
    Ecuador		Zachary Harden
    Egypt (ancient)	Daniel Markstedt
@@ -162,6 +165,7 @@ artists = "
    Epirus		Flanker (Wikimedia Commons) and Daniel Markstedt
    Equatorial Guinea	Open Clip Art
    Esperanto		Gabriel Ehrnst Grundin
+   Essex        Greentubing (Wikimedia Commons)
    Estonia		Daniel Markstedt
    Eritrea		Andrew Duhan
    Ethiopia		Lauris Kaplinski and Christian Schaller
@@ -332,6 +336,7 @@ artists = "
    Mazovia		J.M. Maalderink
    Mecklenburg		Daniel Markstedt
    Median		Dan Cottrell, Daniel Markstedt and J.M. Maalderink
+   Mercia       Cdh1984 (Wikimedia Commons)
    Messapian		Andrzej G.
    Metis		J.M. Maalderink
    Mexico		Cezary Biele
@@ -374,6 +379,7 @@ artists = "
    Nicaragua		Vzb83 (Wikimedia Commons)
    Niger		J.M. Maalderink
    Nigeria		Brett Roper
+   Norfolk      Hogweard (Wikimedia Commons)
    Normandy		Syryatsu
    North Korea		Zachary Harden
    Northumbria		J.M. Maalderink
@@ -479,6 +485,7 @@ artists = "
    Solomon Islands	SKopp (Wikimedia Commons)
    Somalia		J.M. Maalderink
    Somaliland		Cezary Biele and J.M. Maalderink 
+   Somerset     Hogweard (Wikimedia Commons)
    Songhai		Daniel Markstedt
    South Africa		Farrel Lifson
    Southern Cross	Crotalus horridus
@@ -493,6 +500,8 @@ artists = "
    Suebian		Andrzej G.
    Sumeria		Franz Mach, Jason Short, Daniel Markstedt
    Suriname		Vzb83 (Wikimedia Commons)
+   Surrey       Blake- (Creative Commons Attribution-Share Alike 4.0 International)
+   Sussex       Unknown (Wikimedia Commons)
    SVG			SKopp (Wikimedia Commons)
    Swahili		J.M. Maalderink
    Swaziland		Caleb Moore
@@ -563,6 +572,8 @@ artists = "
    Volga German		J.M. Maalderink
    Wales		Tobias Jakobs
    Wallonia		Cedric de Launois (Open Clip Art)
+   Wessex       Benjamin Winger (modified from Sodacan's Edward the Confessor arms on Wikipedia Commons, cc-by-sa-3.0,2.5,2.0,1.0)
+   Wessex (wyvern)  Hogweard (Wikimedia Commons, Creative Commons Attribution-Share Alike 3.0 Unported)
    West Indies Fed.	Stepshep (Wikimedia Commons)
    West Papua		J.M. Maalderink
    Westphalia		Daniel Markstedt and Tobias Jakobs
@@ -718,13 +729,16 @@ sprites =
 		"f.darfur", "flags/darfur"
 		"f.ddr", "flags/ddr"
 		"f.denmark", "flags/denmark"
+        "f.devon", "flags/devon"
 		"f.dgb", "flags/dgb"
 		"f.djibouti", "flags/djibouti"
 		"f.dominica", "flags/dominica"
 		"f.dominican_republic", "flags/dominican_republic"
+        "f.dorset", "flags/dorset"
 		"f.dr_congo", "flags/dr_congo"
 		"f.dryad", "flags/dryad"
 		"f.ecuador", "flags/ecuador"
+        "f.eastanglia", "flags/eastanglia"
 		"f.east_timor", "flags/east_timor"
 		"f.egypt_ancient", "flags/egypt_ancient"
 		"f.egypt", "flags/egypt"
@@ -734,6 +748,7 @@ sprites =
 		"f.epirus", "flags/epirus"
 		"f.equatorial_guinea", "flags/equatorial_guinea"
 		"f.esperanto", "flags/esperanto"
+		"f.essex", "flags/essex"
 		"f.estonia", "flags/estonia"
 		"f.eritrea", "flags/eritrea"
 		"f.ethiopia", "flags/ethiopia"
@@ -904,6 +919,7 @@ sprites =
 		"f.mazovia", "flags/mazovia"
 		"f.mecklenburg", "flags/mecklenburg"
 		"f.median", "flags/median"
+		"f.mercia", "flags/mercia"
 		"f.messapian", "flags/messapian"
 		"f.metis", "flags/metis"
 		"f.mexico", "flags/mexico"
@@ -945,6 +961,7 @@ sprites =
 		"f.nicaragua", "flags/nicaragua"
 		"f.niger", "flags/niger"
 		"f.nigeria", "flags/nigeria"
+        "f.norfolk", "flags/norfolk"
 		"f.normandy", "flags/normandy"
 		"f.north_korea", "flags/north_korea"
 		"f.northumbria", "flags/northumbria"
@@ -1051,6 +1068,7 @@ sprites =
 		"f.solomon_islands", "flags/solomon_islands"
 		"f.somalia", "flags/somalia"
 		"f.somaliland", "flags/somaliland"
+        "f.somerset", "flags/somerset"
 		"f.songhai", "flags/songhai"
 		"f.south_africa", "flags/south_africa"
 		"f.southern_cross", "flags/southern_cross" ; confederate battle flag
@@ -1065,6 +1083,8 @@ sprites =
 		"f.suebian", "flags/suebian"
 		"f.sumeria", "flags/sumeria"
 		"f.suriname", "flags/suriname"
+        "f.surrey", "flags/surrey"
+		"f.sussex", "flags/sussex"
 		"f.svg", "flags/svg"
 		"f.swahili", "flags/swahili"
 		"f.swaziland", "flags/swaziland"
@@ -1135,6 +1155,8 @@ sprites =
 		"f.volga_german", "flags/volga_german"
 		"f.wallonia", "flags/wallonia"
 		"f.wales", "flags/wales"
+        "f.wessex", "flags/wessex"
+        "f.wessex_wyvern", "flags/wessex_wyvern"
 		"f.west_indies_federation", "flags/west_indies_federation"
 		"f.west_papua", "flags/west_papua"
 		"f.westphalia", "flags/westphalia"

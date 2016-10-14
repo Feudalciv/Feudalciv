@@ -14,8 +14,7 @@ ruler_titles = {
  "government",      "male_title",           "female_title"
 }
 
-flag="English"
-flag_alt = "united_kingdom"
+flag="mercia"
 city_style = "European"
 
 init_techs=""

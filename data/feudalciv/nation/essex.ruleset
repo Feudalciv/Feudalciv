@@ -14,8 +14,8 @@ ruler_titles = {
  "government",      "male_title",           "female_title"
 }
 
-flag="viking"
-flag_alt = "united_kingdom"
+flag="essex"
+flag_alt = "-"
 city_style = "European"
 
 init_techs=""

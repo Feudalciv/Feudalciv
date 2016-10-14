@@ -14,7 +14,7 @@ ruler_titles = {
  "government",      "male_title",           "female_title"
 }
 
-flag="england"
+flag="surrey"
 flag_alt = "united_kingdom"
 city_style = "European"
 
