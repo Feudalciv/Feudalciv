@@ -48,18 +48,19 @@ void start_war(struct player * aggressor, struct player * defender, const char *
   pwar = fc_malloc(sizeof(*pwar));
 
   overlord = get_player_overlord(defender);
-  if (overlord != NULL && player_number(overlord) != player_number(get_player_overlord(aggressor))
+  while (overlord != NULL && player_number(overlord) != player_number(get_player_overlord(aggressor))
           && player_number(aggressor) != player_number(overlord)) {
     /* bring overlord into the war if attacked by a foreign power*/
     notify_player(overlord, NULL, E_TREATY_BROKEN, ftc_server,
                   _("%s declared war on our subject %s. "
-                    "We are obligated to defend our subject %s and have taken control of the conflict."),
+                    "We are obligated to defend our subject %s"),
                   player_name(aggressor),
                   player_name(defender),
                   player_name(defender));
     handle_diplomacy_cancel_pact(aggressor, player_number(overlord), CLAUSE_LAST);
     /* Overlord becomes the defender */
     defender = overlord;
+    overlord = get_player_overlord(defender);
   }
 
   pwar->aggressor = aggressor;
@@ -76,14 +77,18 @@ void start_war(struct player * aggressor, struct player * defender, const char *
   players_iterate_alive(otherplayer) {
     if (pplayers_allied(otherplayer, aggressor) &&
             player_number(otherplayer) != player_number(aggressor) &&
-            !pplayers_at_war(otherplayer, defender)) {
+            !pplayers_at_war(otherplayer, defender)
+            && (get_player_overlord(aggressor) == NULL
+                || player_number(otherplayer) != player_number(get_player_overlord(aggressor)))) {
       trigger_by_name(otherplayer, "trigger_call_to_arms", 3, API_TYPE_PLAYER, otherplayer,
                                                               API_TYPE_PLAYER, aggressor,
                                                               API_TYPE_PLAYER, defender);
     }
     else if (pplayers_allied(otherplayer, defender) &&
             player_number(otherplayer) != player_number(defender) &&
-            !pplayers_at_war(otherplayer, aggressor)) {
+            !pplayers_at_war(otherplayer, aggressor)
+            && (get_player_overlord(defender) == NULL
+                || player_number(otherplayer) != player_number(get_player_overlord(defender)))) {
       trigger_by_name(otherplayer, "trigger_call_to_arms", 3, API_TYPE_PLAYER, otherplayer,
                                                               API_TYPE_PLAYER, defender,
                                                               API_TYPE_PLAYER, aggressor);
