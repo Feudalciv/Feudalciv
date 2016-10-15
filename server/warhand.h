@@ -26,6 +26,10 @@ void start_war(struct player * aggressor, struct player * defender, const char *
 
 void update_wars_for_peace_treaty(struct player *pplayer1, struct player *pplayer2);
 
+void update_wars_for_ceasefire(struct player *pplayer1, struct player *pplayer2);
+
+void update_wars_for_broken_ceasefire(struct player *pplayer1, struct player *pplayer2);
+
 bool join_war(struct player *pplayer, struct player *ally, struct player *enemy);
 
 #ifdef __cplusplus

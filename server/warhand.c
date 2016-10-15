@@ -268,16 +268,151 @@ void update_wars_for_peace_treaty(struct player *pplayer1, struct player *pplaye
   int pn1 = player_number(pplayer1);
   int pn2 = player_number(pplayer2);
   int pndef, pnagg;
+  bool pn1def, pn1agg, pn2def, pn2agg;
 
   war_list_iterate(wars, pwar) {
     pndef = player_number(pwar->defender);
     pnagg = player_number(pwar->aggressor);
+    pn1def = player_list_search(pwar->defenders, pplayer1);
+    pn1agg = player_list_search(pwar->aggressors, pplayer1);
+    pn2def = player_list_search(pwar->defenders, pplayer2);
+    pn2agg = player_list_search(pwar->aggressors, pplayer2);
+    if (!((pn1def || pn1agg) && (pn2def || pn2agg))) continue;
+
     if ((pn1 == pndef && pn2 == pnagg) || (pn1 == pnagg && pn2 == pndef)) {
       end_war(pwar);
-    } else if (pn1 == pndef || pn1 == pnagg) {
+    } else if ((pn1 == pndef && pn2agg) || (pn1 == pnagg && pn2def)) {
       leave_war(pplayer2, pwar);
-    } else if (pn2 == pndef || pn2 == pnagg) {
+    } else if ((pn2 == pndef && pn1agg) || (pn2 == pnagg && pn1def)) {
       leave_war(pplayer1, pwar);
     }
+  } war_list_iterate_end;
+}
+
+
+/**************************************************************************
+  Makes a ceasefire between a player and the players on the other side in a war
+**************************************************************************/
+static void make_ceasefire(struct player *pplayer, struct war *pwar)
+{
+  fc_assert(NULL != pplayer);
+  fc_assert(NULL != pwar);
+
+  if (player_list_search(pwar->defenders, pplayer)) {
+    player_list_iterate(pwar->aggressors, aggressor) {
+      set_ceasefire(pplayer, aggressor);
+    } player_list_iterate_end;
+  } else if (player_list_search(pwar->aggressors, pplayer)) {
+    player_list_iterate(pwar->defenders, defender) {
+      set_ceasefire(pplayer, defender);
+    } player_list_iterate_end;
+  }
+}
+
+/**************************************************************************
+  Makes a ceasefire between a player and the players on the other side in a war
+**************************************************************************/
+static void break_ceasefire(struct player *pplayer, struct war *pwar)
+{
+  fc_assert(NULL != pplayer);
+  fc_assert(NULL != pwar);
+
+  if (player_list_search(pwar->defenders, pplayer)) {
+    player_list_iterate(pwar->aggressors, aggressor) {
+      handle_diplomacy_cancel_pact(pplayer, player_number(aggressor), CLAUSE_LAST);
+    } player_list_iterate_end;
+  } else if (player_list_search(pwar->aggressors, pplayer)) {
+    player_list_iterate(pwar->defenders, defender) {
+      handle_diplomacy_cancel_pact(pplayer, player_number(defender), CLAUSE_LAST);
+    } player_list_iterate_end;
+  }
+}
+
+/**************************************************************************
+  Updates the state of the wars when a certain ceasefire is made between
+    two players
+**************************************************************************/
+void update_wars_for_ceasefire(struct player *pplayer1, struct player *pplayer2)
+{
+  fc_assert(NULL != pplayer1);
+  fc_assert(NULL != pplayer2);
+
+  int pn1 = player_number(pplayer1);
+  int pn2 = player_number(pplayer2);
+  int pndef, pnagg;
+  bool pn1def, pn1agg, pn2def, pn2agg;
+
+  war_list_iterate(wars, pwar) {
+    pndef = player_number(pwar->defender);
+    pnagg = player_number(pwar->aggressor);
+    pn1def = player_list_search(pwar->defenders, pplayer1);
+    pn1agg = player_list_search(pwar->aggressors, pplayer1);
+    pn2def = player_list_search(pwar->defenders, pplayer2);
+    pn2agg = player_list_search(pwar->aggressors, pplayer2);
+    if (!((pn1def || pn1agg) && (pn2def || pn2agg))) continue;
+
+    if ((pn1 == pndef && pn2 == pnagg) || (pn1 == pnagg && pn2 == pndef)) {
+      /* War leaders called for ceasefire, make ceasefire between all sides */
+      player_list_iterate(pwar->defenders, pplayer) {
+        make_ceasefire(pplayer, pwar);
+      } player_list_iterate_end;
+    } else if ((pn1 == pndef && pn2agg) || (pn1 == pnagg && pn2def)) {
+      /* War leader player 1 called for a ceasefire with player 2, make ceasefire with entire side */
+      make_ceasefire(pplayer2, pwar);
+    } else if ((pn2 == pndef && pn1agg) || (pn2 == pnagg && pn1def)) {
+      /* Player 2 called for a ceasefire with war leader, make ceasefire with entire side */
+      make_ceasefire(pplayer2, pwar);
+    }
+  } war_list_iterate_end;
+}
+
+/**************************************************************************
+  Updates the state of the wars when a certain ceasefire is made between
+    two players
+**************************************************************************/
+void update_wars_for_broken_ceasefire(struct player *pplayer1, struct player *pplayer2)
+{
+  fc_assert(NULL != pplayer1);
+  fc_assert(NULL != pplayer2);
+
+  int pn1 = player_number(pplayer1);
+  int pn2 = player_number(pplayer2);
+  int pndef, pnagg;
+  bool pn1def, pn1agg, pn2def, pn2agg;
+
+  war_list_iterate(wars, pwar) {
+    pndef = player_number(pwar->defender);
+    pnagg = player_number(pwar->aggressor);
+    pn1def = player_list_search(pwar->defenders, pplayer1);
+    pn1agg = player_list_search(pwar->aggressors, pplayer1);
+    pn2def = player_list_search(pwar->defenders, pplayer2);
+    pn2agg = player_list_search(pwar->aggressors, pplayer2);
+    if (!((pn1def || pn1agg) && (pn2def || pn2agg))) continue;
+
+    if (pn1 == pndef && pn2 == pnagg) {
+      /* War leaders broke ceasefire, ceasefire is cancelled between all sides */
+      player_list_iterate(pwar->defenders, pplayer) {
+        break_ceasefire(pplayer, pwar);
+      } player_list_iterate_end;
+    } else if (pn1 == pnagg && pn2 == pndef) {
+      /* War leaders broke ceasefire, ceasefire is cancelled between all sides */
+      player_list_iterate(pwar->aggressors, pplayer) {
+        break_ceasefire(pplayer, pwar);
+      } player_list_iterate_end;
+    } else if (pn1 == pndef && pn2agg) {
+      /* War leader broke ceasefire with player 2, break ceasefire for all sides*/
+      player_list_iterate(pwar->defenders, pplayer) {
+        break_ceasefire(pplayer, pwar);
+      } player_list_iterate_end;
+    } else if (pn1 == pnagg && pn2def) {
+      /* War leader broke ceasefire with player 2, break ceasefire for all sides*/
+      player_list_iterate(pwar->aggressors, pplayer) {
+        break_ceasefire(pplayer, pwar);
+      } player_list_iterate_end;
+    } else if ((pn2 == pndef && pn1agg) || (pn2 == pnagg && pn1def)) {
+      /* Player 1 broke ceasefire with war leader, break ceasefire with entire side */
+      break_ceasefire(pplayer1, pwar);
+    }
+    /* Otherwise ceasefire is only broken between the two players and nothing needs to be done */
   } war_list_iterate_end;
 }

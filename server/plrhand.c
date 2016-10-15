@@ -616,7 +616,7 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
   enum dipl_reason diplcheck;
   bool repeat = FALSE;
   struct player *pplayer2 = player_by_number(other_player_id);
-  struct player_diplstate *ds_plrplr2, *ds_plr2plr, *ds_plroverlord, *ds_overlordplr, *ds_plrplr3, *ds_plr3plr;
+  struct player_diplstate *ds_plrplr2, *ds_plr2plr;
   struct unit_list *pplayer_seen_units, *pplayer2_seen_units;
   const struct player *overlord;
 
@@ -732,6 +732,9 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
                 nation_plural_for_player(pplayer2),
                 nation_plural_for_player(pplayer),
                 diplstate_text(new_type));
+  if (old_type == DS_CEASEFIRE) {
+    update_wars_for_broken_ceasefire(pplayer, pplayer2);
+  }
 }
 
 /**************************************************************************

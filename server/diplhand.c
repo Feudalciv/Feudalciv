@@ -203,6 +203,25 @@ void set_peace(struct player *pgiver, struct player *pdest)
                 nation_adjective_for_player(pgiver));
 }
 
+void set_ceasefire(struct player *pgiver, struct player *pdest)
+{
+  struct player_diplstate *ds_giverdest
+    = player_diplstate_get(pgiver, pdest);
+  struct player_diplstate *ds_destgiver
+    = player_diplstate_get(pdest, pgiver);
+  ds_giverdest->type = DS_CEASEFIRE;
+  ds_giverdest->turns_left = TURNS_LEFT;
+  ds_destgiver->type = DS_CEASEFIRE;
+  ds_destgiver->turns_left = TURNS_LEFT;
+  notify_player(pgiver, NULL, E_TREATY_CEASEFIRE, ftc_server,
+                _("You agree on a cease-fire with %s."),
+                player_name(pdest));
+  notify_player(pdest, NULL, E_TREATY_CEASEFIRE, ftc_server,
+                _("You agree on a cease-fire with %s."),
+                player_name(pgiver));
+}
+
+
 
 /**************************************************************************
 pplayer clicked the accept button. If he accepted the treaty we check the
@@ -587,16 +606,10 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
           pgiver_seen_units = get_units_seen_via_ally(pgiver, pdest);
           pdest_seen_units = get_units_seen_via_ally(pdest, pgiver);
         }
-        ds_giverdest->type = DS_CEASEFIRE;
-        ds_giverdest->turns_left = TURNS_LEFT;
-        ds_destgiver->type = DS_CEASEFIRE;
-        ds_destgiver->turns_left = TURNS_LEFT;
-        notify_player(pgiver, NULL, E_TREATY_CEASEFIRE, ftc_server,
-                      _("You agree on a cease-fire with %s."),
-                      player_name(pdest));
-        notify_player(pdest, NULL, E_TREATY_CEASEFIRE, ftc_server,
-                      _("You agree on a cease-fire with %s."),
-                      player_name(pgiver));
+        set_ceasefire(pgiver, pdest);
+        if (old_diplstate == DS_WAR) {
+          update_wars_for_ceasefire(pgiver, pdest);
+        }
         if (old_diplstate == DS_ALLIANCE) {
           update_players_after_alliance_breakup(pgiver, pdest,
                                                 pgiver_seen_units,
@@ -615,7 +628,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
 
         set_peace(pgiver, pdest);
         if (old_diplstate == DS_WAR || old_diplstate == DS_CEASEFIRE) {
-            update_wars_for_peace_treaty(pgiver, pdest);
+          update_wars_for_peace_treaty(pgiver, pdest);
         }
 
         if (old_diplstate == DS_ALLIANCE) {
