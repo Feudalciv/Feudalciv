@@ -44,6 +44,10 @@ void war_cache_free()
   if (wars) {
     war_list_iterate(wars, pwar) {
       free((char*)pwar->casus_belli);
+      player_list_clear(pwar->defenders);
+      player_list_destroy(pwar->defenders);
+      player_list_clear(pwar->aggressors);
+      player_list_destroy(pwar->aggressors);
       free(pwar);
     } war_list_iterate_end;
     war_list_destroy(wars);

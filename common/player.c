@@ -711,6 +711,7 @@ void player_destroy(struct player *pplayer)
   unit_list_destroy(pplayer->units);
   fc_assert(0 == city_list_size(pplayer->cities));
   city_list_destroy(pplayer->cities);
+  war_list_clear(pplayer->current_wars);
   fc_assert(0 == war_list_size(pplayer->current_wars));
   war_list_destroy(pplayer->current_wars);
 
