@@ -84,6 +84,8 @@ void wars_save(struct section_file *file, const char *section)
     secfile_insert_int_vec(file, aggressor_nums, aggressor_count,  "%s.war%d.aggressors", section, war_count);
     secfile_insert_int_vec(file, defender_nums, defender_count, "%s.war%d.defenders", section, war_count);
 
+    if (pwar->casus_belli != NULL) secfile_insert_str(file, pwar->casus_belli, "%s.war%d.casus_belli", section, war_count);
+
     war_count++;
   } war_list_iterate_end;
 
@@ -102,6 +104,7 @@ void wars_load(struct section_file *file, const char *section)
   struct player_list *defenders, *aggressors;
   int *defender_nums, *aggressor_nums;
   size_t num_defenders, num_aggressors;
+  const char * casus_belli;
 
   war_count = secfile_lookup_int_default(file, 0, "%s.count", section);
 
@@ -156,11 +159,14 @@ void wars_load(struct section_file *file, const char *section)
       player_list_append(aggressors, tmp);
     }
 
+    casus_belli = secfile_lookup_str(file, "%s.war%d.casus_belli", section, i);
+
     pwar = fc_malloc(sizeof(*pwar));
     pwar->defender = defender;
     pwar->aggressor = aggressor;
     pwar->defenders = defenders;
     pwar->aggressors = aggressors;
+    pwar->casus_belli = casus_belli;
 
     player_list_iterate(defenders, pplayer) {
       war_list_append(pplayer->current_wars, pwar);
