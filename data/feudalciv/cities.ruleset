@@ -11,7 +11,7 @@
 
 [datafile]
 description="cities data for Feudalciv"
-options="+Freeciv-2.5-ruleset"
+options="+Freeciv-2.5-ruleset +Feudalciv-0.1-ruleset"
 
 ; /* <-- avoid gettext warnings
 ;

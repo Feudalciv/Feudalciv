@@ -11,7 +11,7 @@
 
 [datafile]
 description="technology data for Feudalciv"
-options="+Freeciv-2.5-ruleset"
+options="+Freeciv-2.5-ruleset +Feudalciv-0.1-ruleset"
 
 [control]
 ; Names for custom tech flags. There can be up to 8 of these.

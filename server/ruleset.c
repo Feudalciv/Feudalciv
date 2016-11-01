@@ -73,7 +73,7 @@
 #include "ruleset.h"
 
 
-#define RULESET_CAPABILITIES "+Freeciv-2.5-ruleset"
+#define RULESET_CAPABILITIES "+Freeciv-2.5-ruleset +Feudalciv-0.1-ruleset"
 /*
  * Ruleset capabilities acceptable to this program:
  *
@@ -303,14 +303,6 @@ static const char *check_ruleset_capabilities(struct section_file *file,
   if (!(datafile_options = secfile_lookup_str(file, "datafile.options"))) {
     log_fatal("\"%s\": ruleset capability problem:", filename);
     ruleset_error(LOG_ERROR, "%s", secfile_error());
-
-    return NULL;
-  }
-  if (!has_capabilities(us_capstr, datafile_options)) {
-    log_fatal("\"%s\": ruleset datafile appears incompatible:", filename);
-    log_fatal("  datafile options: %s", datafile_options);
-    log_fatal("  supported options: %s", us_capstr);
-    ruleset_error(LOG_ERROR, "Capability problem");
 
     return NULL;
   }

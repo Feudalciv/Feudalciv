@@ -14,7 +14,7 @@
 
 [datafile]
 description="Game rules for Feudalciv"
-options="+Freeciv-2.5-ruleset"
+options="+Freeciv-2.5-ruleset +Feudalciv-0.1-ruleset"
 
 [about]
 ; Ruleset name
@@ -24,6 +24,9 @@ name = _("Feudalciv ruleset")
 description = _("\
 You are playing with the Feudalciv.\
 ")
+
+[tileset]
+prefered = "feudalciv"
 
 [options]
 global_init_techs=""

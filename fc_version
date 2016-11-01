@@ -7,7 +7,7 @@
 MAJOR_VERSION="2"
 MINOR_VERSION="5"
 PATCH_VERSION="5"
-VERSION_LABEL=""
+VERSION_LABEL="+Feudalciv-0.1"
 
 # 1) Development until MAJOR and MINOR version numbers are
 #    set to new release series:
@@ -54,7 +54,7 @@ DEFAULT_FOLLOW_TAG=stable
 #   - Avoid adding a new mandatory capability to the development branch for
 #     as long as possible.  We want to maintain network compatibility with
 #     the stable branch for as long as possible.
-NETWORK_CAPSTRING_MANDATORY="+Freeciv-2.5-network"
+NETWORK_CAPSTRING_MANDATORY="+Freeciv-2.5-network Feudalciv-0.1-network"
 NETWORK_CAPSTRING_OPTIONAL="nationset_change tech_cost split_reports extended_move_rate illness_ranges nonnatdef"
 
 FREECIV_DISTRIBUTOR=""

@@ -9,7 +9,7 @@
 
 [datafile]
 description="nations data for Feudalciv"
-options="+Freeciv-2.5-ruleset"
+options="+Freeciv-2.5-ruleset +Feudalciv-0.1-ruleset"
 
 [compatibility]
 ; Initial government for all the nations that do not

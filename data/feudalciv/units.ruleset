@@ -19,7 +19,7 @@
 
 [datafile]
 description="unit data for Feudalciv"
-options="+Freeciv-2.5-ruleset"
+options="+Freeciv-2.5-ruleset +Feudalciv-0.1-ruleset"
 
 [control]
 ; Names for custom unit type flags. There can be up to 16 of these.
