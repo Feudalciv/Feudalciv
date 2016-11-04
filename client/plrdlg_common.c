@@ -131,14 +131,14 @@ static int diplstate_value(const struct player *plr)
      the number of turns left makes sense */
   static const int diplstate_cmp_lookup[DS_LAST] = {
     [DS_TEAM] = 1 << 16,
-    [DS_OVERLORD] = 1 << 16,
-    [DS_SUBJECT] = 1 << 16,
-    [DS_ALLIANCE] = 2 << 16,
-    [DS_PEACE] = 3 << 16,
-    [DS_ARMISTICE] = 4 << 16,
-    [DS_CEASEFIRE] = 5 << 16,
-    [DS_WAR] = 6 << 16,
-    [DS_NO_CONTACT] = 7 << 16
+    [DS_OVERLORD] = 2 << 16,
+    [DS_SUBJECT] = 3 << 16,
+    [DS_ALLIANCE] = 4 << 16,
+    [DS_PEACE] = 5 << 16,
+    [DS_ARMISTICE] = 6 << 16,
+    [DS_CEASEFIRE] = 7 << 16,
+    [DS_WAR] = 8 << 16,
+    [DS_NO_CONTACT] = 9 << 16
   };
   
   const struct player_diplstate *pds;
