@@ -568,6 +568,8 @@ static void player_defaults(struct player *pplayer)
   pplayer->economic.science = PLAYER_DEFAULT_SCIENCE_RATE;
   pplayer->economic.luxury  = PLAYER_DEFAULT_LUXURY_RATE;
 
+  pplayer->expected_gross_income = 0;
+
   spaceship_init(&pplayer->spaceship);
 
   pplayer->ai_controlled = FALSE;
@@ -1116,11 +1118,11 @@ int player_get_expected_income(const struct player *pplayer)
 
   if (get_player_overlord(pplayer) != NULL) {
     /* Overlord gets 10% of income */
-    income = income - income * 0.1;
+    income *= 0.9;
   }
 
   player_subjects_iterate(pplayer, subject) {
-    income += player_get_expected_gross_income(subject) * 0.1;
+    income += subject->expected_gross_income/10;
   } player_subjects_iterate_end;
 
   return income;
@@ -1145,7 +1147,7 @@ int player_get_expected_gross_income(const struct player *pplayer)
   } city_list_iterate_end;
 
   player_subjects_iterate(pplayer, subject) {
-    income += player_get_expected_gross_income(subject) * 0.1;
+    income += player_get_expected_gross_income(subject)/10;
   } player_subjects_iterate_end;
 
   return income;

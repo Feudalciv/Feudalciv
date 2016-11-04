@@ -218,6 +218,7 @@ struct player {
   struct unit_list *units;
   struct player_score score;
   struct player_economic economic;
+  int expected_gross_income;
 
   struct player_spaceship spaceship;
 

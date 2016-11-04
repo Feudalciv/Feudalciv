@@ -1111,7 +1111,11 @@ static void package_player_info(struct player *plr,
     packet->tech_goal       = A_UNSET;
   }
 
-  /* 
+  if (info_level >= INFO_OVERLORD) {
+    packet->expected_gross_income = plr->expected_gross_income;
+  }
+
+  /*
    * This may be an odd time to check these values but we can be sure
    * to have a consistent state here.
    */
@@ -1185,6 +1189,9 @@ static enum plr_info_level player_info_level(struct player *plr,
   }
   if (plr == receiver) {
     return INFO_FULL;
+  }
+  if (receiver == get_player_overlord(plr)) {
+    return INFO_OVERLORD;
   }
   if (receiver && player_has_embassy(receiver, plr)) {
     return INFO_EMBASSY;
@@ -2962,6 +2969,7 @@ void pay_necessary_tribute(struct player *pplayer)
 
   if (overlord != NULL) {
    income = player_get_expected_gross_income(pplayer);
+   pplayer->expected_gross_income = income;
 
     /* Ignore defecit for now, will be dealt with when updating cities */
     /* FIXME: Could cause issues when upkeep_style != 2 and treasury is close to empty

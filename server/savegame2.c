@@ -3624,6 +3624,13 @@ static void sg_load_players(struct loaddata *loading)
     } city_list_iterate_end;
   } players_iterate_end;
 
+  /* Update the expected gross income of all players this must come after
+   * all city information is updated since for each player, their city
+   * income and their vassal city income is needed*/
+  players_iterate(plr) {
+    plr->expected_gross_income = player_get_expected_gross_income(plr);
+  } players_iterate_end;
+
   /* Since the cities must be placed on the map to put them on the
      player map we do this afterwards */
   players_iterate(pplayer) {

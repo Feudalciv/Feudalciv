@@ -735,6 +735,7 @@ PACKET_PLAYER_INFO = 51; sc, is-info
   BOOL is_alive;
 
   GOLD gold;
+  UINT32 expected_gross_income;
   PERCENT tax, science,luxury;
 
   SINT32 bulbs_prod;

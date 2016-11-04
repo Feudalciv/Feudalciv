@@ -21,7 +21,7 @@ struct rgbcolor;
 struct section_file;
 struct unit_list;
 
-enum plr_info_level { INFO_MINIMUM, INFO_MEETING, INFO_EMBASSY, INFO_FULL };
+enum plr_info_level { INFO_MINIMUM, INFO_MEETING, INFO_EMBASSY, INFO_OVERLORD, INFO_FULL };
 
 struct player *server_create_player(int player_id, const char *ai_type,
                                     struct rgbcolor *prgbcolor);
