@@ -91,6 +91,8 @@ static void diplomacy_dialog_city_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_ceasefire_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_peace_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_alliance_callback(GtkWidget *w, gpointer data);
+static void diplomacy_dialog_become_subject_callback(GtkWidget *w, gpointer data);
+static void diplomacy_dialog_vassalize_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_vision_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_embassy_callback(GtkWidget *w, gpointer data);
 static void close_diplomacy_dialog(struct Diplomacy_dialog *pdialog);
@@ -433,6 +435,18 @@ static void popup_add_menu(GtkMenuShell *parent, gpointer data)
     g_signal_connect(item, "activate",
 		     G_CALLBACK(diplomacy_dialog_alliance_callback), pdialog);
     gtk_widget_set_sensitive(item, ds != DS_ALLIANCE && ds != DS_TEAM);
+
+    item = gtk_menu_item_new_with_mnemonic(Q_("?diplomatic_state:Become Subject"));
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+    g_signal_connect(item, "activate",
+		     G_CALLBACK(diplomacy_dialog_become_subject_callback), pdialog);
+    gtk_widget_set_sensitive(item, ds != DS_OVERLORD && ds != DS_SUBJECT && ds != DS_TEAM);
+
+    item = gtk_menu_item_new_with_mnemonic(Q_("?diplomatic_state:Vassalise"));
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+    g_signal_connect(item, "activate",
+		     G_CALLBACK(diplomacy_dialog_vassalize_callback), pdialog);
+    gtk_widget_set_sensitive(item, ds != DS_OVERLORD && ds != DS_SUBJECT && ds != DS_TEAM);
 
     item = gtk_menu_item_new_with_mnemonic(_("_Pacts"));
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), menu);
@@ -1058,6 +1072,22 @@ static void diplomacy_dialog_peace_callback(GtkWidget *w, gpointer data)
 static void diplomacy_dialog_alliance_callback(GtkWidget *w, gpointer data)
 {
   diplomacy_dialog_add_pact_clause(w, data, CLAUSE_ALLIANCE);
+}
+
+/****************************************************************
+  Become Subject pact menu item activated
+*****************************************************************/
+static void diplomacy_dialog_become_subject_callback(GtkWidget *w, gpointer data)
+{
+  diplomacy_dialog_add_pact_clause(w, data, CLAUSE_BECOME_SUBJECT);
+}
+
+/****************************************************************
+  Vassalize pact menu item activated
+*****************************************************************/
+static void diplomacy_dialog_vassalize_callback(GtkWidget *w, gpointer data)
+{
+  diplomacy_dialog_add_pact_clause(w, data, CLAUSE_VASSALIZE);
 }
 
 /****************************************************************

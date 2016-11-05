@@ -62,6 +62,7 @@
 #include "rssanity.h"
 #include "settings.h"
 #include "srv_main.h"
+#include "triggers.h"
 
 /* server/advisors */
 #include "advruleset.h"
@@ -103,6 +104,10 @@
 #define UNIT_CLASS_SECTION_PREFIX "unitclass_"
 #define UNIT_SECTION_PREFIX "unit_"
 #define DISASTER_SECTION_PREFIX "disaster_"
+#define ACHIEVEMENT_SECTION_PREFIX "achievement_"
+#define ACTION_ENABLER_SECTION_PREFIX "actionenabler_"
+#define MULTIPLIER_SECTION_PREFIX "multiplier_"
+#define TRIGGER_SECTION_PREFIX "trigger_"
 
 #define check_name(name) (check_strlen(name, MAX_LEN_NAME, NULL))
 
@@ -166,6 +171,7 @@ static bool load_ruleset_veteran(struct section_file *file,
                                  const char *path,
                                  struct veteran_system **vsystem, char *err,
                                  size_t err_len);
+static bool load_ruleset_triggers(struct section_file *file);
 
 
 /**************************************************************************
@@ -4562,6 +4568,117 @@ static bool load_ruleset_effects(struct section_file *file)
 }
 
 /**************************************************************************
+Load triggers.ruleset file
+**************************************************************************/
+static bool load_ruleset_triggers(struct section_file *file)
+{
+  struct section_list *sec;
+  const char *filename;
+  bool ok = TRUE;
+  int timeout;
+
+  filename = secfile_name(file);
+  if (check_ruleset_capabilities(file, RULESET_CAPABILITIES, filename) == NULL) {
+    return FALSE;
+  }
+
+  (void) secfile_entry_by_path(file, "datafile.description");   /* unused */
+
+  if (secfile_lookup_int(file, &timeout, "trigger_timeout")) {
+    set_trigger_timeout(timeout);
+  }
+
+  /* Parse triggers and add them to the triggers ruleset cache. */
+  sec = secfile_sections_by_name_prefix(file, TRIGGER_SECTION_PREFIX);
+  section_list_iterate(sec, psection) {
+    const char *mtth, *title, *desc;
+    int nresponses;
+    bool repeatable;
+    struct trigger *ptrigger;
+    const char *sec_name = section_name(psection);
+    const char **responses;
+    struct requirement_vector *reqs;
+    int default_response, ai_response;
+
+    title = secfile_lookup_str(file, "%s.title", sec_name);
+
+    if (title == NULL) {
+      ruleset_error(LOG_ERROR, "\"%s\" [%s] missing trigger title.", filename, sec_name);
+      ok = FALSE;
+      break;
+    }
+
+    desc = secfile_lookup_str(file, "%s.desc", sec_name);
+
+    if (desc == NULL) {
+      ruleset_error(LOG_ERROR, "\"%s\" [%s] missing trigger description.", filename, sec_name);
+      ok = FALSE;
+      break;
+    }
+
+    repeatable = secfile_lookup_bool_default(file, FALSE, "%s.repeatable", sec_name);
+
+    mtth = secfile_lookup_str(file, "%s.mtth", sec_name);
+
+    responses = secfile_lookup_str_vec(file, (size_t*)&nresponses, "%s.responses", sec_name);
+
+    if (!secfile_lookup_int(file, &default_response, "%s.default_response", sec_name) && nresponses > 0) {
+      ruleset_error(LOG_ERROR, "\"%s\" [%s] missing trigger default response but trigger has %d responses.", filename, sec_name, nresponses);
+      ok = FALSE;
+      break;
+    }
+    if (default_response == 0 || default_response > nresponses) {
+      ruleset_error(LOG_ERROR, "\"%s\" [%s] invalid default response; trigger default response should be indexed from 1.", filename, sec_name);
+      ok = FALSE;
+      break;
+    }
+
+    if (!secfile_lookup_int(file, &ai_response, "%s.ai_response", sec_name) && nresponses > 0) {
+      ruleset_error(LOG_ERROR, "\"%s\" [%s] missing trigger ai response but trigger has %d responses.", filename, sec_name, nresponses);
+      ok = FALSE;
+      break;
+    }
+    if (ai_response == 0 || ai_response > nresponses) {
+      ruleset_error(LOG_ERROR, "\"%s\" [%s] invalid ai response; trigger ai response should be indexed from 1.", filename, sec_name);
+      ok = FALSE;
+      break;
+    }
+
+    ptrigger = trigger_new(sec_name, title, desc, mtth, repeatable, nresponses, responses, default_response, ai_response);
+
+    reqs = lookup_req_list(file, sec_name, "reqs", sec_name);
+    if (reqs == NULL) {
+      ok = FALSE;
+      break;
+    }
+
+    requirement_vector_iterate(reqs, preq) {
+      trigger_req_append(ptrigger, *preq);
+    } requirement_vector_iterate_end;
+
+    reqs = lookup_req_list(file, sec_name, "nreqs", sec_name);
+    if (reqs == NULL) {
+      ok = FALSE;
+      break;
+    }
+    requirement_vector_iterate(reqs, preq) {
+      trigger_req_append(ptrigger, *preq);
+    } requirement_vector_iterate_end;
+
+    trigger_signal_create(ptrigger);
+
+  } section_list_iterate_end;
+  section_list_destroy(sec);
+
+  if (ok) {
+    secfile_check_unused(file);
+  }
+
+  return ok;
+}
+
+
+/**************************************************************************
   Print an error message if the value is out of range.
 **************************************************************************/
 static int secfile_lookup_int_default_min_max(struct section_file *file,
@@ -5993,6 +6110,9 @@ static void notify_ruleset_fallback(const char *msg)
 **************************************************************************/
 bool load_rulesets(const char *restore, bool act)
 {
+  // Trigger signals need to be cleared before loading rulesets
+  script_server_trigger_signals_destroy();
+
   if (load_rulesetdir(game.server.rulesetdir, act)) {
     return TRUE;
   }
@@ -6046,6 +6166,7 @@ static void nullcheck_secfile_destroy(struct section_file *file)
 **************************************************************************/
 void rulesets_deinit(void)
 {
+  script_server_trigger_signals_destroy();
   script_server_free();
   requirement_vector_free(&reqs_list);
 }
@@ -6058,6 +6179,7 @@ static bool load_rulesetdir(const char *rsdir, bool act)
 {
   struct section_file *techfile, *unitfile, *buildfile, *govfile, *terrfile;
   struct section_file *cityfile, *nationfile, *effectfile;
+  struct section_file *triggerfile;
   bool ok = TRUE;
 
   log_normal(_("Loading rulesets."));
@@ -6078,6 +6200,7 @@ static bool load_rulesetdir(const char *rsdir, bool act)
   cityfile = openload_ruleset_file("cities", rsdir);
   nationfile = openload_ruleset_file("nations", rsdir);
   effectfile = openload_ruleset_file("effects", rsdir);
+  triggerfile = openload_ruleset_file("triggers", rsdir);
 
   if (techfile == NULL
       || buildfile  == NULL
@@ -6086,7 +6209,8 @@ static bool load_rulesetdir(const char *rsdir, bool act)
       || terrfile   == NULL
       || cityfile   == NULL
       || nationfile == NULL
-      || effectfile == NULL) {
+      || effectfile == NULL
+      || triggerfile == NULL) {
     ok = FALSE;
   }
 
@@ -6127,6 +6251,9 @@ static bool load_rulesetdir(const char *rsdir, bool act)
   if (ok) {
     ok = load_ruleset_game(rsdir, act);
   }
+  if (ok) {
+    ok = load_ruleset_triggers(triggerfile);
+  }
 
   if (ok) {
     /* Init nations we just loaded. */
@@ -6143,6 +6270,7 @@ static bool load_rulesetdir(const char *rsdir, bool act)
   nullcheck_secfile_destroy(buildfile);
   nullcheck_secfile_destroy(nationfile);
   nullcheck_secfile_destroy(effectfile);
+  nullcheck_secfile_destroy(triggerfile);
 
   if (base_sections) {
     free(base_sections);

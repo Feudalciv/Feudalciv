@@ -1271,6 +1271,19 @@ void handle_chat_msg(const char *message, int tile,
 }
 
 /**************************************************************************
+  Handle a trigger packet.
+**************************************************************************/
+void handle_trigger(const struct packet_trigger *packet)
+{
+  const char ** responses = malloc(packet->responses_num * sizeof(const char *));
+  int i;
+  for (i = 0; i < packet->responses_num; i++) {
+    responses[i] = packet->responses[i];
+  }
+  handle_triggered_event(packet->name, packet->title, packet->desc, packet->responses_num, responses);
+}
+
+/**************************************************************************
   Handle a connect message packet. Server sends connect message to
   client immediately when client connects.
 **************************************************************************/
@@ -2122,6 +2135,7 @@ void handle_player_info(const struct packet_player_info *pinfo)
   pplayer->score.game = pinfo->score;
   pplayer->was_created = pinfo->was_created;
 
+  pplayer->expected_gross_income = pinfo->expected_gross_income;
   pplayer->economic.gold = pinfo->gold;
   pplayer->economic.tax = pinfo->tax;
   pplayer->economic.science = pinfo->science;

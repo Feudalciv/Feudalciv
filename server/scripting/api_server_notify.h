@@ -24,5 +24,7 @@ void api_notify_embassies_msg(lua_State *L, Player *pplayer, Tile *ptile,
 void api_notify_event_msg(lua_State *L, Player *pplayer, Tile *ptile,
                           int event, const char *message);
 
+void api_notify_trigger(lua_State *L, Player *pplayer, const char *name);
+
 #endif /* API_SERVER_NOTIFY */
 

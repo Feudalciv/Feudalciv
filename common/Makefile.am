@@ -104,7 +104,9 @@ libfreeciv_la_SOURCES = \
 		worklist.c	\
 		worklist.h	\
 		version.c	\
-		version.h
+		version.h 	\
+		war.c		\
+		war.h
 
 EXTRA_DIST = \
 		packets.def	\

@@ -78,6 +78,18 @@ static void script_server_cmd_reply(struct fc_lua *fcl, enum log_level level,
             fc__attribute((__format__ (__printf__, 3, 4)));
 
 /*****************************************************************************
+  Cache for triggers created before script_server_init is called
+*****************************************************************************/
+struct trigger_signal_list * trigger_signal_cache = NULL;
+
+struct trigger_signal {
+  const char * name;
+  int nargs;
+  enum api_types * args;
+};
+
+
+/*****************************************************************************
   Parse and execute the script in str
 *****************************************************************************/
 bool script_server_do_string(struct connection *caller, const char *str)
@@ -133,8 +145,13 @@ bool script_server_do_file(struct connection *caller, const char *filename)
 bool script_server_callback_invoke(const char *callback_name, int nargs,
                                    enum api_types *parg_types, va_list args)
 {
+  int i;
+  void *arg_list[nargs * 2];
+  for (i = 0; i < nargs * 2; i++) {
+    arg_list[i] = va_arg(args, void*);
+  }
   return luascript_callback_invoke(fcl, callback_name, nargs, parg_types,
-                                   args);
+                                   arg_list);
 }
 
 /*****************************************************************************
@@ -365,6 +382,62 @@ static void script_server_signal_create(void)
                           API_TYPE_DISASTER, API_TYPE_CITY);
 
   luascript_signal_create(fcl, "map_generated", 0);
+
+  if (trigger_signal_cache) {
+    trigger_signal_list_iterate(trigger_signal_cache, ptrigger) {
+      luascript_signal_create_array(fcl, ptrigger->name, ptrigger->nargs, ptrigger->args);
+    } trigger_signal_list_iterate_end;
+  }
+}
+
+/*****************************************************************************
+ * For creating trigger signals
+*****************************************************************************/
+void script_server_trigger_signal_create(const char *signal_name,
+                             int nargs, enum api_types args[])
+{
+  enum api_types *pargs = fc_malloc(sizeof(enum api_types) * nargs);
+  struct trigger_signal *psignal;
+  int i;
+
+  for(i = 0; i < nargs; i++) {
+    pargs[i] = args[i];
+  }
+
+  psignal = fc_malloc(sizeof(*psignal));
+
+  psignal->name = fc_strdup(signal_name);
+  psignal->nargs = nargs;
+  psignal->args = pargs;
+
+  if (!trigger_signal_cache) {
+    trigger_signal_cache = trigger_signal_list_new();
+  }
+  trigger_signal_list_append(trigger_signal_cache, psignal);
+}
+
+/*****************************************************************************
+ Destroys existing trigger signals
+*****************************************************************************/
+void script_server_trigger_signals_destroy()
+{
+  if (trigger_signal_cache) {
+    trigger_signal_list_iterate(trigger_signal_cache, psignal) {
+      luascript_signal_free_by_name(fcl, psignal->name);
+      free((char*)psignal->name);
+      free(psignal->args);
+      free(psignal);
+    } trigger_signal_list_iterate_end;
+    trigger_signal_list_clear(trigger_signal_cache);
+  }
+}
+
+/*****************************************************************************
+  Invoke all the callback functions attached to a given trigger.
+*****************************************************************************/
+void script_server_trigger_emit(const char *signal_name, int nargs, void * args[])
+{
+  luascript_signal_emit_array(fcl, signal_name, nargs, args);
 }
 
 /*****************************************************************************

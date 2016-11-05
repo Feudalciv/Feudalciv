@@ -97,8 +97,13 @@ bool script_client_do_file(const char *filename)
 bool script_client_callback_invoke(const char *callback_name, int nargs,
                                    enum api_types *parg_types, va_list args)
 {
+  int i;
+  void *arg_list[nargs];
+  for (i = 0; i < nargs; i++) {
+    arg_list[i] = va_arg(args, void*);
+  }
   return luascript_callback_invoke(fcl, callback_name, nargs, parg_types,
-                                   args);
+                                   arg_list);
 }
 
 /*****************************************************************************

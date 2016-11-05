@@ -29,6 +29,9 @@ GUI_FUNC_PROTO(void, popup_notify_goto_dialog, const char *headline,
                const char *lines,
                const struct text_tag_list *tags,
                struct tile *ptile)
+GUI_FUNC_PROTO(void, popup_notify_trigger_dialog, const char * id,
+               const char *headline, const char *lines, int num_responses,
+               const char **responses)
 GUI_FUNC_PROTO(void, popup_notify_dialog, const char *caption,
                const char *headline, const char *lines)
 GUI_FUNC_PROTO(void, popup_connect_msg, const char *headline, const char *message)

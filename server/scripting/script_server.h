@@ -20,6 +20,16 @@
 /* common/scriptcore */
 #include "luascript_types.h"
 
+struct trigger_signal;
+
+/* A trigger_signal_list is a list of trigger_signals. */
+#define SPECLIST_TAG trigger_signal
+#define SPECLIST_TYPE struct trigger_signal
+#include "speclist.h"
+#define trigger_signal_list_iterate(trigger_signal_list, ptrigger) \
+  TYPED_LIST_ITERATE(struct trigger_signal, trigger_signal_list, ptrigger)
+#define trigger_signal_list_iterate_end LIST_ITERATE_END
+
 struct section_file;
 struct connection;
 
@@ -41,6 +51,10 @@ void script_server_state_save(struct section_file *file);
 
 /* Signals. */
 void script_server_signal_emit(const char *signal_name, int nargs, ...);
+void script_server_trigger_emit(const char *signal_name, int nargs, void * args[]);
+void script_server_trigger_signal_create(const char *signal_name,
+                             int nargs, enum api_types args[]);
+void script_server_trigger_signals_destroy();
 
 /* Functions */
 bool script_server_call(const char *func_name, int nargs, ...);

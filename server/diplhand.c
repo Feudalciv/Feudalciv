@@ -151,6 +151,8 @@ static enum diplstate_type dst_closest(enum diplstate_type a,
     [DS_PEACE] = 4,
     [DS_ALLIANCE] = 5,
     [DS_TEAM] = 6,
+    [DS_SUBJECT] = 7,
+    [DS_OVERLORD] = 8,
   };
 
   if (how_close[a] < how_close[b]) {
@@ -159,6 +161,67 @@ static enum diplstate_type dst_closest(enum diplstate_type a,
     return a;
   }
 }
+
+void set_peace(struct player *pgiver, struct player *pdest)
+{
+  struct player_diplstate *ds_giverdest
+    = player_diplstate_get(pgiver, pdest);
+
+  struct player_diplstate *ds_destgiver
+    = player_diplstate_get(pdest, pgiver);
+  ds_giverdest->type = DS_ARMISTICE;
+  ds_destgiver->type = DS_ARMISTICE;
+  ds_giverdest->turns_left = TURNS_LEFT;
+  ds_destgiver->turns_left = TURNS_LEFT;
+  ds_giverdest->max_state = dst_closest(DS_PEACE,
+                                        ds_giverdest->max_state);
+  ds_destgiver->max_state = dst_closest(DS_PEACE,
+                                        ds_destgiver->max_state);
+  notify_player(pgiver, NULL, E_TREATY_PEACE, ftc_server,
+                /* TRANS: ... the Poles ... Polish territory. */
+                PL_("You agree on an armistice with the %s. In %d turn, "
+                    "it will become a peace treaty. Move your "
+                    "units out of %s territory.",
+                    "You agree on an armistice with the %s. In %d turns, "
+                    "it will become a peace treaty. Move your "
+                    "units out of %s territory.",
+                    TURNS_LEFT),
+                nation_plural_for_player(pdest),
+                TURNS_LEFT,
+                nation_adjective_for_player(pdest));
+  notify_player(pdest, NULL, E_TREATY_PEACE, ftc_server,
+                /* TRANS: ... the Poles ... Polish territory. */
+                PL_("You agree on an armistice with the %s. In %d turn, "
+                    "it will become a peace treaty. Move your "
+                    "units out of %s territory.",
+                    "You agree on an armistice with the %s. In %d turns, "
+                    "it will become a peace treaty. Move your "
+                    "units out of %s territory.",
+                    TURNS_LEFT),
+                nation_plural_for_player(pgiver),
+                TURNS_LEFT,
+                nation_adjective_for_player(pgiver));
+}
+
+void set_ceasefire(struct player *pgiver, struct player *pdest)
+{
+  struct player_diplstate *ds_giverdest
+    = player_diplstate_get(pgiver, pdest);
+  struct player_diplstate *ds_destgiver
+    = player_diplstate_get(pdest, pgiver);
+  ds_giverdest->type = DS_CEASEFIRE;
+  ds_giverdest->turns_left = TURNS_LEFT;
+  ds_destgiver->type = DS_CEASEFIRE;
+  ds_destgiver->turns_left = TURNS_LEFT;
+  notify_player(pgiver, NULL, E_TREATY_CEASEFIRE, ftc_server,
+                _("You agree on a cease-fire with %s."),
+                player_name(pdest));
+  notify_player(pdest, NULL, E_TREATY_CEASEFIRE, ftc_server,
+                _("You agree on a cease-fire with %s."),
+                player_name(pgiver));
+}
+
+
 
 /**************************************************************************
 pplayer clicked the accept button. If he accepted the treaty we check the
@@ -284,6 +347,18 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
             return;
           }
           break;
+    case CLAUSE_BECOME_SUBJECT:
+          diplcheck = pplayer_can_make_treaty(pplayer, pother, DS_OVERLORD);
+          if (diplcheck != DIPL_OK) {
+            return;
+          }
+          break;
+    case CLAUSE_VASSALIZE:
+          diplcheck = pplayer_can_make_treaty(pplayer, pother, DS_SUBJECT);
+          if (diplcheck != DIPL_OK) {
+            return;
+          }
+          break;
 	case CLAUSE_GOLD:
 	  if (pplayer->economic.gold < pclause->value) {
             notify_player(pplayer, NULL, E_DIPLOMACY, ftc_server,
@@ -387,6 +462,18 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
           break;
   case CLAUSE_CEASEFIRE:
           diplcheck = pplayer_can_make_treaty(pplayer, pother, DS_CEASEFIRE);
+          if (diplcheck != DIPL_OK) {
+            goto cleanup;
+          }
+          break;
+    case CLAUSE_BECOME_SUBJECT:
+          diplcheck = pplayer_can_make_treaty(pplayer, pother, DS_OVERLORD);
+          if (diplcheck != DIPL_OK) {
+            goto cleanup;
+          }
+          break;
+    case CLAUSE_VASSALIZE:
+          diplcheck = pplayer_can_make_treaty(pplayer, pother, DS_SUBJECT);
           if (diplcheck != DIPL_OK) {
             goto cleanup;
           }
@@ -519,16 +606,10 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
           pgiver_seen_units = get_units_seen_via_ally(pgiver, pdest);
           pdest_seen_units = get_units_seen_via_ally(pdest, pgiver);
         }
-        ds_giverdest->type = DS_CEASEFIRE;
-        ds_giverdest->turns_left = TURNS_LEFT;
-        ds_destgiver->type = DS_CEASEFIRE;
-        ds_destgiver->turns_left = TURNS_LEFT;
-        notify_player(pgiver, NULL, E_TREATY_CEASEFIRE, ftc_server,
-                      _("You agree on a cease-fire with %s."),
-                      player_name(pdest));
-        notify_player(pdest, NULL, E_TREATY_CEASEFIRE, ftc_server,
-                      _("You agree on a cease-fire with %s."),
-                      player_name(pgiver));
+        set_ceasefire(pgiver, pdest);
+        if (old_diplstate == DS_WAR) {
+          update_wars_for_ceasefire(pgiver, pdest);
+        }
         if (old_diplstate == DS_ALLIANCE) {
           update_players_after_alliance_breakup(pgiver, pdest,
                                                 pgiver_seen_units,
@@ -544,38 +625,12 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
           pgiver_seen_units = get_units_seen_via_ally(pgiver, pdest);
           pdest_seen_units = get_units_seen_via_ally(pdest, pgiver);
         }
-        ds_giverdest->type = DS_ARMISTICE;
-        ds_destgiver->type = DS_ARMISTICE;
-        ds_giverdest->turns_left = TURNS_LEFT;
-        ds_destgiver->turns_left = TURNS_LEFT;
-        ds_giverdest->max_state = dst_closest(DS_PEACE,
-                                              ds_giverdest->max_state);
-        ds_destgiver->max_state = dst_closest(DS_PEACE,
-                                              ds_destgiver->max_state);
-        notify_player(pgiver, NULL, E_TREATY_PEACE, ftc_server,
-                      /* TRANS: ... the Poles ... Polish territory. */
-                      PL_("You agree on an armistice with the %s. In %d turn, "
-                          "it will become a peace treaty. Move your "
-                          "units out of %s territory.",
-                          "You agree on an armistice with the %s. In %d turns, "
-                          "it will become a peace treaty. Move your "
-                          "units out of %s territory.",
-                          TURNS_LEFT),
-                      nation_plural_for_player(pdest),
-                      TURNS_LEFT,
-                      nation_adjective_for_player(pdest));
-        notify_player(pdest, NULL, E_TREATY_PEACE, ftc_server,
-                      /* TRANS: ... the Poles ... Polish territory. */
-                      PL_("You agree on an armistice with the %s. In %d turn, "
-                          "it will become a peace treaty. Move your "
-                          "units out of %s territory.",
-                          "You agree on an armistice with the %s. In %d turns, "
-                          "it will become a peace treaty. Move your "
-                          "units out of %s territory.",
-                          TURNS_LEFT),
-                      nation_plural_for_player(pgiver),
-                      TURNS_LEFT,
-                      nation_adjective_for_player(pgiver));
+
+        set_peace(pgiver, pdest);
+        if (old_diplstate == DS_WAR || old_diplstate == DS_CEASEFIRE) {
+          update_wars_for_peace_treaty(pgiver, pdest);
+        }
+
         if (old_diplstate == DS_ALLIANCE) {
           update_players_after_alliance_breakup(pgiver, pdest,
                                                 pgiver_seen_units,
@@ -603,7 +658,39 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
         give_allied_visibility(pdest, pgiver);
 
         worker_refresh_required = TRUE;
-	break;
+        break;
+      case CLAUSE_BECOME_SUBJECT:
+        ds_giverdest->type = DS_OVERLORD;
+        ds_destgiver->type = DS_SUBJECT;
+        ds_giverdest->max_state = dst_closest(DS_OVERLORD,
+                                              ds_giverdest->max_state);
+        ds_destgiver->max_state = dst_closest(DS_SUBJECT,
+                                              ds_destgiver->max_state);
+        notify_player(pgiver, NULL, E_TREATY_BECOME_SUBJECT, ftc_server,
+                      _("You pledge fealty to %s."),
+                      player_name(pdest));
+        notify_player(pdest, NULL, E_TREATY_VASSALIZE, ftc_server,
+                      _("%s has agreed become your servant."),
+                      player_name(pgiver));
+        give_allied_visibility(pgiver, pdest);
+        give_allied_visibility(pdest, pgiver);
+        break;
+      case CLAUSE_VASSALIZE:
+        ds_giverdest->type = DS_SUBJECT;
+        ds_destgiver->type = DS_OVERLORD;
+        ds_giverdest->max_state = dst_closest(DS_SUBJECT,
+                                              ds_giverdest->max_state);
+        ds_destgiver->max_state = dst_closest(DS_OVERLORD,
+                                              ds_destgiver->max_state);
+        notify_player(pdest, NULL, E_TREATY_BECOME_SUBJECT, ftc_server,
+                      _("You pledge fealty to %s."),
+                      player_name(pgiver));
+        notify_player(pgiver, NULL, E_TREATY_VASSALIZE, ftc_server,
+                      _("%s has agreed become your servant."),
+                      player_name(pdest));
+        give_allied_visibility(pgiver, pdest);
+        give_allied_visibility(pdest, pgiver);
+        break;
       case CLAUSE_VISION:
 	give_shared_vision(pgiver, pdest);
         notify_player(pgiver, NULL, E_TREATY_SHARED_VISION, ftc_server,

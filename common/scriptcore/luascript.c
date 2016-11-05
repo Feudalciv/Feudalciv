@@ -426,7 +426,7 @@ void luascript_log_vargs(struct fc_lua *fcl, enum log_level level,
   Push arguments into the Lua stack.
 *****************************************************************************/
 void luascript_push_args(struct fc_lua *fcl, int nargs,
-                         enum api_types *parg_types, va_list args)
+                         enum api_types *parg_types, void* args[])
 {
   int i;
 
@@ -436,7 +436,7 @@ void luascript_push_args(struct fc_lua *fcl, int nargs,
   for (i = 0; i < nargs; i++) {
     int type;
 
-    type = va_arg(args, int);
+    type = (long)args[2 * i];
     fc_assert_ret(api_types_is_valid(type));
     fc_assert_ret(type == *(parg_types + i));
 
@@ -445,7 +445,7 @@ void luascript_push_args(struct fc_lua *fcl, int nargs,
         {
           int arg;
 
-          arg = va_arg(args, int);
+          arg = (long)args[2 * i + 1];
           tolua_pushnumber(fcl->state, (lua_Number)arg);
         }
         break;
@@ -453,7 +453,7 @@ void luascript_push_args(struct fc_lua *fcl, int nargs,
         {
           int arg;
 
-          arg = va_arg(args, int);
+          arg = (long)args[2 * i + 1];
           tolua_pushboolean(fcl->state, (bool)arg);
         }
         break;
@@ -461,7 +461,7 @@ void luascript_push_args(struct fc_lua *fcl, int nargs,
         {
           const char *arg;
 
-          arg = va_arg(args, const char*);
+          arg = (const char*)args[2 * i + 1];
           tolua_pushstring(fcl->state, arg);
         }
         break;
@@ -472,7 +472,7 @@ void luascript_push_args(struct fc_lua *fcl, int nargs,
 
           name = api_types_name(type);
 
-          arg = va_arg(args, void*);
+          arg = args[2 * i + 1];
           tolua_pushusertype(fcl->state, arg, name);
         }
         break;
@@ -588,7 +588,7 @@ int luascript_do_file(struct fc_lua *fcl, const char *filename)
 *****************************************************************************/
 bool luascript_callback_invoke(struct fc_lua *fcl, const char *callback_name,
                                int nargs, enum api_types *parg_types,
-                               va_list args)
+                               void *args[])
 {
   bool stop_emission = FALSE;
 

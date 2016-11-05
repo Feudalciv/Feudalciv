@@ -719,6 +719,7 @@ enum economy_report_columns {
   ERD_COL_NAME,
   ERD_COL_REDUNDANT,
   ERD_COL_COUNT,
+  ERD_COL_INCOME,
   ERD_COL_COST,
   ERD_COL_TOTAL_COST,
 
@@ -740,6 +741,7 @@ static GtkListStore *economy_report_store_new(void)
                             G_TYPE_INT,         /* ERD_COL_REDUNDANT */
                             G_TYPE_INT,         /* ERD_COL_COUNT */
                             G_TYPE_INT,         /* ERD_COL_COST */
+                            G_TYPE_INT,         /* ERD_COL_INCOME */
                             G_TYPE_INT,         /* ERD_COL_TOTAL_COST */
                             G_TYPE_BOOLEAN,     /* ERD_COL_IS_IMPROVEMENT */
                             G_TYPE_INT,         /* ERD_COL_UNI_KIND */
@@ -762,6 +764,8 @@ economy_report_column_name(enum economy_report_columns col)
     return _("Redundant");
   case ERD_COL_COUNT:
     return _("Count");
+  case ERD_COL_INCOME:
+    return _("Income");
   case ERD_COL_COST:
     return _("Cost");
   case ERD_COL_TOTAL_COST:
@@ -787,7 +791,9 @@ static void economy_report_update(struct economy_report *preport)
   GtkTreeIter iter;
   struct improvement_entry building_entries[B_LAST];
   struct unit_entry unit_entries[U_LAST];
-  int entries_used, building_total, unit_total, tax, i;
+  struct tribute_entry tribute_entries[U_LAST];
+  int entries_used, building_total, unit_total,
+      tribute_total_cost, tribute_total_income, tax, i;
   char buf[256];
   cid selected;
 
@@ -820,6 +826,7 @@ static void economy_report_update(struct economy_report *preport)
                        ERD_COL_NAME, improvement_name_translation(pimprove),
                        ERD_COL_REDUNDANT, pentry->redundant,
                        ERD_COL_COUNT, pentry->count,
+                       ERD_COL_INCOME, 0,
                        ERD_COL_COST, pentry->cost,
                        ERD_COL_TOTAL_COST, pentry->total_cost,
                        ERD_COL_IS_IMPROVEMENT, TRUE,
@@ -846,6 +853,7 @@ static void economy_report_update(struct economy_report *preport)
                        ERD_COL_NAME, utype_name_translation(putype),
                        ERD_COL_REDUNDANT, 0,
                        ERD_COL_COUNT, pentry->count,
+                       ERD_COL_INCOME, 0,
                        ERD_COL_COST, pentry->cost,
                        ERD_COL_TOTAL_COST, pentry->total_cost,
                        ERD_COL_IS_IMPROVEMENT, FALSE,
@@ -857,9 +865,32 @@ static void economy_report_update(struct economy_report *preport)
     }
   }
 
+  get_economy_report_tribute_data(tribute_entries, &entries_used,
+          &tribute_total_cost, &tribute_total_income);
+  for (i = 0; i < entries_used; i++) {
+    struct tribute_entry *pentry = tribute_entries + i;
+    struct player *pplayer = pentry->player;
+    struct sprite *sprite = get_nation_flag_sprite(tileset, pplayer->nation);
+
+    log_error("tribute is: %d", pentry->tribute);
+    gtk_list_store_append(store, &iter);
+    gtk_list_store_set(store, &iter,
+                       ERD_COL_SPRITE, sprite_get_pixbuf(sprite),
+                       ERD_COL_NAME, player_name(pplayer),
+                       ERD_COL_REDUNDANT, 0,
+                       ERD_COL_COUNT, 0,
+                       ERD_COL_INCOME, (pentry->tribute < 0 ? -(pentry->tribute) : 0),
+                       ERD_COL_COST, (pentry->tribute > 0 ? pentry->tribute : 0),
+                       ERD_COL_TOTAL_COST, (pentry->tribute > 0 ? pentry->tribute : 0),
+                       ERD_COL_IS_IMPROVEMENT, FALSE,
+                       ERD_COL_CID, NULL,
+                       -1);
+  }
+
+
   /* Update the label. */
   fc_snprintf(buf, sizeof(buf), _("Income: %d    Total Costs: %d"),
-              tax, building_total + unit_total);
+              tax + tribute_total_income, building_total + unit_total + tribute_total_cost);
   gtk_label_set_text(preport->label, buf);
 }
 

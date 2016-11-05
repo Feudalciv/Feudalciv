@@ -32,4 +32,7 @@ struct Treaty *find_treaty(struct player *plr0, struct player *plr1);
 void send_diplomatic_meetings(struct connection *dest);
 void cancel_all_meetings(struct player *pplayer);
 void reject_all_treaties(struct player *pplayer);
+
+void set_peace(struct player *pgiver, struct player *pdest);
+void set_ceasefire(struct player *pgiver, struct player *pdest);
 #endif  /* FC__DIPLHAND_H */

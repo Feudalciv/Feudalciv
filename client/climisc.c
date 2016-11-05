@@ -291,6 +291,14 @@ void client_diplomacy_clause_string(char *buf, int bufsiz,
     fc_snprintf(buf, bufsiz, _("The %s give an embassy"),
                 nation_plural_for_player(pclause->from));
     break;
+  case CLAUSE_BECOME_SUBJECT:
+    fc_snprintf(buf, bufsiz, _("%s becomes your subject"),
+                player_name(pclause->from));
+    break;
+  case CLAUSE_VASSALIZE:
+    fc_snprintf(buf, bufsiz, _("%s becomes your overlord"),
+                player_name(pclause->from));
+    break;
   default:
     fc_assert(FALSE);
     if (bufsiz > 0) {
@@ -931,6 +939,15 @@ int num_present_units_in_city(struct city *pcity)
   }
 
   return unit_list_size(plist);
+}
+
+/**************************************************************************
+  Handles a triggered event
+**************************************************************************/
+void handle_triggered_event(const char *name, const char *title, const char *desc,
+        int num_responses, const char **responses)
+{
+  popup_notify_trigger_dialog(name, title, desc, num_responses, responses);
 }
 
 /**************************************************************************

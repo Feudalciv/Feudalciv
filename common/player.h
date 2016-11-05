@@ -150,6 +150,8 @@ enum diplstate_type {
   DS_ALLIANCE,
   DS_NO_CONTACT,
   DS_TEAM,
+  DS_SUBJECT,
+  DS_OVERLORD,
   DS_LAST	/* leave this last */
 };
 
@@ -216,6 +218,7 @@ struct player {
   struct unit_list *units;
   struct player_score score;
   struct player_economic economic;
+  int expected_gross_income;
 
   struct player_spaceship spaceship;
 
@@ -235,6 +238,8 @@ struct player {
   struct attribute_block_s attribute_block_buffer;
 
   struct dbv tile_known;
+
+  struct war_list *current_wars;
 
   struct rgbcolor *rgb;
 
@@ -359,6 +364,8 @@ int num_known_tech_with_flag(const struct player *pplayer,
 			     enum tech_flag_id flag);
 int player_get_expected_income(const struct player *pplayer);
 
+int player_get_expected_gross_income(const struct player *pplayer);
+
 struct city *player_capital(const struct player *pplayer);
 
 bool ai_handicap(const struct player *pplayer, enum handicap_type htype);
@@ -401,6 +408,8 @@ static inline bool is_barbarian(const struct player *pplayer)
   return pplayer->ai_common.barbarian_type != NOT_A_BARBARIAN;
 }
 
+struct player * get_player_overlord(const struct player *pplayer);
+
 bool gives_shared_vision(const struct player *me, const struct player *them);
 
 /* iterate over all player slots */
@@ -429,6 +438,16 @@ bool gives_shared_vision(const struct player *me, const struct player *them);
     }
 #define players_iterate_alive_end                                           \
   } players_iterate_end;
+
+/* iterate over all players which are alive and subjects of the given player */
+#define player_subjects_iterate(_pplayer, _psubject)                          \
+  players_iterate_alive(_psubject) {                                          \
+    enum diplstate_type ds = player_diplstate_get(_pplayer, _psubject)->type; \
+    if (ds != DS_SUBJECT) {                                                   \
+        continue;                                                             \
+    }
+#define player_subjects_iterate_end                                           \
+  } players_iterate_alive_end;
 
 /* get 'struct player_list' and related functions: */
 #define SPECLIST_TAG player

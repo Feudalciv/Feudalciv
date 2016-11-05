@@ -14702,6 +14702,14 @@ msgstr "?diplomatic_state:Never met"
 msgid "?diplomatic_state:Team"
 msgstr "?diplomatic_state:Team"
 
+#: common/player.c:1230
+msgid "?diplomatic_state:Subject"
+msgstr "?diplomatic_state:Subject"
+
+#: common/player.c:1231
+msgid "?diplomatic_state:Overlord"
+msgstr "?diplomatic_state:Overlord"
+
 #: common/requirements.c:1958
 #, c-format
 msgid "\"%s\" tech"

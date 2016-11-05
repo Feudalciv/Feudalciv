@@ -58,6 +58,8 @@ module notify {
   void api_notify_event_msg
     @ event_msg (lua_State *L, Player *pplayer, Tile *ptile, int event,
                  const char *message);
+  void api_notify_trigger
+    @ trigger (lua_State *L, Player *pplayer, const char *name); 
 }
 
 $[
@@ -131,6 +133,10 @@ module edit {
                       int effect);
   Player *api_edit_civil_war
     @ civil_war(lua_State *L, Player *pplayer, int probability);
+  void api_edit_enter_war
+    @ enter_war(lua_State *L, Player *pplayer, Player *applayer2lly, Player *enemy);
+  void api_edit_break_pact
+    @ break_pact(lua_State *L, Player *pplayer, Player *pplayer2);
   void api_edit_unit_turn
     @ unit_turn(lua_State *L, Unit *punit, Direction dir);
   void api_edit_player_victory
@@ -218,6 +224,14 @@ end
 
 function Player:civil_war(probability)
   return edit.civil_war(self, probability)
+end
+
+function Player:enter_war(ally, enemy)
+  return edit.enter_war(self, ally, enemy)
+end
+
+function Player:break_pact(otherplayer)
+  return edit.break_pact(self, otherplayer)
 end
 
 function Player:victory()

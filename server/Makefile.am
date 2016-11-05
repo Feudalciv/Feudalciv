@@ -100,12 +100,18 @@ libfreeciv_srv_la_SOURCES = \
 		stdinhand.h	\
 		techtools.h	\
 		techtools.c	\
+		triggerhand.c\
+		triggerhand.h\
+		triggers.c\
+		triggers.h  \
 		unithand.c	\
 		unithand.h	\
 		unittools.c	\
 		unittools.h	\
 		voting.c	\
-		voting.h
+		voting.h	\
+		warhand.c	\
+		warhand.h
 
 # hand_gen.c & hand_gen.h are generated files, but as they are generated
 # outside this directory (when building common) there's no point in

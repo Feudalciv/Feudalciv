@@ -21,12 +21,13 @@ extern "C" {
 
 /* Used in the network protocol. */
 enum clause_type { CLAUSE_ADVANCE, CLAUSE_GOLD, CLAUSE_MAP,
-		   CLAUSE_SEAMAP, CLAUSE_CITY, 
+		   CLAUSE_SEAMAP, CLAUSE_CITY,
 		   CLAUSE_CEASEFIRE, CLAUSE_PEACE, CLAUSE_ALLIANCE,
-		   CLAUSE_VISION, CLAUSE_EMBASSY, CLAUSE_LAST };
+		   CLAUSE_VISION, CLAUSE_EMBASSY, CLAUSE_BECOME_SUBJECT, CLAUSE_VASSALIZE, CLAUSE_LAST };
 
 #define is_pact_clause(x)                                                   \
-  ((x == CLAUSE_CEASEFIRE) || (x == CLAUSE_PEACE) || (x == CLAUSE_ALLIANCE))
+  ((x == CLAUSE_CEASEFIRE) || (x == CLAUSE_PEACE) || (x == CLAUSE_ALLIANCE) || (x == CLAUSE_BECOME_SUBJECT)\
+   || (x == CLAUSE_VASSALIZE))
 
 /* For when we need to iterate over treaties */
 struct Clause;

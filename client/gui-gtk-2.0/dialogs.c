@@ -179,6 +179,50 @@ static void notify_connect_msg_response(GtkWidget *w, gint response)
   gtk_widget_destroy(w);
 }
 
+/****************************************************************
+  User has responded to notify dialog with possibility to center
+  (goto) on event location.
+*****************************************************************/
+static void notify_trigger_response(GtkWidget *w, gint response)
+{
+  const char *id = g_object_get_data(G_OBJECT(w), "id");
+  dsend_packet_trigger_response(&client.conn, fc_strdup(id), response);
+  gtk_widget_destroy(w);
+}
+
+/**************************************************************************
+  Popup a dialog to display information about an event
+**************************************************************************/
+void popup_notify_trigger_dialog(const char * id, const char *headline,
+                                 const char *lines, int num_responses,
+                                 const char **responses)
+{
+  GtkWidget *shell, *label, *command;
+  int i;
+
+  shell = gtk_dialog_new_with_buttons(headline,
+        NULL,
+        0,
+        NULL);
+  setup_dialog(shell, toplevel);
+  gtk_dialog_set_default_response(GTK_DIALOG(shell), GTK_RESPONSE_CLOSE);
+  gtk_window_set_position(GTK_WINDOW(shell), GTK_WIN_POS_CENTER_ON_PARENT);
+
+  label = gtk_label_new(lines);
+  gtk_container_add(GTK_CONTAINER(GTK_DIALOG(shell)->vbox), label);
+  gtk_widget_show(label);
+
+  for (i = 0; i < num_responses; i++) {
+    command = gtk_button_new_with_label(responses[i]);
+    gtk_dialog_add_action_widget(GTK_DIALOG(shell), command, i + 1);
+    gtk_widget_show(command);
+  }
+
+  g_object_set_data(G_OBJECT(shell), "id", fc_strdup(id));
+  g_signal_connect(shell, "response", G_CALLBACK(notify_trigger_response), NULL);
+  gtk_widget_show(shell);
+}
+
 /**************************************************************************
   Popup a dialog to display information about an event that has a
   specific location.  The user should be given the option to goto that

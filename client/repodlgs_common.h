@@ -36,6 +36,12 @@ struct unit_entry
   int count, cost, total_cost;
 };
 
+struct tribute_entry
+{
+  struct player * player;
+  int tribute;
+};
+
 void get_economy_report_data(struct improvement_entry *entries,
 			     int *num_entries_used, int *total_cost,
 			     int *total_income);
@@ -47,6 +53,9 @@ void get_economy_report_data(struct improvement_entry *entries,
  * client simultaneously and I simply can't */
 void get_economy_report_units_data(struct unit_entry *entries,
 				   int *num_entries_used, int *total_cost);
+
+void get_economy_report_tribute_data(struct tribute_entry *entries,
+                   int *num_entries_used, int *total_cost, int *total_income);
 
 void sell_all_improvements(struct impr_type *pimprove, bool redundant_only,
 			   char *message, size_t message_sz);

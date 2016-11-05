@@ -150,6 +150,46 @@ void get_economy_report_units_data(struct unit_entry *entries,
   } unit_type_iterate_end;
 }
 
+/******************************************************************
+  Returns an array of units with gold_upkeep. Number of units in
+  the array is added to num_entries_used.
+******************************************************************/
+void get_economy_report_tribute_data(struct tribute_entry *entries,
+				   int *num_entries_used, int *total_cost, int *total_income)
+{
+  int cost;
+  struct player *overlord;
+
+  *num_entries_used = 0;
+  *total_cost = 0;
+  *total_income = 0;
+
+  if (NULL == client.conn.playing) {
+    return;
+  }
+
+  player_subjects_iterate(client.conn.playing, psubject) {
+    cost = -psubject->expected_gross_income/10;
+
+    entries[*num_entries_used].player = psubject;
+    entries[*num_entries_used].tribute = cost;
+    (*num_entries_used)++;
+    (*total_income) += -cost;
+  } player_subjects_iterate_end;
+
+  if ((overlord = get_player_overlord(client.conn.playing)) != NULL) {
+    cost = client.conn.playing->expected_gross_income/10;
+
+    entries[*num_entries_used].player = overlord;
+    entries[*num_entries_used].tribute = cost;
+    (*num_entries_used)++;
+
+    (*total_cost) += cost;
+  }
+
+}
+
+
 /****************************************************************************
   Sell all improvements of the given type in all cities.  If "redundant_only"
   is specified then only those improvements that are replaced will be sold.
