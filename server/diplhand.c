@@ -261,6 +261,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
 
     clause_list_iterate(ptreaty->clauses, pclause) {
       struct city *pcity = NULL;
+      struct player *pvassal = NULL;
 
       if (pclause->from == pplayer || is_pact_clause(pclause->type)) {
 	switch(pclause->type) {
@@ -359,6 +360,21 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
             return;
           }
           break;
+    case CLAUSE_VASSAL:
+	  pvassal = player_by_number(pclause->value);
+	  if (!pvassal || !pvassal->is_alive) { /* Can't find out cityname any more. */
+            notify_player(pplayer, NULL, E_DIPLOMACY, ftc_server,
+			  _("Subject you are trying to give no longer exists, "
+			    "you can't accept treaty."));
+	    return;
+	  }
+	  if (get_player_overlord(pvassal) != pplayer) {
+            notify_player(pplayer, NULL, E_DIPLOMACY, ftc_server,
+			  _("You are not the overlord of %s, you can't accept treaty."),
+			  city_link(pvassal));
+	    return;
+	  }
+	  break;
 	case CLAUSE_GOLD:
 	  if (pplayer->economic.gold < pclause->value) {
             notify_player(pplayer, NULL, E_DIPLOMACY, ftc_server,
@@ -409,6 +425,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
 
     clause_list_iterate(ptreaty->clauses, pclause) {
       struct city *pcity;
+      struct player *pvassal;
       if (pclause->from == pother) {
 	switch (pclause->type) {
 	case CLAUSE_CITY:
@@ -478,6 +495,34 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
             goto cleanup;
           }
           break;
+    case CLAUSE_VASSAL:
+          pvassal = player_by_number(pclause->value);
+	  if (!pvassal || !pvassal->is_alive) { /* Can't find out subject name any more. */
+            notify_player(pplayer, NULL, E_DIPLOMACY, ftc_server,
+                          _("One of the subjects the %s are giving away"
+                            " is no more! Treaty canceled!"),
+                          nation_plural_for_player(pother));
+            notify_player(pother, NULL, E_DIPLOMACY, ftc_server,
+                          _("One of the subjects the %s are giving away"
+                            " is no more! Treaty canceled!"),
+                          nation_plural_for_player(pother));
+	    goto cleanup;
+	  }
+	  if (get_player_overlord(pvassal) != pother) {
+            notify_player(pplayer, NULL, E_DIPLOMACY, ftc_server,
+                          _("The %s are no longer the overlords of %s! "
+                            "Treaty canceled!"),
+                          nation_plural_for_player(pother),
+                          player_name(pvassal));
+            notify_player(pother, NULL, E_DIPLOMACY, ftc_server,
+                          _("The %s are no longer the overlords of %s! "
+                            "Treaty canceled!"),
+                          nation_plural_for_player(pother),
+                          player_name(pvassal));
+	    goto cleanup;
+	  }
+	  break;
+
 	case CLAUSE_GOLD:
 	  if (pother->economic.gold < pclause->value) {
             notify_player(pplayer, NULL, E_DIPLOMACY, ftc_server,
@@ -691,6 +736,50 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
         give_allied_visibility(pgiver, pdest);
         give_allied_visibility(pdest, pgiver);
         break;
+      case CLAUSE_VASSAL:
+	{
+          struct player *pvassal = player_by_number(pclause->value);
+
+	  if (!pvassal || !pvassal->is_alive) {
+            log_error("Treaty vassal id %d not found or vassal is no longer alive - skipping clause.",
+                      pclause->value);
+	    break;
+	  }
+
+          notify_player(pdest, city_tile(player_capital(pvassal)), E_TREATY_TRANSFER_VASSAL, ftc_server,
+                        _("%s has transferred control of their subject %s to you."),
+                        player_name(pgiver), player_name(pvassal));
+
+          notify_player(pgiver, city_tile(player_capital(pvassal)), E_TREATY_TRANSFER_VASSAL, ftc_server,
+                        _("You transfer control of your subject %s to %s."),
+                        player_name(pvassal), player_name(pdest));
+
+        ds_giverdest = player_diplstate_get(pdest, pvassal);
+        ds_destgiver = player_diplstate_get(pvassal, pdest);
+
+        ds_giverdest->type = DS_SUBJECT;
+        ds_destgiver->type = DS_OVERLORD;
+        ds_giverdest->max_state = dst_closest(DS_SUBJECT,
+                                              ds_giverdest->max_state);
+        ds_destgiver->max_state = dst_closest(DS_OVERLORD,
+                                              ds_destgiver->max_state);
+        ds_giverdest = player_diplstate_get(pgiver, pvassal);
+        ds_destgiver = player_diplstate_get(pvassal, pgiver);
+
+        ds_giverdest->type = DS_PEACE;
+        ds_destgiver->type = DS_PEACE;
+        ds_giverdest->max_state = dst_closest(DS_PEACE,
+                                              ds_giverdest->max_state);
+        ds_destgiver->max_state = dst_closest(DS_PEACE,
+                                              ds_destgiver->max_state);
+        notify_player(pvassal, NULL, E_TREATY_TRANSFER_VASSAL, ftc_server,
+                      _("%s has become your new overlord."),
+                      player_name(pdest));
+        give_allied_visibility(pvassal, pdest);
+        give_allied_visibility(pdest, pvassal);
+	  break;
+	}
+
       case CLAUSE_VISION:
 	give_shared_vision(pgiver, pdest);
         notify_player(pgiver, NULL, E_TREATY_SHARED_VISION, ftc_server,

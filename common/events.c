@@ -157,6 +157,7 @@ static struct {
   GEN_EV(E_TREATY_PEACE,	E_S_TREATY,	N_("Peace")),
   GEN_EV(E_TREATY_SHARED_VISION,E_S_TREATY,	N_("Shared Vision")),
   GEN_EV(E_TREATY_VASSALIZE,E_S_TREATY,     N_("Vassalize")),
+  GEN_EV(E_TREATY_TRANSFER_VASSAL,E_S_TREATY,     N_("Transfer Vassal")),
   GEN_EV(E_UNIT_LOST_ATT,	E_S_UNIT,	N_("Attack Failed")),
   GEN_EV(E_UNIT_WIN_ATT,	E_S_UNIT,	N_("Attack Succeeded")),
   GEN_EV(E_UNIT_BUY,		E_S_UNIT,	N_("Bought")),
