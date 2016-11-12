@@ -600,7 +600,7 @@ sound_fight   = "f_warriors"
 sound_fight_alt = "f_generic"
 build_cost    = 60
 pop_cost      = 0
-attack        = 2
+attack        = 3
 defense       = 2
 hitpoints     = 8
 firepower     = 1
@@ -614,6 +614,37 @@ uk_food       = 0
 uk_gold       = 0
 flags         = "NoHome"
 roles         = "DefendOk", "Hut", "BarbarianBuild", "BarbarianSea"
+helptext      = _("\
+Viking Raiders\
+")
+
+[unit_viking_warriors]
+name          = _("Viking Warriors")
+class         = "Land"
+tech_req      = "Norse Culture"
+obsolete_by   = "None"
+graphic       = "u.warriors"
+graphic_alt   = "-"
+sound_move    = "m_warriors"
+sound_move_alt = "m_generic"
+sound_fight   = "f_warriors"
+sound_fight_alt = "f_generic"
+build_cost    = 20
+pop_cost      = 0
+attack        = 2
+defense       = 2
+hitpoints     = 8
+firepower     = 1
+move_rate     = 4
+vision_radius_sq = 2
+transport_cap = 0
+fuel          = 0
+uk_happy      = 1
+uk_shield     = 0
+uk_food       = 1
+uk_gold       = 0
+flags         = ""
+roles         = "DefendGood", "FirstBuild"
 helptext      = _("\
 Viking Raiders\
 ")
