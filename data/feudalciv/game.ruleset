@@ -42,6 +42,8 @@ happy_cost       = 2
 ; Cost in food of upkeeping a single citizen
 food_cost        = 2
 
+pop_base_growth_pct = 2
+
 ; Parameters used to generalize the calculation of city granary size:
 ;   if city_size <= num_inis:
 ;     city_granary_size = (granary_food_ini[city_size] * foodbox / 100)
@@ -149,7 +151,7 @@ tech_leakage = 2
 illness_on = TRUE
 
 ; the base factor for illness (of percent)
-illness_base_factor = 25
+illness_base_factor = 50
 
 ; minimum city size for illness
 illness_min_size = 3
