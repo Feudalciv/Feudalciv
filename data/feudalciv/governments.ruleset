@@ -124,7 +124,7 @@ Monarchy suffers the same small amount of corruption that\
 
 name        = _("Feudalism")
 reqs = { "type", "name", "range"
-         "tech", "Monarchy", "Player"
+         "tech", "Feudalism", "Player"
        }
 graphic     = "gov.monarchy"
 graphic_alt = "-"
