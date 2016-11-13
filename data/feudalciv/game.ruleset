@@ -42,8 +42,6 @@ happy_cost       = 2
 ; Cost in food of upkeeping a single citizen
 food_cost        = 2
 
-pop_base_growth_pct = 2
-
 ; Parameters used to generalize the calculation of city granary size:
 ;   if city_size <= num_inis:
 ;     city_granary_size = (granary_food_ini[city_size] * foodbox / 100)

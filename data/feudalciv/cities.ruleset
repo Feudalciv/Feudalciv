@@ -45,6 +45,8 @@ options="+Freeciv-2.5-ruleset +Feudalciv-0.1-ruleset"
 ;
 ; */ <-- avoid gettext warnings
 
+pop_base_growth_pct = 2
+
 [specialist_bard]
 name            = _("Entertainers")
 rule_name       = "elvis"
