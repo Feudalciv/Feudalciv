@@ -524,6 +524,7 @@ void city_size_set(struct city *pcity, citizens size);
 void city_population_set(struct city *pcity, int size);
 int city_population_add(struct city *pcity, int add);
 int city_population_for_size(int size);
+int city_size_for_population(int population);
 
 citizens city_specialists(const struct city *pcity);
 

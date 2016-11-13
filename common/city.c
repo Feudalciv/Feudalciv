@@ -1159,9 +1159,20 @@ int city_population_add(struct city *pcity, int add)
   return new_size - pcity->size;
 }
 
+/*****************************************************************************
+  Returns the minimum population for the given city size
+*****************************************************************************/
 int city_population_for_size(int size)
 {
   return size * (size + 1) * 50;
+}
+
+/*****************************************************************************
+  Returns the city size for a given population
+*****************************************************************************/
+int city_size_for_population(int population)
+{
+  return -0.5 + 0.1 * sqrt(2 * population + 25);
 }
 
 /**************************************************************************

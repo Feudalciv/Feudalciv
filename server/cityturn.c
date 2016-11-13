@@ -984,6 +984,11 @@ static void city_populate(struct city *pcity, struct player *nationality)
   } else if (added_size < 0) {
     city_reduce_size_and_population(pcity, -added_size, NULL, FALSE);
   }
+
+  /* If city population grows beyond population for the city size, reduce it proportionally */
+  if (pcity->size < city_size_for_population(pcity->population)) {
+    city_population_add(pcity, game.info.pop_base_growth * (pcity->size - city_size_for_population(pcity->population)) * city_population(pcity));
+  }
 }
 
 /**************************************************************************
