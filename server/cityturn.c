@@ -736,7 +736,7 @@ static bool city_reduce_size_and_population(struct city *pcity, citizens pop_los
 bool city_reduce_size(struct city *pcity, citizens pop_loss,
                       struct player *destroyer)
 {
-  city_reduce_size_and_population(pcity, pop_loss, destroyer, TRUE);
+  return city_reduce_size_and_population(pcity, pop_loss, destroyer, TRUE);
 }
 
 
@@ -896,7 +896,7 @@ static bool city_increase_size_and_population(struct city *pcity, struct player 
 
 static bool city_increase_size(struct city *pcity, struct player *nationality)
 {
-  city_increase_size_and_population(pcity, nationality, TRUE);
+  return city_increase_size_and_population(pcity, nationality, TRUE);
 }
 
 /****************************************************************************
