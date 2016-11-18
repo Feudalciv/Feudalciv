@@ -736,7 +736,7 @@ static bool city_reduce_size_and_population(struct city *pcity, citizens pop_los
 bool city_reduce_size(struct city *pcity, citizens pop_loss,
                       struct player *destroyer)
 {
-  city_reduce_size_and_population(pcity, pop_loss, destroyer, TRUE);
+  return city_reduce_size_and_population(pcity, pop_loss, destroyer, TRUE);
 }
 
 
@@ -896,7 +896,7 @@ static bool city_increase_size_and_population(struct city *pcity, struct player 
 
 static bool city_increase_size(struct city *pcity, struct player *nationality)
 {
-  city_increase_size_and_population(pcity, nationality, TRUE);
+  return city_increase_size_and_population(pcity, nationality, TRUE);
 }
 
 /****************************************************************************
@@ -943,6 +943,34 @@ static void city_populate(struct city *pcity, struct player *nationality)
   } else if (pcity->food_stock < 0) {
     population_increase += game.info.pop_base_growth * pcity->food_stock;
     pcity->food_stock = 0;
+
+    /* FIXME: should this depend on units with ability to build
+     * cities or on units that require food in upkeep?
+     * I'll assume citybuilders (units that 'contain' 1 pop) -- sjolie
+     * The above may make more logical sense, but in game terms
+     * you want to disband a unit that is draining your food
+     * reserves.  Hence, I'll assume food upkeep > 0 units. -- jjm
+     */
+    unit_list_iterate_safe(pcity->units_supported, punit) {
+      if (punit->upkeep[O_FOOD] > 0
+          && !unit_has_type_flag(punit, UTYF_UNDISBANDABLE)) {
+
+        notify_player(city_owner(pcity), city_tile(pcity),
+                      E_UNIT_LOST_MISC, ftc_server,
+                      _("Famine feared in %s, %s lost!"),
+                      city_link(pcity), unit_tile_link(punit));
+        wipe_unit(punit, ULR_STARVED, NULL);
+
+        if (city_exist(saved_id)) {
+          city_reset_foodbox(pcity, city_size_get(pcity));
+        }
+        break;
+      }
+    } unit_list_iterate_safe_end;
+    notify_player(city_owner(pcity), city_tile(pcity),
+                    E_CITY_FAMINE, ftc_server,
+                    _("Famine causes population loss in %s."),
+                    city_link(pcity));
   }
 
   /* Increase population */
@@ -955,6 +983,11 @@ static void city_populate(struct city *pcity, struct player *nationality)
     map_claim_border(pcity->tile, pcity->owner, -1);
   } else if (added_size < 0) {
     city_reduce_size_and_population(pcity, -added_size, NULL, FALSE);
+  }
+
+  /* If city population grows beyond population for the city size, reduce it proportionally */
+  if (pcity->size < city_size_for_population(pcity->population)) {
+    city_population_add(pcity, game.info.pop_base_growth * (pcity->size - city_size_for_population(pcity->population)) * city_population(pcity));
   }
 }
 

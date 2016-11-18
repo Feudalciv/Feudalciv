@@ -149,7 +149,7 @@ tech_leakage = 2
 illness_on = TRUE
 
 ; the base factor for illness (of percent)
-illness_base_factor = 25
+illness_base_factor = 50
 
 ; minimum city size for illness
 illness_min_size = 3

@@ -22,13 +22,13 @@ default_government = "Feudalism"
 ; not defined, the ultimate default is 50.
 
 ; Value of trait "expansionist" defines how much AI wants to settle new territory.
-;expansionist = 50
+expansionist = 0
 
 ; Value of trait "trader" defines how much AI wants to establish trade routes.
-;trader = 50
+trader = 10
 
 ; Value of trait "aggressive" defines how easily AI declares war.
-;aggressive = 50
+aggressive = 100
 
 
 *include "feudalciv/nationlist.ruleset"

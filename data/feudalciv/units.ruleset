@@ -485,7 +485,7 @@ vision_radius_sq = 2
 transport_cap = 0
 fuel          = 0
 uk_happy      = 1
-uk_shield     = 0
+uk_shield     = 1
 uk_food       = 1
 uk_gold       = 0
 flags         = ""
@@ -547,7 +547,7 @@ vision_radius_sq = 2
 transport_cap = 0
 fuel          = 0
 uk_happy      = 1
-uk_shield     = 0
+uk_shield     = 1
 uk_food       = 1
 uk_gold       = 0
 flags         = ""
@@ -600,7 +600,7 @@ sound_fight   = "f_warriors"
 sound_fight_alt = "f_generic"
 build_cost    = 60
 pop_cost      = 0
-attack        = 2
+attack        = 3
 defense       = 2
 hitpoints     = 8
 firepower     = 1
@@ -614,6 +614,37 @@ uk_food       = 0
 uk_gold       = 0
 flags         = "NoHome"
 roles         = "DefendOk", "Hut", "BarbarianBuild", "BarbarianSea"
+helptext      = _("\
+Viking Raiders\
+")
+
+[unit_viking_warriors]
+name          = _("Viking Warriors")
+class         = "Land"
+tech_req      = "Norse Culture"
+obsolete_by   = "None"
+graphic       = "u.warriors"
+graphic_alt   = "-"
+sound_move    = "m_warriors"
+sound_move_alt = "m_generic"
+sound_fight   = "f_warriors"
+sound_fight_alt = "f_generic"
+build_cost    = 20
+pop_cost      = 0
+attack        = 2
+defense       = 2
+hitpoints     = 8
+firepower     = 1
+move_rate     = 4
+vision_radius_sq = 2
+transport_cap = 0
+fuel          = 0
+uk_happy      = 1
+uk_shield     = 1
+uk_food       = 1
+uk_gold       = 0
+flags         = ""
+roles         = "DefendGood", "FirstBuild"
 helptext      = _("\
 Viking Raiders\
 ")
@@ -858,58 +889,6 @@ In some game strategies, hordes of Diplomats can be used to wreak\
 "), _("\
 Diplomats built under a Communist government will start at the first\
  veteran level (secretary).\
-")
-
-[unit_caravan]
-name          = _("Caravan")
-class         = "Land"
-tech_req      = "Trade"
-obsolete_by   = "None"
-graphic       = "u.caravan"
-graphic_alt   = "-"
-sound_move    = "m_caravan"
-sound_move_alt = "m_generic"
-sound_fight   = "f_caravan"
-sound_fight_alt = "f_generic"
-build_cost    = 50
-pop_cost      = 0
-attack        = 0
-defense       = 1
-hitpoints     = 10
-firepower     = 1
-move_rate     = 4
-vision_radius_sq = 2
-transport_cap = 0
-fuel          = 0
-uk_happy      = 0
-uk_shield     = 0
-uk_food       = 0
-uk_gold       = 0
-flags         = "TradeRoute", "HelpWonder", "IgZOC", "NonMil"
-roles         = ""
-helptext      = _("\
-A Caravan carries goods or material for trading with distant cities\
- and foreign countries, or to help build wonders in your cities.\
-"), _("\
-Caravans can establish trade routes with your own cities or those of other\
- nations (even enemies) by traveling to them. A route's ongoing revenue\
- is doubled if the two cities involved are on different continents, and\
- doubled again if the cities are from different civilizations. This last\
- condition means the net benefit to your civilization of a trade route\
- is the same regardless of whether you own both cities or only one of\
- them; if you only own one city, trade in each city is doubled, but you\
- only get the benefit from one end of the route.\
-"), _("\
-Initially cities can support a maximum of two trade routes. Knowledge of\
- the technologies Magnetism and The Corporation each increase this limit\
- by one; knowing both allows cities to support four trade routes each.\
-"), _("\
-Every Caravan that is used to build a wonder will add 50 shields\
- towards the production of the wonder.\
-"), _("\
-TIP:  You can stockpile a stack of Caravans in advance and bring\
- them all into a city where you have started to build a wonder,\
- and finish it in only one turn!\
 ")
 
 [unit_leader]

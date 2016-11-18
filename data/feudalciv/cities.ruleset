@@ -45,6 +45,8 @@ options="+Freeciv-2.5-ruleset +Feudalciv-0.1-ruleset"
 ;
 ; */ <-- avoid gettext warnings
 
+pop_base_growth_pct = 2
+
 [specialist_bard]
 name            = _("Entertainers")
 rule_name       = "elvis"
@@ -96,7 +98,7 @@ changable_tax = TRUE            ; set to FALSE to disallow changing of tax rates
 
 vision_reveal_tiles = TRUE      ; civ1 & 2 default FALSE
 
-pop_report_zeroes = 2           ; Population in reports in tens of thousands
+pop_report_zeroes = 1           ; Population in reports in tens of thousands
 
 [citizen]
 nationality   = TRUE            ; account for the nationality of the citizens
