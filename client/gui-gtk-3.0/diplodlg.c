@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@
 struct Diplomacy_dialog {
   struct Treaty treaty;
   struct gui_dialog* dialog;
-  
+
   GtkWidget *menu0;
   GtkWidget *menu1;
 
@@ -79,7 +79,7 @@ struct Diplomacy_notebook {
 static struct dialog_list *dialog_list;
 static struct Diplomacy_notebook *dipl_main;
 
-static struct Diplomacy_dialog *create_diplomacy_dialog(struct player *plr0, 
+static struct Diplomacy_dialog *create_diplomacy_dialog(struct player *plr0,
 						 struct player *plr1);
 
 static struct Diplomacy_dialog *find_diplomacy_dialog(int other_player_id);
@@ -92,6 +92,8 @@ static void diplomacy_dialog_ceasefire_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_peace_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_alliance_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_vassal_callback(GtkWidget *w, gpointer data);
+static void diplomacy_dialog_become_subject_callback(GtkWidget *w, gpointer data);
+static void diplomacy_dialog_vassalize_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_vision_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_embassy_callback(GtkWidget *w, gpointer data);
 static void close_diplomacy_dialog(struct Diplomacy_dialog *pdialog);
@@ -162,7 +164,7 @@ void handle_diplomacy_create_clause(int counterpart, int giver,
 
   add_clause(&pdialog->treaty, player_by_number(giver), type, value);
   update_diplomacy_dialog(pdialog);
-  gui_dialog_alert(pdialog->dialog);  
+  gui_dialog_alert(pdialog->dialog);
 }
 
 /****************************************************************
@@ -183,7 +185,7 @@ void handle_diplomacy_remove_clause(int counterpart, int giver,
 }
 
 /****************************************************************
-  Popup the dialog 10% inside the main-window 
+  Popup the dialog 10% inside the main-window
 *****************************************************************/
 static void popup_diplomacy_dialog(int other_player_id, int initiated_from)
 {
@@ -337,8 +339,8 @@ static void popup_add_menu(GtkMenuShell *parent, gpointer data)
 
   /****************************************************************
   Creates a sorted list of plr0's cities, excluding the capital and
-  any cities not visible to plr1.  This means that you can only trade 
-  cities visible to requesting player.  
+  any cities not visible to plr1.  This means that you can only trade
+  cities visible to requesting player.
 
 			      - Kris Bubendorfer
   *****************************************************************/
@@ -360,7 +362,7 @@ static void popup_add_menu(GtkMenuShell *parent, gpointer data)
     } city_list_iterate_end;
 
     qsort(city_list_ptrs, i, sizeof(struct city *), city_name_compare);
-    
+
     menu = gtk_menu_new();
 
     for (j = 0; j < i; j++) {
@@ -473,6 +475,18 @@ static void popup_add_menu(GtkMenuShell *parent, gpointer data)
 		     G_CALLBACK(diplomacy_dialog_alliance_callback), pdialog);
     gtk_widget_set_sensitive(item, ds != DS_ALLIANCE && ds != DS_TEAM);
 
+    item = gtk_menu_item_new_with_mnemonic(Q_("?diplomatic_state:Become Subject"));
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+    g_signal_connect(item, "activate",
+		     G_CALLBACK(diplomacy_dialog_become_subject_callback), pdialog);
+    gtk_widget_set_sensitive(item, ds != DS_OVERLORD && ds != DS_SUBJECT && ds != DS_TEAM);
+
+    item = gtk_menu_item_new_with_mnemonic(Q_("?diplomatic_state:Vassalise"));
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+    g_signal_connect(item, "activate",
+		     G_CALLBACK(diplomacy_dialog_vassalize_callback), pdialog);
+    gtk_widget_set_sensitive(item, ds != DS_OVERLORD && ds != DS_SUBJECT && ds != DS_TEAM);
+
     item = gtk_menu_item_new_with_mnemonic(_("_Pacts"));
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), menu);
     gtk_menu_shell_append(GTK_MENU_SHELL(parent), item);
@@ -492,7 +506,7 @@ static void row_callback(GtkTreeView *view, GtkTreePath *path,
 
   index = gtk_tree_path_get_indices(path);
 
-  i = 0; 
+  i = 0;
   clause_list_iterate(pdialog->treaty.clauses, pclause) {
     if (i == index[0]) {
       dsend_packet_diplomacy_remove_clause_req(&client.conn,
@@ -745,7 +759,7 @@ static struct Diplomacy_dialog *create_diplomacy_dialog(struct player *plr0,
 
   /* Our flag */
   sprite = get_nation_flag_sprite(tileset, nation_of_player(plr0));
-  
+
   image = gtk_pixcomm_new_from_sprite(sprite);
   gtk_container_add(GTK_CONTAINER(hbox), image);
 
@@ -830,7 +844,7 @@ static struct Diplomacy_dialog *create_diplomacy_dialog(struct player *plr0,
 
   /* Their flag */
   sprite = get_nation_flag_sprite(tileset, nation_of_player(plr1));
-  
+
   image = gtk_pixcomm_new_from_sprite(sprite);
   gtk_container_add(GTK_CONTAINER(hbox), image);
 
@@ -1085,7 +1099,7 @@ static void diplomacy_dialog_seamap_callback(GtkWidget *w, gpointer data)
 {
   struct Diplomacy_dialog *pdialog = (struct Diplomacy_dialog *)data;
   struct player *pgiver;
-  
+
   pgiver = (struct player *)g_object_get_data(G_OBJECT(w), "plr");
 
   dsend_packet_diplomacy_create_clause_req(&client.conn,
@@ -1130,6 +1144,22 @@ static void diplomacy_dialog_peace_callback(GtkWidget *w, gpointer data)
 static void diplomacy_dialog_alliance_callback(GtkWidget *w, gpointer data)
 {
   diplomacy_dialog_add_pact_clause(w, data, CLAUSE_ALLIANCE);
+}
+
+/****************************************************************
+  Become Subject pact menu item activated
+*****************************************************************/
+static void diplomacy_dialog_become_subject_callback(GtkWidget *w, gpointer data)
+{
+  diplomacy_dialog_add_pact_clause(w, data, CLAUSE_BECOME_SUBJECT);
+}
+
+/****************************************************************
+  Vassalize pact menu item activated
+*****************************************************************/
+static void diplomacy_dialog_vassalize_callback(GtkWidget *w, gpointer data)
+{
+  diplomacy_dialog_add_pact_clause(w, data, CLAUSE_VASSALIZE);
 }
 
 /****************************************************************
@@ -1215,7 +1245,7 @@ static void diplo_dialog_returnkey(GtkWidget *w, gpointer data)
   struct player *pgiver =
       (struct player *) g_object_get_data(G_OBJECT(w), "plr");
   int amount = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w));
-  
+
   if (amount >= 0 && amount <= pgiver->economic.gold) {
     dsend_packet_diplomacy_create_clause_req(&client.conn,
 					     player_number(pdialog->treaty.plr1),
