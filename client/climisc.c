@@ -242,6 +242,7 @@ void client_diplomacy_clause_string(char *buf, int bufsiz,
 				    struct Clause *pclause)
 {
   struct city *pcity;
+  struct player *pvassal;
 
   switch(pclause->type) {
   case CLAUSE_ADVANCE:
@@ -298,6 +299,12 @@ void client_diplomacy_clause_string(char *buf, int bufsiz,
   case CLAUSE_VASSALIZE:
     fc_snprintf(buf, bufsiz, _("%s becomes your overlord"),
                 player_name(pclause->from));
+    break;
+  case CLAUSE_VASSAL:
+    pvassal = player_by_number(pclause->value);
+    fc_snprintf(buf, bufsiz, _("The %s transfer control of their vassal %s"),
+                nation_plural_for_player(pclause->from),
+                player_name(pvassal));
     break;
   default:
     fc_assert(FALSE);

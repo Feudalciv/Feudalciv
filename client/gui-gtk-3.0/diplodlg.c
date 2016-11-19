@@ -91,6 +91,7 @@ static void diplomacy_dialog_city_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_ceasefire_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_peace_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_alliance_callback(GtkWidget *w, gpointer data);
+static void diplomacy_dialog_vassal_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_vision_callback(GtkWidget *w, gpointer data);
 static void diplomacy_dialog_embassy_callback(GtkWidget *w, gpointer data);
 static void close_diplomacy_dialog(struct Diplomacy_dialog *pdialog);
@@ -408,6 +409,44 @@ static void popup_add_menu(GtkMenuShell *parent, gpointer data)
   gtk_menu_shell_append(GTK_MENU_SHELL(parent), item);
   gtk_widget_show(item);
 
+
+  int i = 0, n = 0;
+  struct player **vassal_list_ptrs;
+
+  player_subjects_iterate(pgiver, subject) {
+    if (pother == subject) continue;
+    n++;
+  } player_subjects_iterate_end;
+
+  vassal_list_ptrs = fc_malloc(sizeof(struct player *) * n);
+
+  player_subjects_iterate(pgiver, subject) {
+    if (pother == subject) continue;
+    vassal_list_ptrs[i] = subject;
+    i++;
+  } player_subjects_iterate_end;
+
+  qsort(vassal_list_ptrs, i, sizeof(struct player*), player_name_compare);
+
+  menu = gtk_menu_new();
+
+  for (i = 0; i < n; i++) {
+    struct player * subject = vassal_list_ptrs[i];
+    item = gtk_menu_item_new_with_label(player_name(subject));
+
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+    g_signal_connect(item, "activate",
+		     G_CALLBACK(diplomacy_dialog_vassal_callback),
+			 GINT_TO_POINTER((player_number(pgiver) << 24) |
+					(player_number(pother) << 16) |
+					player_number(subject)));
+  }
+
+  item = gtk_menu_item_new_with_mnemonic(_("_Vassals"));
+  gtk_widget_set_sensitive(item, (i > 0));
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), menu);
+  gtk_menu_shell_append(GTK_MENU_SHELL(parent), item);
+  gtk_widget_show_all(item);
 
   /* Pacts. */
   if (pgiver == pdialog->treaty.plr0) {
@@ -1006,13 +1045,32 @@ static void diplomacy_dialog_city_callback(GtkWidget * w, gpointer data)
 }
 
 /****************************************************************
+Callback for trading vassals
+*****************************************************************/
+static void diplomacy_dialog_vassal_callback(GtkWidget * w, gpointer data)
+{
+  size_t choice = GPOINTER_TO_UINT(data);
+  int giver = (choice >> 24) & 0xff, dest = (choice >> 16) & 0xff, other;
+  int vassal = choice & 0xffff;
+
+  if (player_by_number(giver) == client.conn.playing) {
+    other = dest;
+  } else {
+    other = giver;
+  }
+
+  dsend_packet_diplomacy_create_clause_req(&client.conn, other, giver,
+					   CLAUSE_VASSAL, vassal);
+}
+
+/****************************************************************
   Map menu item activated
 *****************************************************************/
 static void diplomacy_dialog_map_callback(GtkWidget *w, gpointer data)
 {
   struct Diplomacy_dialog *pdialog = (struct Diplomacy_dialog *)data;
   struct player *pgiver;
-  
+
   pgiver = (struct player *)g_object_get_data(G_OBJECT(w), "plr");
 
   dsend_packet_diplomacy_create_clause_req(&client.conn,

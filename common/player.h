@@ -400,6 +400,8 @@ bool players_on_same_team(const struct player *pplayer1,
 int player_in_territory(const struct player *pplayer,
 			const struct player *pplayer2);
 
+int player_name_compare(const void *p1, const void *p2);
+
 /**************************************************************************
   Return TRUE iff player is any kind of barbarian
 **************************************************************************/

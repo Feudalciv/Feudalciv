@@ -1585,3 +1585,13 @@ void player_set_ai_data(struct player *pplayer, const struct ai_type *ai,
 {
   pplayer->server.ais[ai_type_number(ai)] = data;
 }
+
+/**************************************************************************
+  Comparison function for qsort for player _pointers_, sorting by player name.
+  Args are really (struct player**), to sort an array of pointers.
+**************************************************************************/
+int player_name_compare(const void *p1, const void *p2)
+{
+  return fc_strcasecmp((*(const struct player **) p1)->name,
+                       (*(const struct player **) p2)->name);
+}
