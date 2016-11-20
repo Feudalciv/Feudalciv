@@ -6235,11 +6235,6 @@ static void sg_save_wars(struct savedata *saving)
   /* Check status and return if not OK (sg_success != TRUE). */
   sg_check_ret();
 
-  if (saving->scenario) {
-    /* Do _not_ save events in a scenario. */
-    return;
-  }
-
   wars_save(saving->file, "wars");
 }
 
