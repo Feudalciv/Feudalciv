@@ -73,16 +73,16 @@ options="+Freeciv-2.5-ruleset +Feudalciv-0.1-ruleset"
 
 [advance_anglosaxon]
 name    = _("Anglo-Saxon Culture")
-req1    = "Never"
-req2    = "Never"
-root_req = "None"
+req1    = "None"
+req2    = "None"
+root_req = "Anglo-Saxon Culture"
 flags   = ""
 
 [advance_norse]
 name    = _("Norse Culture")
-req1    = "Never"
-req2    = "Never"
-root_req = "None"
+req1    = "None"
+req2    = "None"
+root_req = "Norse Culture"
 flags   = ""
 
 [advance_construction]

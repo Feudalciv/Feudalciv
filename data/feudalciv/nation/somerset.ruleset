@@ -19,7 +19,7 @@ ruler_titles = {
 flag="somerset"
 city_style = "European"
 
-init_techs=""
+init_techs="Anglo-Saxon Culture"
 init_buildings=""
 init_units=""
 
