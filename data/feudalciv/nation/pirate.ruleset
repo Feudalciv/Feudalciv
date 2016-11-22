@@ -23,7 +23,7 @@ flag="pirate"
 flag_alt = "-"
 city_style = "European"
 
-init_techs=""
+init_techs="Norse Culture"
 init_buildings=""
 init_units=""
 

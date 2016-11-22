@@ -20,6 +20,6 @@ flag="viking"
 flag_alt="norway"
 city_style="European"
 
-init_techs=""
+init_techs="Norse Culture"
 init_buildings=""
 init_units=""
