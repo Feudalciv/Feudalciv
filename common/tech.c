@@ -378,8 +378,6 @@ void player_research_update(struct player *pplayer)
       }
 
       if (player_invention_state(pplayer, i) == TECH_UNKNOWN
-          && advance_required(i, AR_ONE) != A_LAST
-          && advance_required(i, AR_TWO) != A_LAST
           && player_invention_state(pplayer, advance_required(i, AR_ONE))
              == TECH_KNOWN
           && player_invention_state(pplayer, advance_required(i, AR_TWO))
